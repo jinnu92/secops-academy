@@ -263,7 +263,7 @@ MIT -- free to use, modify, and distribute. See [LICENSE](LICENSE).
 
 ## Credits
 
-Built by **Fractal AI Security Team** for the cybersecurity community.
+Built by **the SecOps Academy community** for the cybersecurity community.
 
 If this helped you learn DevSecOps or prepare for a security role, star the repo and share it with your team.
 

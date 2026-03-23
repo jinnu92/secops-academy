@@ -4670,7 +4670,7 @@ function CertificateModal({ profile, progress, rank, onClose }) {
             {completedMods} Modules Completed | {profile.totalXP.toLocaleString()} XP Earned
           </div>
           <div className="text-xs mt-2" style={{ color: DT.textTertiary }}>{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-          <div className="text-[10px] mt-4 uppercase tracking-wider" style={{ color: DT.textTertiary }}>Fractal AI Security Team</div>
+          <div className="text-[10px] mt-4 uppercase tracking-wider" style={{ color: DT.textTertiary }}>SecOps Academy</div>
         </div>
         <div className="p-4 flex flex-wrap gap-2 justify-center">
           <button onClick={() => { navigator.clipboard.writeText(shareText); setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border" style={{ borderColor: DT.blue, color: DT.blue }}>
@@ -4820,7 +4820,7 @@ function ProfileScreen({ profile, progress, badges, terminal, onUpdateProfile, o
       <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
         <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-4">Certificate & Sharing</div>
         <div className="flex flex-wrap gap-3">
-          <button onClick={() => setShowCert(true)} disabled={completedMods === 0} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border disabled:opacity-30 disabled:cursor-not-allowed" style={{ borderColor: DT.blue, color: DT.blue }}>
+          <button onClick={() => setShowCert(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border hover:opacity-80 transition-opacity" style={{ borderColor: DT.blue, color: DT.blue }}>
             <Award size={16} /> Generate Certificate
           </button>
           <button onClick={() => {
@@ -4852,7 +4852,7 @@ function ProfileScreen({ profile, progress, badges, terminal, onUpdateProfile, o
         )}
       </div>
 
-      <div className="text-center text-[#71717A] text-xs">SecOps Academy — Built by Fractal AI Security Team. A free, open community platform for learning DevSecOps from zero to interview-ready.</div>
+      <div className="text-center text-[#71717A] text-xs">SecOps Academy — Built by SecOps Academy. A free, open community platform for learning DevSecOps from zero to interview-ready.</div>
     </div>
   );
 }
