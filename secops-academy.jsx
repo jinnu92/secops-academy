@@ -4246,7 +4246,7 @@ function DashboardScreen({ profile, progress, badges, terminal, onNavigate, onOp
             {[
               { step: '1', text: 'Start with Path 1: DevSecOps Fundamentals', done: completedMods > 0 },
               { step: '2', text: 'Complete all 6 modules to unlock Security Scanning', done: completedMods >= 6 },
-              { step: '3', text: 'Practice commands in the Terminal simulator', done: (terminal.masteredCommands || []).length > 0 },
+              { step: '3', text: 'Master 10+ commands in the Terminal simulator', done: (terminal.masteredCommands || []).length >= 10 },
               { step: '4', text: 'Use the Intel tab as your cheat sheet', done: false },
               { step: '5', text: 'Try the Interview Prep path (always unlocked!)', done: false },
             ].map((item, i) => (
@@ -4443,7 +4443,8 @@ function TerminalScreen({ profile, terminal, onMasterCommand, onCompleteChalleng
       newHist.push({ type: 'output', text: `Callsign: ${profile.callsign || 'Not set'}\nRank: ${rank.icon} ${rank.name}\nXP: ${profile.totalXP}\nStreak: ${profile.streak} days` });
     } else if (TERMINAL_COMMANDS[trimmed]) {
       newHist.push({ type: 'output', text: TERMINAL_COMMANDS[trimmed] });
-      if (!mastered.includes(trimmed)) onMasterCommand(trimmed);
+      const META_COMMANDS = ['help', 'clear', 'whoami'];
+      if (!mastered.includes(trimmed) && !META_COMMANDS.includes(trimmed)) onMasterCommand(trimmed);
     } else {
       newHist.push({ type: 'error', text: 'Command not recognized. Type "help" for available commands.' });
     }
@@ -4476,7 +4477,7 @@ function TerminalScreen({ profile, terminal, onMasterCommand, onCompleteChalleng
       <div className="flex items-center gap-3 px-4 py-2 bg-[#18181B] border-b border-[#27272A]">
         <button onClick={() => { setMode('free'); setHistory([{ type: 'system', text: 'Free practice mode. Type any command.' }]); }} className={`px-3 py-1 rounded text-xs border ${mode === 'free' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#27272A] text-[#71717A]'}`}>Free Practice</button>
         <button onClick={() => { setMode('challenge'); setHistory([{ type: 'system', text: 'Challenge mode. Complete objectives to earn XP.' }]); setCurrentChallenge(0); }} className={`px-3 py-1 rounded text-xs border ${mode === 'challenge' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#27272A] text-[#71717A]'}`}>Challenges</button>
-        <span className="ml-auto text-[#71717A] text-xs">Commands mastered: {mastered.length}/{Object.keys(TERMINAL_COMMANDS).length - 2}</span>
+        <span className="ml-auto text-[#71717A] text-xs">Commands mastered: {mastered.length}/{Object.keys(TERMINAL_COMMANDS).length - 3}</span>
       </div>
       {mode === 'challenge' && challenge && (
         <div className="px-4 py-2 bg-[rgba(245,158,11,0.05)] border-b border-[#27272A] flex items-center justify-between">
