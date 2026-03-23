@@ -91,12 +91,91 @@ const MODULES = {
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'The Evolution', content: 'Waterfall → Agile → DevOps → DevSecOps. Each solved a problem but security kept being an afterthought. DevSecOps makes security a first-class citizen embedded into every stage of the software development lifecycle.' },
-        { heading: 'Shift Left', content: '"Shift Left" means moving security testing earlier in the development lifecycle. Finding a bug in design costs 1x, in development 6x, in testing 15x, in production 100x. The earlier you find and fix security issues, the cheaper and easier they are to address.', highlight: true },
-        { heading: 'Three Pillars', content: 'People (security champions, shared responsibility), Process (automated gates, blameless postmortems), Technology (scanning tools, policy-as-code). All three must work together — you cannot buy your way to security with tools alone.' },
-        { heading: 'DevSecOps Lifecycle', content: 'Plan → Code → Build → Test → Release → Deploy → Operate → Monitor. Security touchpoints exist at every single stage. Planning includes threat modeling. Coding includes IDE security plugins. Building includes SAST/SCA. Testing includes DAST. And so on.' },
-        { heading: 'Why This Matters', content: 'Culture change is the hardest part. Tools are easy to install; getting developers to care about security is the real challenge. DevSecOps succeeds when security becomes everyone\'s job, not just the security team\'s.', callout: true },
-        { heading: 'Real-World Example', content: 'The Equifax breach (2017) exposed 147 million records because a known vulnerability in Apache Struts went unpatched for months. An automated DevSecOps pipeline with SCA scanning would have flagged this dependency as vulnerable before deployment.', breach: true },
+        { heading: 'The Evolution', blocks: [
+          { type: 'text', content: 'Software development has evolved through four major eras. Each solved a real problem, but security kept getting left behind — until DevSecOps.' },
+          { type: 'timeline', items: [
+            { label: 'Waterfall', year: '1970s', desc: 'Sequential phases. Security was a final gate before release — found too late, expensive to fix.' },
+            { label: 'Agile', year: '2001', desc: 'Iterative development. Faster releases, but security reviews couldn\'t keep pace with 2-week sprints.' },
+            { label: 'DevOps', year: '2009', desc: 'Dev + Ops united. Automated deployments, but security was still a separate team called in at the end.' },
+            { label: 'DevSecOps', year: '2012+', desc: 'Security embedded into every stage. Automated scanning, shared responsibility, no more "security as a bottleneck."' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'What is DevSecOps?', content: 'DevSecOps = Development + Security + Operations. It means making security a first-class citizen in every stage of the software lifecycle — not something bolted on at the end.' },
+        ]},
+        { heading: 'Shift Left', blocks: [
+          { type: 'text', content: '"Shift Left" is the most important concept in DevSecOps. It means moving security testing earlier in the development lifecycle — from production all the way back to design and coding.' },
+          { type: 'cost-chart', items: [
+            { stage: 'Design', multiplier: 1, color: '#22C55E' },
+            { stage: 'Development', multiplier: 6, color: '#3B82F6' },
+            { stage: 'Testing', multiplier: 15, color: '#F59E0B' },
+            { stage: 'Production', multiplier: 100, color: '#EF4444' },
+          ]},
+          { type: 'text', content: 'A vulnerability found during design costs 1x to fix. The same vulnerability found in production costs 100x — because it now involves incident response, emergency patches, testing, deployment, potential downtime, customer impact, and reputation damage.' },
+          { type: 'callout', variant: 'tip', content: 'The goal isn\'t to eliminate all bugs in design. It\'s to catch as many as possible as early as possible using automated tools at every stage.' },
+        ]},
+        { heading: 'The Three Pillars', blocks: [
+          { type: 'text', content: 'DevSecOps stands on three pillars. All three must work together — you cannot buy your way to security with tools alone.' },
+          { type: 'comparison', items: [
+            { title: 'People', color: '#3B82F6', points: ['Security Champions in each team', 'Shared responsibility for security', 'Blameless culture — learn from incidents', 'Regular security training and awareness'] },
+            { title: 'Process', color: '#A78BFA', points: ['Automated security gates in CI/CD', 'Severity-based SLAs for fixing vulns', 'Blameless postmortems after incidents', 'Regular dependency update cycles'] },
+            { title: 'Technology', color: '#22C55E', points: ['SAST, DAST, SCA scanning tools', 'Secrets detection in pre-commit hooks', 'Container image scanning', 'Policy-as-Code enforcement'] },
+          ]},
+        ]},
+        { heading: 'DevSecOps Lifecycle', blocks: [
+          { type: 'text', content: 'Security touchpoints exist at every stage of the software lifecycle. Here\'s what security looks like at each stage:' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Plan', note: 'Threat modeling' },
+            { label: 'Code', note: 'IDE plugins, linting' },
+            { label: 'Build', note: 'SAST, SCA scanning' },
+            { label: 'Test', note: 'DAST, pen testing' },
+            { label: 'Release', note: 'Sign & verify' },
+            { label: 'Deploy', note: 'IaC scanning' },
+            { label: 'Operate', note: 'Runtime security' },
+            { label: 'Monitor', note: 'SIEM, alerts' },
+          ]},
+          { type: 'callout', variant: 'key-concept', content: 'The key insight: security is not a stage — it\'s a continuous activity that happens at every stage. DevSecOps pipelines automate these checks so developers get instant feedback.' },
+        ]},
+        { heading: 'Before vs After DevSecOps', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Without DevSecOps', color: '#EF4444', points: [
+              'Security team reviews code manually at the end',
+              'Weeks of delay before release approval',
+              'Developers and security in adversarial relationship',
+              'Vulnerabilities found in production (expensive)',
+              'No visibility into security posture',
+            ]},
+            { title: 'With DevSecOps', color: '#22C55E', points: [
+              'Automated scanning in every pull request',
+              'Fast feedback in seconds to minutes',
+              'Shared responsibility, collaborative culture',
+              'Vulnerabilities caught in development (cheap)',
+              'Real-time dashboard of security metrics',
+            ]},
+          ]},
+        ]},
+        { heading: 'Why This Matters', blocks: [
+          { type: 'callout', variant: 'warning', content: 'Culture change is the hardest part. Tools are easy to install. Getting an entire development team to care about security — that\'s the real challenge. DevSecOps succeeds when security becomes everyone\'s job, not just the security team\'s.' },
+          { type: 'text', content: 'The good news: modern DevSecOps tools are designed to be developer-friendly. They integrate into the tools developers already use (IDEs, Git, CI/CD) and provide fast, actionable feedback rather than lengthy security reports.' },
+        ]},
+        { heading: 'Real-World Example', blocks: [
+          { type: 'callout', variant: 'example', title: 'Equifax Breach (2017) — $575 Million', content: '147 million records exposed because a known vulnerability in Apache Struts (CVE-2017-5638) went unpatched for months. The patch was available. The vulnerability was public. But there was no automated process to detect and remediate it.' },
+          { type: 'steps', steps: [
+            { label: 'March 2017: Vulnerability disclosed', detail: 'Apache Struts CVE-2017-5638 published with a severity score of 10.0 (maximum).' },
+            { label: 'Months pass — no patch applied', detail: 'Equifax had no automated dependency scanning. The vulnerable component went unnoticed.' },
+            { label: 'May-July 2017: Attackers exploit', detail: 'Attackers used the known vulnerability to access 147 million customer records.' },
+            { label: 'The DevSecOps solution', detail: 'An SCA tool (like Trivy or Grype) in the CI/CD pipeline would have flagged this dependency as critically vulnerable within hours of the CVE being published.' },
+          ]},
+        ]},
+        { heading: 'Key Terms to Remember', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'DevSecOps', definition: 'Development + Security + Operations — embedding security into every stage of the software lifecycle.' },
+            { term: 'Shift Left', definition: 'Moving security testing earlier in development. Earlier detection = cheaper fixes.' },
+            { term: 'Security Champion', definition: 'A developer who advocates for security within their feature team, bridging dev and security.' },
+            { term: 'SAST', definition: 'Static Application Security Testing — analyzes source code for vulnerabilities without running it.' },
+            { term: 'SCA', definition: 'Software Composition Analysis — checks third-party dependencies for known CVEs.' },
+            { term: 'DAST', definition: 'Dynamic Application Security Testing — tests the running application for vulnerabilities.' },
+            { term: 'CVE', definition: 'Common Vulnerabilities and Exposures — a standardized ID for publicly known security vulnerabilities.' },
+          ]},
+        ]},
       ],
     },
     simulation: null,
@@ -1514,6 +1593,180 @@ const LABS_LIST = [
 ];
 
 // ============================================================================
+// DESIGN TOKENS
+// ============================================================================
+const DT = {
+  bg: '#09090B', surface: '#18181B', surfaceRaised: '#27272A',
+  border: '#27272A', borderSubtle: '#3F3F46',
+  textPrimary: '#FAFAFA', textSecondary: '#A1A1AA', textTertiary: '#71717A',
+  blue: '#3B82F6', blueMuted: 'rgba(59,130,246,0.1)',
+  purple: '#A78BFA', purpleMuted: 'rgba(167,139,250,0.1)',
+  amber: '#F59E0B', amberMuted: 'rgba(245,158,11,0.1)',
+  success: '#22C55E', successMuted: 'rgba(34,197,94,0.1)',
+  error: '#EF4444', errorMuted: 'rgba(239,68,68,0.1)',
+  termGreen: '#4ADE80', termBg: '#0C0C0C',
+};
+
+const CALLOUT_VARIANTS = {
+  'key-concept': { color: DT.purple, bg: DT.purpleMuted, icon: Brain, label: 'Key Concept' },
+  'tip': { color: DT.success, bg: DT.successMuted, icon: Zap, label: 'Tip' },
+  'warning': { color: DT.amber, bg: DT.amberMuted, icon: AlertTriangle, label: 'Important' },
+  'example': { color: DT.blue, bg: DT.blueMuted, icon: BookOpen, label: 'Real-World Example' },
+};
+
+// ============================================================================
+// RICH CONTENT BLOCK RENDERERS
+// ============================================================================
+function TextBlock({ content }) {
+  return <p className="text-[#A1A1AA] text-[15px] leading-[1.7]">{content}</p>;
+}
+
+function CalloutBlock({ variant = 'tip', title, content }) {
+  const v = CALLOUT_VARIANTS[variant] || CALLOUT_VARIANTS.tip;
+  const Icon = v.icon;
+  return (
+    <div className="rounded-xl p-5 flex gap-4" style={{ background: v.bg, borderLeft: `3px solid ${v.color}` }}>
+      <Icon size={20} style={{ color: v.color, flexShrink: 0, marginTop: 2 }} />
+      <div>
+        <div className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: v.color }}>{title || v.label}</div>
+        <div className="text-[#FAFAFA] text-sm leading-relaxed">{content}</div>
+      </div>
+    </div>
+  );
+}
+
+function TimelineBlock({ items }) {
+  return (
+    <div className="relative flex flex-col gap-0">
+      {items.map((item, i) => (
+        <div key={i} className="flex gap-4 relative pb-6">
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border-2 shrink-0" style={{ borderColor: DT.blue, color: DT.blue, background: DT.blueMuted }}>
+              {item.year?.slice(-2) || (i + 1)}
+            </div>
+            {i < items.length - 1 && <div className="w-0.5 flex-1 mt-1" style={{ background: DT.border }} />}
+          </div>
+          <div className="pt-1.5 pb-2">
+            <div className="text-[#FAFAFA] font-semibold text-sm">{item.label} {item.year && <span className="text-[#71717A] font-normal text-xs ml-1">({item.year})</span>}</div>
+            <div className="text-[#A1A1AA] text-sm mt-1 leading-relaxed">{item.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CostChartBlock({ items }) {
+  const max = Math.max(...items.map(i => i.multiplier));
+  return (
+    <div className="rounded-xl p-5" style={{ background: DT.surface }}>
+      <div className="text-xs font-semibold uppercase tracking-wider text-[#71717A] mb-4">Cost of Fixing Bugs</div>
+      <div className="space-y-3">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div className="w-24 text-sm text-[#A1A1AA] shrink-0">{item.stage}</div>
+            <div className="flex-1 h-7 rounded-md overflow-hidden" style={{ background: DT.surfaceRaised }}>
+              <div className="h-full rounded-md flex items-center px-3 transition-all" style={{ width: `${Math.max((Math.log10(item.multiplier + 1) / Math.log10(max + 1)) * 100, 12)}%`, background: item.color + '22', borderLeft: `3px solid ${item.color}` }}>
+                <span className="text-xs font-bold" style={{ color: item.color }}>{item.multiplier}x</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ComparisonBlock({ items }) {
+  return (
+    <div className={`grid gap-4 ${items.length === 3 ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
+      {items.map((item, i) => (
+        <div key={i} className="rounded-xl p-5" style={{ background: DT.surface, borderTop: `3px solid ${item.color}` }}>
+          <div className="font-semibold text-sm mb-3" style={{ color: item.color }}>{item.title}</div>
+          <ul className="space-y-2">
+            {item.points.map((p, j) => (
+              <li key={j} className="flex gap-2 text-sm text-[#A1A1AA] leading-relaxed">
+                <CheckCircle size={14} className="shrink-0 mt-1" style={{ color: item.color }} />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DiagramBlock({ nodes }) {
+  return (
+    <div className="rounded-xl p-5 overflow-x-auto" style={{ background: DT.surface }}>
+      <div className="flex items-start gap-1 min-w-max">
+        {nodes.map((node, i) => (
+          <React.Fragment key={i}>
+            <div className="flex flex-col items-center w-20">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: DT.blueMuted, color: DT.blue, border: `1px solid ${DT.border}` }}>
+                {node.label.slice(0, 3)}
+              </div>
+              <div className="text-xs font-semibold text-[#FAFAFA] mt-2 text-center">{node.label}</div>
+              {node.note && <div className="text-[10px] text-[#71717A] mt-0.5 text-center leading-tight">{node.note}</div>}
+            </div>
+            {i < nodes.length - 1 && <ArrowRight size={14} className="mt-4 shrink-0" style={{ color: DT.borderSubtle }} />}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StepsBlock({ steps }) {
+  return (
+    <div className="space-y-0">
+      {steps.map((step, i) => (
+        <div key={i} className="flex gap-4 relative pb-5">
+          <div className="flex flex-col items-center">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: DT.blueMuted, color: DT.blue, border: `1px solid ${DT.border}` }}>
+              {i + 1}
+            </div>
+            {i < steps.length - 1 && <div className="w-0.5 flex-1 mt-1" style={{ background: DT.border }} />}
+          </div>
+          <div className="pt-1">
+            <div className="text-[#FAFAFA] font-semibold text-sm">{step.label}</div>
+            {step.detail && <div className="text-[#A1A1AA] text-sm mt-1 leading-relaxed">{step.detail}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function KeytermsBlock({ terms }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {terms.map((t, i) => (
+        <div key={i} className="rounded-lg p-4" style={{ background: DT.surface }}>
+          <div className="font-mono text-sm font-semibold mb-1" style={{ color: DT.blue }}>{t.term}</div>
+          <div className="text-sm text-[#A1A1AA] leading-relaxed">{t.definition}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ContentBlock({ block }) {
+  switch (block.type) {
+    case 'text': return <TextBlock content={block.content} />;
+    case 'callout': return <CalloutBlock variant={block.variant} title={block.title} content={block.content} />;
+    case 'timeline': return <TimelineBlock items={block.items} />;
+    case 'cost-chart': return <CostChartBlock items={block.items} />;
+    case 'comparison': return <ComparisonBlock items={block.items} />;
+    case 'diagram': return <DiagramBlock nodes={block.nodes} />;
+    case 'steps': return <StepsBlock steps={block.steps} />;
+    case 'keyterms': return <KeytermsBlock terms={block.terms} />;
+    default: return <TextBlock content={block.content || ''} />;
+  }
+}
+
+// ============================================================================
 // STORAGE HELPERS
 // ============================================================================
 const STORAGE_DEFAULTS = {
@@ -1550,7 +1803,7 @@ function Toast({ message, onDone }) {
     return () => clearTimeout(t);
   }, [onDone]);
   return (
-    <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-lg border border-[#00ff41] bg-[#0d1117] text-[#00ff41] font-mono text-sm shadow-lg animate-pulse" style={{ boxShadow: '0 0 20px rgba(0,255,65,0.2)' }}>
+    <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-lg" style={{ background: DT.surface, border: `1px solid ${DT.blue}`, color: DT.blue, boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
       {message}
     </div>
   );
@@ -1848,35 +2101,46 @@ function ModuleView({ moduleId, progress, onUpdateProgress, onBack }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-[#1a1a2e] bg-[#0d1117]">
-        <button onClick={onBack} className="text-[#8b949e] hover:text-[#00ff41]"><ChevronRight size={16} className="transform rotate-180" /></button>
+      <div className="flex items-center gap-3 px-6 py-4 border-b" style={{ borderColor: DT.border, background: DT.surface }}>
+        <button onClick={onBack} className="hover:opacity-80 transition-opacity" style={{ color: DT.textTertiary }}><ChevronRight size={16} className="transform rotate-180" /></button>
         <div>
-          <div className="text-[#00ff41] font-mono text-sm font-bold">{mod.id}: {mod.title}</div>
-          <div className="text-[#8b949e] font-mono text-xs">{mod.baseXP} XP</div>
+          <div className="text-sm font-semibold" style={{ color: DT.textPrimary }}>{mod.id}: {mod.title}</div>
+          <div className="text-xs mt-0.5" style={{ color: DT.textTertiary }}>{mod.baseXP} XP</div>
         </div>
-        <div className="ml-auto flex gap-1">
-          {mp.simulationComplete && <span className="text-xs px-2 py-0.5 rounded bg-[rgba(0,255,65,0.1)] text-[#00ff41]">Sim ✓</span>}
-          {mp.verified && <span className="text-xs px-2 py-0.5 rounded bg-[rgba(0,212,255,0.1)] text-[#00d4ff]">Verified ✓</span>}
-          {(mp.quizBestScore || 0) >= 3 && <span className="text-xs px-2 py-0.5 rounded bg-[rgba(255,184,0,0.1)] text-[#ffb800]">Quiz {mp.quizBestScore}/5</span>}
+        <div className="ml-auto flex gap-2">
+          {mp.simulationComplete && <span className="text-xs px-2 py-0.5 rounded-md font-medium" style={{ background: DT.successMuted, color: DT.success }}>Sim ✓</span>}
+          {mp.verified && <span className="text-xs px-2 py-0.5 rounded-md font-medium" style={{ background: DT.blueMuted, color: DT.blue }}>Verified ✓</span>}
+          {(mp.quizBestScore || 0) >= 3 && <span className="text-xs px-2 py-0.5 rounded-md font-medium" style={{ background: DT.amberMuted, color: DT.amber }}>Quiz {mp.quizBestScore}/5</span>}
         </div>
       </div>
-      <div className="flex border-b border-[#1a1a2e] bg-[#0a0a0f]">
+      <div className="flex border-b px-2" style={{ borderColor: DT.border, background: DT.bg }}>
         {tabs.map(t => {
           const Icon = tabIcons[t];
           return (
-            <button key={t} onClick={() => setActiveTab(t)} className={`flex items-center gap-1.5 px-4 py-2 font-mono text-xs border-b-2 transition-colors ${activeTab === t ? 'border-[#00ff41] text-[#00ff41]' : 'border-transparent text-[#8b949e] hover:text-[#c9d1d9]'}`}>
+            <button key={t} onClick={() => setActiveTab(t)} className={`flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border-b-2 transition-colors`} style={activeTab === t ? { borderColor: DT.blue, color: DT.blue } : { borderColor: 'transparent', color: DT.textTertiary }}>
               <Icon size={14} /> {tabLabels[t]}
             </button>
           );
         })}
       </div>
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-8">
         {activeTab === 'learn' && (
-          <div className="max-w-3xl space-y-6">
+          <div className="max-w-[680px] mx-auto space-y-10">
             {mod.theory.sections.map((s, i) => (
-              <div key={i} className={`${s.highlight ? 'border-l-2 border-[#00ff41] pl-4' : ''}`}>
-                <h3 className="text-[#00ff41] font-mono font-bold text-sm uppercase tracking-wider mb-2">{s.heading}</h3>
-                <div className="text-[#c9d1d9] font-mono text-sm leading-relaxed whitespace-pre-wrap">{s.content}</div>
+              <div key={i}>
+                <div className="flex items-baseline gap-3 mb-4 border-b pb-3" style={{ borderColor: DT.border }}>
+                  <span className="text-xs font-semibold" style={{ color: DT.textTertiary }}>{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="text-base font-semibold" style={{ color: DT.textPrimary, letterSpacing: '-0.01em' }}>{s.heading}</h3>
+                </div>
+                {s.blocks ? (
+                  <div className="space-y-5">
+                    {s.blocks.map((block, j) => <ContentBlock key={j} block={block} />)}
+                  </div>
+                ) : (
+                  <div className={`${s.highlight ? 'rounded-xl p-5' : ''}`} style={s.highlight ? { background: DT.blueMuted, borderLeft: `3px solid ${DT.blue}` } : s.breach ? { background: DT.errorMuted, borderLeft: `3px solid ${DT.error}`, borderRadius: 12, padding: 20 } : s.callout ? { background: DT.amberMuted, borderLeft: `3px solid ${DT.amber}`, borderRadius: 12, padding: 20 } : {}}>
+                    <p className="text-[15px] leading-[1.7]" style={{ color: s.highlight || s.breach || s.callout ? DT.textPrimary : DT.textSecondary }}>{s.content}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -2715,8 +2979,8 @@ export default function SecOpsAcademy() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <div className="text-[#00ff41] font-mono text-lg animate-pulse">Initializing SecOps Academy...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: DT.bg }}>
+        <div className="text-lg font-medium animate-pulse" style={{ color: DT.blue }}>Initializing SecOps Academy...</div>
       </div>
     );
   }
@@ -2731,28 +2995,28 @@ export default function SecOpsAcademy() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-[#c9d1d9] flex flex-col" style={{ fontFamily: "'Fira Code', 'Cascadia Code', 'JetBrains Mono', 'Courier New', monospace" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: DT.bg, color: DT.textSecondary }}>
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
 
       {/* NAV */}
-      <nav className="bg-[#0d1117] border-b border-[#1a1a2e] px-4 py-2 flex items-center gap-6 sticky top-0 z-40" style={{ boxShadow: '0 2px 10px rgba(0,255,65,0.05)' }}>
-        <div className="text-[#00ff41] font-mono font-bold text-sm flex items-center gap-2">
-          <Shield size={16} /> SecOps Academy
+      <nav className="border-b px-6 py-3 flex items-center gap-8 sticky top-0 z-40 backdrop-blur-md" style={{ background: DT.surface + 'ee', borderColor: DT.border }}>
+        <div className="font-semibold text-sm flex items-center gap-2" style={{ color: DT.textPrimary }}>
+          <Shield size={18} style={{ color: DT.blue }} /> SecOps Academy
         </div>
         <div className="flex gap-1 flex-1 justify-center">
           {NAV_ITEMS.map(item => {
             const Icon = item.icon;
             const active = screen === item.id && !activeModule;
             return (
-              <button key={item.id} onClick={() => { setScreen(item.id); setActiveModule(null); setFocusPath(null); }} className={`flex items-center gap-1.5 px-3 py-1.5 rounded font-mono text-xs transition-colors ${active ? 'bg-[rgba(0,255,65,0.1)] text-[#00ff41]' : 'text-[#8b949e] hover:text-[#c9d1d9]'}`}>
-                <Icon size={14} /> {item.label}
+              <button key={item.id} onClick={() => { setScreen(item.id); setActiveModule(null); setFocusPath(null); }} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all ${active ? '' : 'hover:opacity-80'}`} style={active ? { background: DT.blueMuted, color: DT.blue } : { color: DT.textTertiary }}>
+                <Icon size={15} /> {item.label}
               </button>
             );
           })}
         </div>
-        <div className="flex items-center gap-2 text-[#8b949e] font-mono text-xs">
-          <span className="text-[#00d4ff]">{profile.totalXP} XP</span>
-          <span>{getRank(profile.totalXP).icon}</span>
+        <div className="flex items-center gap-3 text-xs font-medium">
+          <span style={{ color: DT.purple }}>{profile.totalXP} XP</span>
+          <span className="text-sm">{getRank(profile.totalXP).icon}</span>
         </div>
       </nav>
 
