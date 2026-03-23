@@ -16,3 +16,10 @@ body {
 code, .font-mono, pre, .terminal-text {
   font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 }
+
+@media print {
+  body { background: white !important; color: black !important; }
+  nav, .no-print { display: none !important; }
+  .print-expand { display: block !important; }
+  * { color: black !important; background: white !important; border-color: #ddd !important; }
+}

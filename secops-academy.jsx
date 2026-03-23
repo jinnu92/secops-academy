@@ -4,7 +4,8 @@ import {
   Lock, Unlock, Star, Flame, User, Search, ExternalLink, Play, Award, Target,
   Zap, Database, Server, GitBranch, FileCode, AlertTriangle, CheckCircle,
   XCircle, BarChart3, Clock, ArrowRight, RefreshCw, Menu, X, Eye, EyeOff,
-  Folder, File, Hash, Brain, Map, Layers
+  Folder, File, Hash, Brain, Map, Layers, Printer, Share2, StickyNote, Download,
+  Sun, Moon, Upload
 } from 'lucide-react';
 
 // ============================================================================
@@ -57,22 +58,22 @@ const BADGES = [
 const PATHS = [
   {
     id: 1, name: 'DevSecOps Fundamentals', icon: '🛡️', difficulty: 'Beginner',
-    color: '#00ff41', desc: 'Build your foundation — Docker, Git, CI/CD concepts, and the security mindset.',
+    color: '#3B82F6', desc: 'Build your foundation — Docker, Git, CI/CD concepts, and the security mindset.',
     moduleIds: ['1.1','1.2','1.3','1.4','1.5','1.6'], prerequisite: null,
   },
   {
     id: 2, name: 'Security Scanning & Testing', icon: '🎯', difficulty: 'Beginner-Intermediate',
-    color: '#00d4ff', desc: 'Master the tools — secrets detection, SAST, SCA, container scanning, DAST, IaC.',
+    color: '#A78BFA', desc: 'Master the tools — secrets detection, SAST, SCA, container scanning, DAST, IaC.',
     moduleIds: ['2.1','2.2','2.3','2.4','2.5','2.6'], prerequisite: 1,
   },
   {
     id: 3, name: 'CI/CD Pipeline Security', icon: '🔀', difficulty: 'Intermediate',
-    color: '#00d4ff', desc: 'Build secure pipelines — Jenkins, GitLab CI, GitHub Actions, full pipeline design.',
+    color: '#A78BFA', desc: 'Build secure pipelines — Jenkins, GitLab CI, GitHub Actions, full pipeline design.',
     moduleIds: ['3.1','3.2','3.3','3.4','3.5'], prerequisite: 2,
   },
   {
     id: 4, name: 'Advanced DevSecOps', icon: '⚡', difficulty: 'Advanced',
-    color: '#ffb800', desc: 'Go deep — Vault, Kubernetes, OPA, SonarQube, supply chain, runtime security.',
+    color: '#F59E0B', desc: 'Go deep — Vault, Kubernetes, OPA, SonarQube, supply chain, runtime security.',
     moduleIds: ['4.1','4.2','4.3','4.4','4.5','4.6'], prerequisite: 3,
   },
   {
@@ -87,7 +88,7 @@ const PATHS = [
 // ============================================================================
 const MODULES = {
   '1.1': {
-    id: '1.1', pathId: 1, title: 'What is DevSecOps?', baseXP: 80,
+    id: '1.1', pathId: 1, title: 'What is DevSecOps?', baseXP: 80, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
@@ -190,16 +191,59 @@ const MODULES = {
     ],
   },
   '1.2': {
-    id: '1.2', pathId: 1, title: 'Understanding CI/CD Pipelines', baseXP: 80,
+    id: '1.2', pathId: 1, title: 'Understanding CI/CD Pipelines', baseXP: 80, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'Continuous Integration (CI)', content: 'Developers merge code to the main branch frequently. Each merge triggers automated build + tests. This catches integration issues early before they compound. The key rule: never leave the build broken.' },
-        { heading: 'Continuous Delivery vs Deployment', content: 'Continuous Delivery: code is always in a deployable state, but deployment to production requires manual approval. Continuous Deployment: every passing build auto-deploys to production. Most teams start with Delivery and graduate to Deployment.', highlight: true },
-        { heading: 'Pipeline Stages', content: 'Source (git push triggers) → Build (compile, Docker build) → Test (unit, integration) → Security Scan (this is where DevSecOps lives!) → Deploy (staging then production). Each stage is a quality gate.' },
-        { heading: 'Pipeline as Code', content: 'Defining your pipeline in a file (Jenkinsfile, .gitlab-ci.yml, workflow YAML) that\'s version-controlled alongside your app code. This is critical — your pipeline IS code and should be reviewed like code.', highlight: true },
-        { heading: 'Artifacts', content: 'Files produced by one stage and consumed by another — JARs, Docker images, test reports, security scan results. Artifacts make pipelines reproducible and auditable.' },
-        { heading: 'Popular Tools', content: 'Jenkins (self-hosted, most flexible), GitLab CI (built-in if using GitLab), GitHub Actions (built-in if using GitHub). Each has tradeoffs in flexibility, ease of use, and ecosystem.' },
+        { heading: 'Continuous Integration (CI)', blocks: [
+          { type: 'text', content: 'Developers merge code to the main branch frequently. Each merge triggers an automated build + tests. This catches integration issues early before they compound.' },
+          { type: 'callout', variant: 'key-concept', title: 'The Golden Rule of CI', content: 'Never leave the build broken. If a merge breaks the build, fixing it is the team\'s #1 priority. A broken build means no one can ship.' },
+        ]},
+        { heading: 'Continuous Delivery vs Deployment', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Continuous Delivery', color: '#3B82F6', points: ['Code is always in a deployable state', 'Deployment requires manual approval', 'Good for regulated industries', 'Team controls when releases happen'] },
+            { title: 'Continuous Deployment', color: '#22C55E', points: ['Every passing build auto-deploys to production', 'Fully automated — no human gates', 'Requires excellent test coverage', 'Fastest path from commit to customer'] },
+          ]},
+          { type: 'text', content: 'Most teams start with Continuous Delivery and graduate to Continuous Deployment as their test coverage and confidence grow.' },
+        ]},
+        { heading: 'Pipeline Stages', blocks: [
+          { type: 'text', content: 'A CI/CD pipeline is a series of automated stages. Each stage acts as a quality gate — if it fails, the pipeline stops and the team is notified.' },
+          { type: 'pipeline', stages: [
+            { label: 'Source', icon: '📥', desc: 'git push triggers', security: false },
+            { label: 'Build', icon: '🔨', desc: 'Compile, Docker build', security: false },
+            { label: 'Test', icon: '🧪', desc: 'Unit, integration', security: false },
+            { label: 'Scan', icon: '🔍', desc: 'SAST, SCA, secrets', security: true, tool: 'DevSecOps' },
+            { label: 'Stage', icon: '🎭', desc: 'Deploy to staging', security: false },
+            { label: 'DAST', icon: '🎯', desc: 'Dynamic testing', security: true, tool: 'ZAP' },
+            { label: 'Approve', icon: '✅', desc: 'Quality gate', security: true },
+            { label: 'Deploy', icon: '🚀', desc: 'Production', security: false },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Notice the green-highlighted stages — those are where DevSecOps adds security. Without them, the pipeline only checks functionality, not safety.' },
+        ]},
+        { heading: 'Pipeline as Code', blocks: [
+          { type: 'callout', variant: 'key-concept', title: 'Pipeline as Code', content: 'Your pipeline configuration lives in a file (Jenkinsfile, .gitlab-ci.yml, workflow YAML) that\'s version-controlled alongside your app code. Your pipeline IS code — it should be reviewed, tested, and secured like any other code.' },
+          { type: 'scan-output', tool: '.gitlab-ci.yml', title: 'Example Pipeline Config', findings: [
+            { type: 'header', text: 'stages:\\n  - build\\n  - test\\n  - security-scan\\n  - deploy' },
+            { type: 'header', text: '\\nsecurity-scan:\\n  stage: security-scan\\n  script:\\n    - gitleaks detect --report-format sarif\\n    - semgrep scan --config auto --sarif\\n    - trivy fs . --format sarif\\n  artifacts:\\n    reports:\\n      sast: gl-sast-report.json' },
+          ]},
+        ]},
+        { heading: 'Artifacts', blocks: [
+          { type: 'text', content: 'Artifacts are files produced by one stage and consumed by another — compiled binaries, Docker images, test reports, security scan results. Artifacts make pipelines reproducible and auditable.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Build', note: 'Produces Docker image' },
+            { label: 'Test', note: 'Produces test report' },
+            { label: 'Scan', note: 'Produces SARIF report' },
+            { label: 'Deploy', note: 'Uses Docker image' },
+            { label: 'Archive', note: 'Stores all reports' },
+          ]},
+        ]},
+        { heading: 'CI/CD Platforms Compared', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Jenkins', color: '#F59E0B', points: ['Self-hosted, most flexible', 'Jenkinsfile (Groovy)', 'Plugin ecosystem', 'Best for enterprise/custom'] },
+            { title: 'GitLab CI', color: '#A78BFA', points: ['Built into GitLab', '.gitlab-ci.yml (YAML)', 'Built-in security templates', 'Best for GitLab-native teams'] },
+            { title: 'GitHub Actions', color: '#3B82F6', points: ['Built into GitHub', '.github/workflows/*.yml', 'Huge marketplace', 'Best for open source'] },
+          ]},
+        ]},
       ],
     },
     simulation: null, execute: null, verify: null,
@@ -212,15 +256,80 @@ const MODULES = {
     ],
   },
   '1.3': {
-    id: '1.3', pathId: 1, title: 'Security Threats in Software Development', baseXP: 80,
+    id: '1.3', pathId: 1, title: 'Security Threats in Software Development', baseXP: 80, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'OWASP Top 10 (2021)', content: 'A01 Broken Access Control — A02 Cryptographic Failures — A03 Injection — A04 Insecure Design — A05 Security Misconfiguration — A06 Vulnerable Components — A07 Authentication Failures — A08 Software & Data Integrity Failures — A09 Security Logging Failures — A10 Server-Side Request Forgery (SSRF). These are the most critical web application security risks.', highlight: true },
-        { heading: 'Supply Chain Attacks', content: 'SolarWinds (2020): backdoor injected into build pipeline, 18,000 organizations affected including US government agencies. Log4Shell (2021): critical RCE in a logging library used by millions of Java apps. Codecov (2021): bash uploader modified to steal environment variables from CI systems.', breach: true },
-        { heading: 'Secrets Leakage', content: 'Uber 2016: AWS keys committed to GitHub, 57 million records exposed. Samsung 2022: source code and credentials leaked. A single committed secret can compromise entire infrastructure within minutes — bots scan GitHub in real-time.', breach: true },
-        { heading: 'Container Misconfigurations', content: 'Running as root, using the "latest" tag, exposed Docker socket, no resource limits, privileged mode enabled. These are the low-hanging fruit attackers check first when targeting containerized environments.' },
-        { heading: 'Why This Matters', content: 'Understanding threats is the foundation of defense. You can\'t protect against what you don\'t understand. DevSecOps tools are designed to catch these specific categories of vulnerabilities automatically.', callout: true },
+        { heading: 'OWASP Top 10 (2025)', blocks: [
+          { type: 'text', content: 'The OWASP Top 10 (2025 edition) is the most widely recognized list of critical web application security risks. Updated to reflect modern threats including AI and supply chain risks:' },
+          { type: 'severity-bars', title: 'OWASP Top 10:2025 — Ranked by Risk', items: [
+            { rank: 'A01', label: 'Broken Access Control', count: 94, color: '#EF4444' },
+            { rank: 'A02', label: 'Cryptographic Failures', count: 82, color: '#EF4444' },
+            { rank: 'A03', label: 'Injection (SQLi, XSS, SSTI)', count: 76, color: '#F97316' },
+            { rank: 'A04', label: 'Insecure Design', count: 70, color: '#F97316' },
+            { rank: 'A05', label: 'Security Misconfiguration', count: 64, color: '#F59E0B' },
+            { rank: 'A06', label: 'Vulnerable & Outdated Components', count: 60, color: '#F59E0B' },
+            { rank: 'A07', label: 'Identity & Authentication Failures', count: 52, color: '#3B82F6' },
+            { rank: 'A08', label: 'Software & Data Integrity Failures', count: 44, color: '#3B82F6' },
+            { rank: 'A09', label: 'Security Logging & Monitoring Failures', count: 38, color: '#A78BFA' },
+            { rank: 'A10', label: 'Server-Side Request Forgery (SSRF)', count: 30, color: '#A78BFA' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Focus on the top 3: Broken Access Control, Cryptographic Failures, and Injection. These account for the vast majority of real-world breaches. The 2025 update emphasizes supply chain risks (A06, A08) more heavily than previous editions.' },
+        ]},
+        { heading: 'Supply Chain Attacks', blocks: [
+          { type: 'text', content: 'Supply chain attacks target upstream dependencies and build tools. One compromised component can affect thousands of organizations downstream.' },
+          { type: 'attack-flow', steps: [
+            { type: 'attack', label: 'SolarWinds (2020)', detail: 'Attackers compromised the build pipeline and injected a backdoor into legitimate software updates. 18,000+ organizations received the malicious update, including US government agencies.' },
+            { type: 'attack', label: 'Log4Shell (2021)', detail: 'A critical RCE vulnerability (CVSS 10.0) in Apache Log4j, a logging library used by millions of Java applications. Exploitation was trivial — just send a crafted string.' },
+            { type: 'attack', label: 'Codecov (2021)', detail: 'Attackers modified the Codecov bash uploader script to steal environment variables (secrets, tokens) from CI systems of thousands of companies.' },
+            { type: 'defense', label: 'DevSecOps Defense', detail: 'SCA scanning (Trivy, Grype) detects known vulnerabilities in dependencies. SBOM generation provides full component inventory. Image signing verifies build integrity.' },
+          ]},
+        ]},
+        { heading: 'Secrets Leakage', blocks: [
+          { type: 'callout', variant: 'example', title: 'Uber Breach (2016) — $148M Settlement', content: 'A developer committed AWS access keys to a GitHub repository. Attackers used those keys to access an S3 bucket containing 57 million customer and driver records. The breach went undisclosed for over a year.' },
+          { type: 'scan-output', tool: 'gitleaks', title: 'What a Secrets Scan Looks Like', findings: [
+            { type: 'finding', severity: 'CRITICAL', text: 'AWS Access Key ID found', file: 'config.py:5' },
+            { type: 'finding', severity: 'HIGH', text: 'GitHub Personal Access Token', file: 'config.py:7' },
+            { type: 'finding', severity: 'HIGH', text: 'Stripe API Key (live)', file: '.env:3' },
+            { type: 'finding', severity: 'MEDIUM', text: 'Database password in plaintext', file: 'deployment.yaml:12' },
+            { type: 'summary', text: '4 secrets found in 3 files — Gitleaks would have caught all of these before commit.' },
+          ]},
+          { type: 'callout', variant: 'warning', content: 'Bots scan GitHub in real-time for leaked credentials. A committed AWS key can be exploited within minutes. Deleting the commit is NOT enough — the key must be revoked immediately.' },
+        ]},
+        { heading: 'Container Misconfigurations', blocks: [
+          { type: 'text', content: 'As a pentester, these are the first things I check when attacking containerized environments:' },
+          { type: 'comparison', items: [
+            { title: 'Insecure (What Attackers Love)', color: '#EF4444', points: [
+              'Running containers as root (UID 0)',
+              'Using "latest" tag (unpredictable)',
+              'Docker socket exposed to containers',
+              'No resource limits (CPU/memory)',
+              'Privileged mode enabled',
+            ]},
+            { title: 'Secure (What Stops Attackers)', color: '#22C55E', points: [
+              'Non-root user (UID 1000+)',
+              'Pinned image versions (nginx:1.25)',
+              'Docker socket never mounted',
+              'CPU and memory limits set',
+              'Capabilities dropped, read-only FS',
+            ]},
+          ]},
+          { type: 'scan-output', tool: 'hadolint', title: 'Dockerfile Lint Results', findings: [
+            { type: 'finding', severity: 'HIGH', text: 'DL3007: Using latest tag', file: 'Dockerfile:1' },
+            { type: 'finding', severity: 'HIGH', text: 'DL3002: Last USER should not be root', file: 'Dockerfile:5' },
+            { type: 'finding', severity: 'MEDIUM', text: 'DL3008: Pin versions in apt-get', file: 'Dockerfile:3' },
+            { type: 'summary', text: 'Hadolint catches these misconfigs automatically in CI.' },
+          ]},
+        ]},
+        { heading: 'Why This Matters', blocks: [
+          { type: 'callout', variant: 'key-concept', content: 'Understanding threats is the foundation of defense. As a DevSecOps engineer, you\'re not just running tools — you\'re thinking like an attacker to build defenses. Every tool in this course is designed to catch one of the threat categories above.' },
+          { type: 'keyterms', terms: [
+            { term: 'OWASP', definition: 'Open Web Application Security Project — produces the Top 10 and other security guidance.' },
+            { term: 'Supply Chain Attack', definition: 'Compromising an upstream dependency or build tool to affect all downstream consumers.' },
+            { term: 'CVE', definition: 'Common Vulnerabilities and Exposures — a unique ID for each publicly known vulnerability.' },
+            { term: 'CVSS', definition: 'Common Vulnerability Scoring System — rates severity from 0.0 (none) to 10.0 (critical).' },
+          ]},
+        ]},
       ],
     },
     simulation: null, execute: null, verify: null,
@@ -233,15 +342,70 @@ const MODULES = {
     ],
   },
   '1.4': {
-    id: '1.4', pathId: 1, title: 'Docker Fundamentals', baseXP: 80,
+    id: '1.4', pathId: 1, title: 'Docker Fundamentals', baseXP: 80, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Containers vs VMs', content: 'Containers share the host OS kernel (lighter, faster startup) but have weaker isolation than VMs. Docker provides process isolation using Linux namespaces (what a process can see) and cgroups (what a process can use).' },
-        { heading: 'Docker Architecture', content: 'Docker daemon (background service), Docker client (CLI you interact with), images (read-only templates built from Dockerfiles), containers (running instances of images), registries (Docker Hub, ECR, GCR — where images are stored and shared).', highlight: true },
-        { heading: 'Image Layers', content: 'Each Dockerfile instruction creates a layer. Layers are cached and reused. Order matters for build speed — put rarely-changing instructions (like installing OS packages) before frequently-changing ones (like copying your source code).' },
-        { heading: 'Base Image Security', content: 'python:3.12 (900MB, hundreds of packages, large attack surface) vs python:3.12-slim (150MB, minimal packages) vs python:3.12-alpine (50MB, musl libc, smallest attack surface). Smaller images = fewer vulnerabilities = easier to scan and secure.', highlight: true },
-        { heading: 'Key Security Basics', content: 'Use specific version tags (never "latest" in production). Run as non-root user. Don\'t store secrets in images. Use .dockerignore. Set resource limits (memory and CPU). These are the basics every developer should know.' },
+        { heading: 'Containers vs VMs', blocks: [
+          { type: 'text', content: 'Containers and virtual machines both provide isolation, but they work very differently:' },
+          { type: 'comparison', items: [
+            { title: 'Virtual Machines', color: '#F59E0B', points: ['Each VM runs a full OS (Linux, Windows)', 'Strong isolation — separate kernel per VM', 'Heavy — GBs of disk, minutes to start', 'Managed by hypervisor (VMware, Hyper-V)'] },
+            { title: 'Containers', color: '#3B82F6', points: ['Share the host OS kernel', 'Lighter isolation — namespaces + cgroups', 'Light — MBs of disk, seconds to start', 'Managed by container runtime (Docker)'] },
+          ]},
+          { type: 'callout', variant: 'key-concept', content: 'Docker uses Linux namespaces (what a process can see) and cgroups (what a process can use) to isolate containers. This is lighter than VMs but means a kernel vulnerability could affect all containers on the host.' },
+        ]},
+        { heading: 'Docker Architecture', blocks: [
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'CLI', note: 'docker commands' },
+            { label: 'Daemon', note: 'Background service' },
+            { label: 'Images', note: 'Read-only templates' },
+            { label: 'Containers', note: 'Running instances' },
+            { label: 'Registry', note: 'Docker Hub, ECR' },
+          ]},
+          { type: 'keyterms', terms: [
+            { term: 'Docker Image', definition: 'A read-only template containing your app code, dependencies, and OS. Built from a Dockerfile.' },
+            { term: 'Container', definition: 'A running instance of an image. You can have many containers from one image.' },
+            { term: 'Registry', definition: 'Where images are stored — Docker Hub (public), ECR/GCR (private cloud).' },
+            { term: 'Dockerfile', definition: 'A text file with instructions to build an image (FROM, RUN, COPY, CMD).' },
+          ]},
+        ]},
+        { heading: 'Image Layers & Caching', blocks: [
+          { type: 'text', content: 'Each Dockerfile instruction creates a layer. Docker caches layers and only rebuilds changed ones. This means the ORDER of instructions matters for build speed:' },
+          { type: 'steps', steps: [
+            { label: 'FROM python:3.12-slim', detail: 'Base layer — rarely changes, always cached.' },
+            { label: 'RUN apt-get install...', detail: 'OS dependencies — changes rarely, cache hit most builds.' },
+            { label: 'COPY requirements.txt && RUN pip install', detail: 'App dependencies — only rebuilds when requirements change.' },
+            { label: 'COPY . .', detail: 'Your source code — changes every build, so put it LAST.' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Put the least-changing instructions first. If you put COPY . . before RUN pip install, Docker will reinstall ALL dependencies every time you change any source file.' },
+        ]},
+        { heading: 'Base Image Security', blocks: [
+          { type: 'text', content: 'Your base image choice directly impacts security. Fewer packages = fewer vulnerabilities:' },
+          { type: 'severity-bars', title: 'Image Size vs Attack Surface', items: [
+            { rank: '🔴', label: 'python:3.12 (full)', count: 900, color: '#EF4444' },
+            { rank: '🟡', label: 'python:3.12-slim', count: 150, color: '#F59E0B' },
+            { rank: '🟢', label: 'python:3.12-alpine', count: 50, color: '#22C55E' },
+          ]},
+          { type: 'callout', variant: 'warning', content: 'The full python:3.12 image contains hundreds of packages you don\'t need — each one is a potential vulnerability. Always use -slim or -alpine for production.' },
+        ]},
+        { heading: 'Docker Security Checklist', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Do This', color: '#22C55E', points: [
+              'Pin specific version tags (nginx:1.25)',
+              'Run as non-root USER',
+              'Use .dockerignore for secrets',
+              'Set memory and CPU limits',
+              'Use multi-stage builds',
+            ]},
+            { title: 'Never Do This', color: '#EF4444', points: [
+              'Use :latest tag in production',
+              'Run containers as root',
+              'COPY secrets into images',
+              'Run without resource limits',
+              'Install unnecessary packages',
+            ]},
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -291,14 +455,71 @@ const MODULES = {
     ],
   },
   '1.5': {
-    id: '1.5', pathId: 1, title: 'Writing Secure Dockerfiles', baseXP: 80,
+    id: '1.5', pathId: 1, title: 'Writing Secure Dockerfiles', baseXP: 80, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Dockerfile Instructions', content: 'FROM (base image), RUN (execute command during build), COPY (add files from host), WORKDIR (set working directory), EXPOSE (document port), USER (set runtime user), CMD/ENTRYPOINT (default command when container starts).' },
-        { heading: 'Multi-Stage Builds', content: 'Use a large image to build your app (with compilers, dev tools), then copy only the compiled artifact into a tiny runtime image. This dramatically reduces image size and attack surface. A Go binary built in golang:1.22 can run in scratch (0 base packages).', highlight: true },
-        { heading: 'Security Best Practices', content: '(1) Pin specific base image versions. (2) Use slim/distroless images. (3) Create and switch to a non-root user. (4) Never COPY secrets or .env files. (5) Use .dockerignore. (6) Minimize RUN layers. (7) Add HEALTHCHECK. (8) Don\'t install unnecessary packages with --no-install-recommends.', highlight: true },
-        { heading: 'Bad vs Good Example', content: 'BAD: FROM ubuntu:latest, no USER directive, COPY . . (copies everything including .env), RUN chmod 777, no HEALTHCHECK.\nGOOD: FROM python:3.12-slim, RUN useradd -r appuser, COPY only needed files, USER appuser, HEALTHCHECK CMD curl -f http://localhost:5000/health.' },
+        { heading: 'Dockerfile Instructions', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'FROM', definition: 'Sets the base image. Always the first instruction. Pin a specific version.' },
+            { term: 'RUN', definition: 'Executes a command during build (install packages, compile code). Each RUN creates a layer.' },
+            { term: 'COPY', definition: 'Copies files from your machine into the image. Use .dockerignore to exclude secrets.' },
+            { term: 'WORKDIR', definition: 'Sets the working directory inside the container. Avoids using cd in RUN commands.' },
+            { term: 'USER', definition: 'Sets which user the container runs as. Always switch to a non-root user for security.' },
+            { term: 'EXPOSE', definition: 'Documents which port the container listens on. Does not actually open the port.' },
+            { term: 'CMD', definition: 'The default command when the container starts. Use JSON array format: ["python", "app.py"].' },
+            { term: 'HEALTHCHECK', definition: 'Tells Docker how to check if the container is healthy. Essential for orchestration.' },
+          ]},
+        ]},
+        { heading: 'Multi-Stage Builds', blocks: [
+          { type: 'text', content: 'Multi-stage builds let you use a large image for building and a tiny image for running. This dramatically reduces attack surface.' },
+          { type: 'scan-output', tool: 'Dockerfile', title: 'Multi-Stage Build Example', findings: [
+            { type: 'header', text: '# Stage 1: Build (large image with compilers)\\nFROM golang:1.22 AS builder\\nWORKDIR /app\\nCOPY . .\\nRUN go build -o myapp' },
+            { type: 'header', text: '\\n# Stage 2: Run (tiny image, just the binary)\\nFROM alpine:3.19\\nCOPY --from=builder /app/myapp /myapp\\nUSER 1000\\nCMD ["/myapp"]' },
+          ]},
+          { type: 'severity-bars', title: 'Image Size Comparison', items: [
+            { rank: '🔴', label: 'golang:1.22 (build image)', count: 850, color: '#EF4444' },
+            { rank: '🟢', label: 'alpine:3.19 (runtime image)', count: 8, color: '#22C55E' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'The final image is only 8MB with the compiled binary — 99% smaller than the build image. Fewer packages = fewer CVEs = smaller attack surface.' },
+        ]},
+        { heading: 'Security Best Practices', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Pin specific base image versions', detail: 'Use python:3.12-slim, never python:latest. The :latest tag is mutable and can change without warning.' },
+            { label: 'Use slim or distroless images', detail: 'Fewer installed packages = fewer vulnerabilities. Distroless images have no shell at all.' },
+            { label: 'Create and switch to non-root user', detail: 'RUN useradd -r appuser && USER appuser. If the container is compromised, the attacker gets limited permissions.' },
+            { label: 'Never COPY secrets into images', detail: 'Use .dockerignore to exclude .env, credentials, and private keys. Secrets should be injected at runtime via Vault or env vars.' },
+            { label: 'Add HEALTHCHECK', detail: 'HEALTHCHECK CMD curl -f http://localhost:5000/health || exit 1. Orchestrators use this to detect and restart unhealthy containers.' },
+            { label: 'Minimize layers and packages', detail: 'Combine RUN commands with && to reduce layers. Use --no-install-recommends to skip unnecessary packages.' },
+          ]},
+        ]},
+        { heading: 'Bad vs Good Dockerfile', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Insecure Dockerfile', color: '#EF4444', points: [
+              'FROM ubuntu:latest',
+              'RUN apt-get install -y everything',
+              'COPY . . (includes .env and secrets)',
+              'RUN chmod 777 /app',
+              'No USER directive (runs as root)',
+              'No HEALTHCHECK',
+            ]},
+            { title: 'Secure Dockerfile', color: '#22C55E', points: [
+              'FROM python:3.12-slim',
+              'RUN apt-get install --no-install-recommends',
+              'COPY only needed files, .dockerignore configured',
+              'RUN useradd -r appuser && USER appuser',
+              'Read-only filesystem where possible',
+              'HEALTHCHECK CMD curl -f /health',
+            ]},
+          ]},
+          { type: 'scan-output', tool: 'hadolint', title: 'What Hadolint Catches', findings: [
+            { type: 'finding', severity: 'HIGH', text: 'DL3007: Using latest tag — pin a specific version', file: 'Dockerfile:1' },
+            { type: 'finding', severity: 'HIGH', text: 'DL3002: Last USER should not be root', file: 'Dockerfile:8' },
+            { type: 'finding', severity: 'MEDIUM', text: 'DL3008: Pin versions in apt-get install', file: 'Dockerfile:3' },
+            { type: 'finding', severity: 'MEDIUM', text: 'DL3025: Use JSON notation for CMD', file: 'Dockerfile:10' },
+            { type: 'summary', text: 'Hadolint automatically catches these in CI — add it to your pipeline!' },
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -345,15 +566,62 @@ const MODULES = {
     ],
   },
   '1.6': {
-    id: '1.6', pathId: 1, title: 'Git Security Basics', baseXP: 80,
+    id: '1.6', pathId: 1, title: 'Git Security Basics', baseXP: 80, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Git and Security', content: 'Git remembers everything. Even "deleted" files exist in git history forever unless you rewrite history (which is complex and dangerous). This means secrets committed even once are permanently accessible to anyone who clones the repo.' },
-        { heading: '.gitignore', content: 'Your first line of defense. Always create a .gitignore BEFORE your first commit. Include: .env, *.key, *.pem, credentials.json, config/secrets.*, node_modules/, __pycache__/. If a file was already tracked, .gitignore alone won\'t help — you must also remove it from tracking.', highlight: true },
-        { heading: 'Git Hooks for Prevention', content: 'Git hooks are scripts that run automatically at specific points. Pre-commit hooks run before every commit and can block commits containing secrets. Tools like Gitleaks and pre-commit framework make this easy to set up.', highlight: true },
-        { heading: 'Branching Strategies', content: 'Protected branches (main/develop) should require pull request reviews, passing CI checks, and no direct pushes. Branch protection rules are your enforcement mechanism.' },
-        { heading: 'Why History Matters', content: 'Tools like TruffleHog scan the ENTIRE git history, not just current files. A secret committed 1000 commits ago and then deleted is still findable. This is why prevention (pre-commit hooks) is better than detection (scanning after the fact).', callout: true },
+        { heading: 'Git Remembers Everything', blocks: [
+          { type: 'callout', variant: 'warning', content: 'Git is a permanent record. Even "deleted" files exist in git history forever. A secret committed once is accessible to anyone who clones the repo — even if you delete it in the next commit.' },
+          { type: 'attack-flow', steps: [
+            { type: 'info', label: 'Developer commits AWS key', detail: 'Accidentally pushes config.py with AKIA... key to GitHub.' },
+            { type: 'info', label: 'Realizes mistake, deletes key', detail: 'Removes the key in the next commit. Thinks the problem is solved.' },
+            { type: 'attack', label: 'Attacker runs: git log --all -p', detail: 'The key is still visible in the old commit. Bots do this automatically on public repos within seconds.' },
+            { type: 'defense', label: 'Prevention: pre-commit hooks', detail: 'Gitleaks pre-commit hook would have blocked the commit BEFORE the key ever entered git history.' },
+          ]},
+        ]},
+        { heading: '.gitignore — Your First Defense', blocks: [
+          { type: 'text', content: 'Always create a .gitignore BEFORE your first commit. Once a file is tracked by git, .gitignore alone won\'t help — you must also remove it from tracking.' },
+          { type: 'scan-output', tool: '.gitignore', title: 'Essential .gitignore for Security', findings: [
+            { type: 'header', text: '# Secrets and credentials\\n.env\\n.env.local\\n*.key\\n*.pem\\ncredentials.json\\nconfig/secrets.*' },
+            { type: 'header', text: '\\n# Dependencies (may contain vulns)\\nnode_modules/\\n__pycache__/\\nvendor/' },
+            { type: 'header', text: '\\n# Build artifacts\\ndist/\\n*.pyc\\n.terraform/' },
+          ]},
+        ]},
+        { heading: 'Git Hooks for Prevention', blocks: [
+          { type: 'text', content: 'Git hooks are scripts that run automatically at specific points in the git workflow. Pre-commit hooks are the most important for security:' },
+          { type: 'pipeline', stages: [
+            { label: 'git add', icon: '📝', desc: 'Stage files', security: false },
+            { label: 'git commit', icon: '💾', desc: 'Trigger hooks', security: false },
+            { label: 'Pre-commit', icon: '🔍', desc: 'Gitleaks scan', security: true, tool: 'Gitleaks' },
+            { label: 'Commit OK', icon: '✅', desc: 'No secrets found', security: true },
+            { label: 'git push', icon: '🚀', desc: 'Push to remote', security: false },
+          ]},
+          { type: 'callout', variant: 'key-concept', content: 'If Gitleaks finds a secret in staged files, the commit is BLOCKED. The secret never enters git history. This is prevention, not detection — infinitely better than finding secrets after they\'re committed.' },
+        ]},
+        { heading: 'Branch Protection', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Unprotected Branch', color: '#EF4444', points: [
+              'Anyone can push directly to main',
+              'No code review required',
+              'CI checks can be skipped',
+              'Force push can rewrite history',
+            ]},
+            { title: 'Protected Branch', color: '#22C55E', points: [
+              'Requires pull request for all changes',
+              'Minimum 1-2 reviewer approvals',
+              'CI/security checks must pass',
+              'No force push, no deletion',
+            ]},
+          ]},
+        ]},
+        { heading: 'Why History Scanning Matters', blocks: [
+          { type: 'text', content: 'Tools like TruffleHog don\'t just scan current files — they scan the ENTIRE git history, commit by commit. A secret committed 1000 commits ago and later deleted is still findable.' },
+          { type: 'scan-output', tool: 'trufflehog', title: 'History Scan Finding a Deleted Secret', findings: [
+            { type: 'finding', severity: 'CRITICAL', text: 'AWS Access Key found in commit a1b2c3d (deleted 6 months ago)', file: 'old-config.py' },
+            { type: 'summary', text: 'This key was "deleted" but lives forever in git history. TruffleHog found it. So would an attacker.' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Prevention (pre-commit hooks) is always better than detection (history scanning). But run both — pre-commit catches new leaks, history scanning catches old ones.' },
+        ]},
       ],
     },
     simulation: {
@@ -398,15 +666,97 @@ const MODULES = {
     ],
   },
   '2.1': {
-    id: '2.1', pathId: 2, title: 'Secrets Detection', baseXP: 120,
+    id: '2.1', pathId: 2, title: 'Secrets Detection', baseXP: 120, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Types of Secrets', content: 'API keys, database passwords, JWT signing keys, private SSH keys, OAuth tokens, cloud credentials (AWS/GCP/Azure), encryption keys, service account tokens. Each type has different formats that scanners can pattern-match.' },
-        { heading: 'How Secrets Leak', content: 'Committed to code repositories (most common), hardcoded in configuration files, embedded in Docker images, left in CI/CD logs, shared in Slack/email, stored in browser local storage. Each leak vector needs a different prevention strategy.', highlight: true },
-        { heading: 'Prevention vs Detection', content: 'Prevention (pre-commit hooks, .gitignore) is always better than detection (scanning after commit). But detection is essential as a safety net — secrets still slip through. Defense in depth: both prevention AND detection.', callout: true },
-        { heading: 'Tool Comparison', content: 'Gitleaks: fast, regex-based, great for CI/CD, pre-commit hooks. TruffleHog: entropy-based + regex, verified credentials (checks if secrets are still active), git history scanning. Both are essential in a complete secrets management strategy.' },
-        { heading: 'Real-World Breach', content: 'Uber (2016): Two developers committed AWS credentials to a private GitHub repo. Attackers found the keys, accessed an S3 bucket containing 57 million rider/driver records. Uber paid the attackers $100K to delete the data and hide the breach. Later fined millions.', breach: true },
+        { heading: 'Types of Secrets', blocks: [
+          { type: 'text', content: 'Secrets are any credentials, tokens, or keys that grant access to systems or data. Scanners detect them by matching known patterns (regex) and measuring randomness (entropy).' },
+          { type: 'keyterms', terms: [
+            { term: 'API Key', definition: 'A token that authenticates requests to a service (e.g., AKIAIOSFODNN7EXAMPLE for AWS).' },
+            { term: 'Database Password', definition: 'Credentials for database access, often in connection strings like postgresql://admin:pass@host.' },
+            { term: 'JWT Signing Key', definition: 'Secret used to sign JSON Web Tokens. Leaked key lets attackers forge any token.' },
+            { term: 'SSH Private Key', definition: 'Private key for SSH authentication. Begins with -----BEGIN RSA PRIVATE KEY-----.' },
+            { term: 'OAuth Token', definition: 'Access or refresh token for OAuth flows. Often prefixed (ghp_, gho_, xoxb-).' },
+            { term: 'Cloud Credentials', definition: 'AWS access keys, GCP service account JSON, Azure client secrets for cloud API access.' },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'Pattern Recognition', content: 'Each secret type has a distinct format. AWS keys start with AKIA, GitHub PATs start with ghp_, Stripe keys start with sk_live_ or sk_test_. Scanners use these patterns to find secrets automatically.' },
+        ] },
+        { heading: 'How Secrets Leak', blocks: [
+          { type: 'text', content: 'Secrets end up in the wrong places through several common vectors. The most dangerous is committing them to git, because git history is permanent — even after deletion, the secret remains in old commits.' },
+          { type: 'attack-flow', steps: [
+            { type: 'attack', label: 'Developer Hardcodes Secret', detail: 'API key written directly in source code or config file' },
+            { type: 'attack', label: 'Committed to Git', detail: 'Secret enters git history — even if deleted later, it persists in old commits' },
+            { type: 'attack', label: 'Pushed to Remote', detail: 'Secret now on GitHub/GitLab, potentially in a public or compromised repo' },
+            { type: 'attack', label: 'Attacker Scrapes Repos', detail: 'Automated bots scan public repos for secrets within seconds of push' },
+            { type: 'attack', label: 'Data Breach', detail: 'Attacker uses credentials to access cloud resources, databases, or APIs' },
+          ] },
+          { type: 'callout', variant: 'warning', title: 'Git History is Forever', content: 'Deleting a file with a secret does NOT remove it from git history. The secret persists in previous commits. You must rotate the secret AND use tools like git-filter-repo or BFG to clean history.' },
+        ] },
+        { heading: 'Prevention vs Detection', blocks: [
+          { type: 'text', content: 'A strong secrets management strategy uses both prevention (stop secrets from entering code) and detection (find secrets that slipped through). Prevention is always cheaper and safer.' },
+          { type: 'comparison', items: [
+            { title: 'Prevention', color: '#22C55E', points: [
+              'Pre-commit hooks block secrets before they enter git',
+              '.gitignore excludes sensitive files (.env, credentials)',
+              'Environment variables keep secrets out of code',
+              'Vault/secrets manager for runtime injection',
+              'Cost: $0 — secret never leaked',
+            ] },
+            { title: 'Detection', color: '#F59E0B', points: [
+              'CI/CD scanning catches secrets after commit',
+              'Repository scanning finds existing leaks',
+              'Git history scanning finds old secrets',
+              'Monitoring for credential usage anomalies',
+              'Cost: secret rotation + incident response',
+            ] },
+          ] },
+          { type: 'callout', variant: 'key-concept', title: 'Defense in Depth', content: 'Use both prevention AND detection. Pre-commit hooks are your first line of defense. CI/CD scanning is your safety net. Git history scanning catches what both missed.' },
+        ] },
+        { heading: 'Tool Comparison', blocks: [
+          { type: 'text', content: 'Gitleaks and TruffleHog are the two most popular open-source secrets detection tools. They use different approaches and complement each other well.' },
+          { type: 'comparison', items: [
+            { title: 'Gitleaks', color: '#3B82F6', points: [
+              'Regex-based pattern matching',
+              'Very fast — ideal for CI/CD pipelines',
+              'Built-in pre-commit hook support',
+              'SARIF output for GitHub integration',
+              'Custom rules via .gitleaks.toml',
+            ] },
+            { title: 'TruffleHog', color: '#A78BFA', points: [
+              'Regex + entropy-based detection',
+              'Verified credentials (checks if secrets are still active)',
+              'Deep git history scanning',
+              '700+ credential detectors',
+              'Can scan GitHub orgs, S3 buckets, filesystems',
+            ] },
+          ] },
+          { type: 'scan-output', tool: 'gitleaks', title: 'Gitleaks Scan Output', findings: [
+            { type: 'header', text: '$ gitleaks detect -v' },
+            { type: 'finding', text: 'aws-access-key-id', severity: 'CRITICAL', file: 'config.py:8' },
+            { type: 'finding', text: 'aws-secret-access-key', severity: 'CRITICAL', file: 'config.py:9' },
+            { type: 'finding', text: 'github-pat (ghp_...)', severity: 'HIGH', file: 'config.py:12' },
+            { type: 'finding', text: 'stripe-secret-key (sk_test_...)', severity: 'HIGH', file: '.env:2' },
+            { type: 'finding', text: 'sendgrid-api-key (SG...)', severity: 'HIGH', file: '.env:3' },
+            { type: 'finding', text: 'slack-bot-token (xoxb-...)', severity: 'HIGH', file: 'app.js:5' },
+            { type: 'summary', text: '6 leaks found in 4 files' },
+          ] },
+        ] },
+        { heading: 'Real-World Breach', blocks: [
+          { type: 'callout', variant: 'warning', title: 'Uber Breach (2016)', content: 'Two developers committed AWS credentials to a private GitHub repo. Attackers found the keys, accessed an S3 bucket containing 57 million rider and driver records. Uber paid the attackers $100K to delete the data and hide the breach. They were later fined millions by regulators.' },
+          { type: 'attack-flow', steps: [
+            { type: 'attack', label: 'AWS Keys in GitHub', detail: 'Developers committed AWS access keys to a private repository' },
+            { type: 'attack', label: 'Attacker Found Keys', detail: 'Attackers gained access to the private repo and extracted credentials' },
+            { type: 'attack', label: 'S3 Bucket Accessed', detail: '57 million rider/driver records in an S3 bucket were exposed' },
+            { type: 'defense', label: 'What Should Have Happened', detail: 'Pre-commit hooks, secrets scanning, IAM roles instead of static keys' },
+          ] },
+          { type: 'cost-chart', items: [
+            { stage: 'Pre-commit hook', multiplier: '1x', color: '#22C55E' },
+            { stage: 'CI/CD detection', multiplier: '10x', color: '#F59E0B' },
+            { stage: 'Post-breach rotation', multiplier: '100x', color: '#EF4444' },
+            { stage: 'Regulatory fines', multiplier: '1000x', color: '#EF4444' },
+          ] },
+        ] },
       ],
     },
     simulation: {
@@ -455,15 +805,98 @@ const MODULES = {
     ],
   },
   '2.2': {
-    id: '2.2', pathId: 2, title: 'SAST — Static Application Security Testing', baseXP: 120,
+    id: '2.2', pathId: 2, title: 'SAST — Static Application Security Testing', baseXP: 120, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'What is SAST?', content: 'Static Application Security Testing analyzes source code WITHOUT executing it. It reads your code like a very thorough code reviewer, looking for patterns that indicate vulnerabilities — SQL injection, command injection, XSS, insecure cryptography, and more.' },
-        { heading: 'How SAST Works', content: 'AST (Abstract Syntax Tree) parsing to understand code structure, pattern matching against known vulnerability signatures, taint analysis to track user input flowing into dangerous functions. Different tools use different combinations of these techniques.', highlight: true },
-        { heading: 'Strengths & Weaknesses', content: 'Strengths: finds code-level vulnerabilities, full coverage of codebase, runs early in pipeline, language-specific deep analysis.\nWeaknesses: high false positive rate, can\'t find runtime issues (misconfigurations, auth bypass), needs tuning per project.' },
-        { heading: 'Semgrep vs Others', content: 'Semgrep: open-source, fast, custom rules in YAML, 30+ languages. SonarQube: enterprise, quality + security, dashboards. CodeQL: GitHub-native, semantic queries, deep analysis but slower. For DevSecOps pipelines, Semgrep is the go-to for its speed and flexibility.', highlight: true },
-        { heading: 'SARIF Format', content: 'Static Analysis Results Interchange Format — the standard for exchanging security findings between tools. Upload SARIF to GitHub, GitLab, or VS Code to see findings inline with your code.' },
+        { heading: 'What is SAST?', blocks: [
+          { type: 'text', content: 'Static Application Security Testing (SAST) analyzes source code WITHOUT executing it. It reads your code like a very thorough code reviewer, looking for patterns that indicate vulnerabilities — SQL injection, command injection, XSS, insecure cryptography, and more.' },
+          { type: 'callout', variant: 'key-concept', title: 'Static = No Execution', content: 'SAST tools parse and analyze source code, bytecode, or binaries without running the application. This means they can run very early in the development lifecycle — even in your IDE or pre-commit hooks.' },
+          { type: 'keyterms', terms: [
+            { term: 'SQL Injection', definition: 'User input inserted directly into SQL queries, allowing attackers to read/modify the database.' },
+            { term: 'Command Injection', definition: 'User input passed to OS commands (os.system, subprocess), letting attackers execute arbitrary commands.' },
+            { term: 'XSS', definition: 'Cross-Site Scripting — user input rendered as HTML/JS in the browser, enabling session hijacking.' },
+            { term: 'Path Traversal', definition: 'User input used in file paths (../../etc/passwd), allowing access to arbitrary files.' },
+            { term: 'Insecure Deserialization', definition: 'Untrusted data deserialized into objects, potentially executing malicious code.' },
+          ] },
+        ] },
+        { heading: 'How SAST Works', blocks: [
+          { type: 'text', content: 'SAST tools use multiple techniques to find vulnerabilities. The most effective tools combine all three approaches for comprehensive analysis.' },
+          { type: 'steps', steps: [
+            { label: 'Parsing', detail: 'Source code is parsed into an Abstract Syntax Tree (AST) — a structured representation of the code that tools can analyze programmatically.' },
+            { label: 'Pattern Matching', detail: 'Known vulnerability signatures are matched against the AST. For example, detecting eval() called with user-controlled input.' },
+            { label: 'Taint Analysis', detail: 'Tracks how user-controlled data ("tainted" input) flows through the code. If tainted data reaches a dangerous function (sink) without sanitization, it flags a vulnerability.' },
+            { label: 'Control Flow Analysis', detail: 'Examines the execution paths through the code to determine if a vulnerable code path is actually reachable.' },
+          ] },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Source Code', note: 'Your application files' },
+            { label: 'AST Parser', note: 'Builds syntax tree' },
+            { label: 'Rule Engine', note: 'Pattern + taint analysis' },
+            { label: 'Findings', note: 'Vulnerabilities with severity' },
+            { label: 'SARIF Report', note: 'Standardized output' },
+          ] },
+        ] },
+        { heading: 'Strengths & Weaknesses', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Strengths', color: '#22C55E', points: [
+              'Finds code-level vulnerabilities early in development',
+              'Full coverage of entire codebase — scans every line',
+              'Runs before deployment (shift-left security)',
+              'Language-specific deep analysis and custom rules',
+              'Fast feedback loop for developers in CI/CD',
+            ] },
+            { title: 'Weaknesses', color: '#EF4444', points: [
+              'High false positive rate (flags code that isn\'t actually vulnerable)',
+              'Cannot find runtime issues (misconfigurations, auth bypass)',
+              'Requires tuning per project to reduce noise',
+              'Limited understanding of business logic',
+              'May miss vulnerabilities in dynamically generated code',
+            ] },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'Reducing False Positives', content: 'Start with a small, high-confidence rule set. Gradually add rules and tune thresholds. Use Semgrep\'s "nosemgrep" comments for verified false positives. Track your false positive rate over time.' },
+        ] },
+        { heading: 'Semgrep vs Others', blocks: [
+          { type: 'text', content: 'Several SAST tools exist, each with different strengths. Semgrep has become the go-to for DevSecOps pipelines due to its speed, simplicity, and extensibility.' },
+          { type: 'comparison', items: [
+            { title: 'Semgrep', color: '#22C55E', points: [
+              'Open-source, fast, 30+ languages',
+              'Custom rules written in simple YAML',
+              'OWASP Top 10 and CWE rule packs',
+              'Runs in seconds in CI/CD pipelines',
+            ] },
+            { title: 'SonarQube', color: '#3B82F6', points: [
+              'Enterprise-grade with dashboards',
+              'Code quality + security combined',
+              'Historical trend tracking',
+              'Paid for advanced features',
+            ] },
+            { title: 'CodeQL', color: '#A78BFA', points: [
+              'GitHub-native, deep semantic queries',
+              'Powerful but complex query language',
+              'Excellent for complex data flow analysis',
+              'Slower — better for nightly scans',
+            ] },
+          ] },
+          { type: 'scan-output', tool: 'semgrep', title: 'Semgrep OWASP Scan Output', findings: [
+            { type: 'header', text: '$ semgrep scan --config "p/owasp-top-ten"' },
+            { type: 'finding', text: 'A03:Injection — os.system() with user input', severity: 'ERROR', file: 'app.py:11' },
+            { type: 'finding', text: 'A03:Injection — subprocess.call(shell=True)', severity: 'ERROR', file: 'app.py:17' },
+            { type: 'finding', text: 'A03:Injection — f-string in SQL query', severity: 'ERROR', file: 'app.py:24' },
+            { type: 'finding', text: 'A03:Injection — eval() with user input', severity: 'ERROR', file: 'app.py:30' },
+            { type: 'finding', text: 'A01:Access — open() with user-controlled path', severity: 'WARNING', file: 'app.py:36' },
+            { type: 'summary', text: 'Ran 89 rules on 1 file: 5 findings (4 ERROR, 1 WARNING)' },
+          ] },
+        ] },
+        { heading: 'SARIF Format', blocks: [
+          { type: 'text', content: 'SARIF (Static Analysis Results Interchange Format) is the standard JSON format for exchanging security findings between tools, IDEs, and CI/CD platforms.' },
+          { type: 'pipeline', stages: [
+            { label: 'SAST Tool', icon: 'scan', desc: 'Semgrep, CodeQL, etc.', security: true, tool: 'semgrep' },
+            { label: 'SARIF Output', icon: 'file', desc: 'Standardized JSON report', security: false, tool: 'sarif' },
+            { label: 'GitHub Security', icon: 'shield', desc: 'Code scanning alerts tab', security: true, tool: 'github' },
+            { label: 'IDE Integration', icon: 'code', desc: 'Inline findings in VS Code', security: false, tool: 'vscode' },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'SARIF Everywhere', content: 'Upload SARIF to GitHub\'s Security tab to see findings inline in pull requests. VS Code and JetBrains IDEs can import SARIF to show findings directly in your editor. One format, many consumers.' },
+        ] },
       ],
     },
     simulation: {
@@ -507,15 +940,90 @@ const MODULES = {
     ],
   },
   '2.3': {
-    id: '2.3', pathId: 2, title: 'SCA — Software Composition Analysis', baseXP: 120,
+    id: '2.3', pathId: 2, title: 'SCA — Software Composition Analysis', baseXP: 120, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'What is SCA?', content: 'Software Composition Analysis scans your project\'s dependencies — the open-source libraries and packages you use. It checks if any have known vulnerabilities (CVEs) listed in vulnerability databases like the National Vulnerability Database (NVD).' },
-        { heading: 'Why SCA Matters', content: '80-90% of modern application code comes from open-source dependencies. You might write 10% of the code, but you\'re responsible for 100% of the security. One vulnerable dependency can compromise your entire application. Log4Shell affected millions of apps through a single library.', highlight: true },
-        { heading: 'CVEs, CVSS, and NVD', content: 'CVE = Common Vulnerabilities and Exposures (unique IDs like CVE-2021-44228). CVSS = Common Vulnerability Scoring System (0-10 severity score). NVD = National Vulnerability Database (central registry). These are the standards that SCA tools use.', highlight: true },
-        { heading: 'Direct vs Transitive Dependencies', content: 'Direct: packages you explicitly install (in package.json). Transitive: packages your dependencies depend on. You might have 20 direct dependencies but 500+ transitive ones. Vulnerabilities in transitive deps are just as dangerous but harder to spot.' },
-        { heading: 'Tool Comparison', content: 'Trivy: fast, multi-target (fs, image, IaC), free. Grype: fast, Anchore-backed, good output. Snyk: commercial, fix PRs, IDE integration. npm audit: built-in for Node.js, basic but free.' },
+        { heading: 'What is SCA?', blocks: [
+          { type: 'text', content: 'Software Composition Analysis (SCA) scans your project\'s dependencies — the open-source libraries and packages you use. It checks them against vulnerability databases like the National Vulnerability Database (NVD) to find known security issues (CVEs).' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Your Code', note: '10-20% of total' },
+            { label: 'Direct Deps', note: 'package.json, requirements.txt' },
+            { label: 'Transitive Deps', note: 'Dependencies of dependencies' },
+            { label: 'SCA Scanner', note: 'Trivy, Grype, Snyk' },
+            { label: 'CVE Report', note: 'Known vulnerabilities found' },
+          ] },
+          { type: 'callout', variant: 'key-concept', title: 'Why SCA Exists', content: 'You don\'t write most of your application\'s code — open-source libraries do. SCA ensures those libraries don\'t have known security holes that attackers can exploit.' },
+        ] },
+        { heading: 'Why SCA Matters', blocks: [
+          { type: 'text', content: '80-90% of modern application code comes from open-source dependencies. You might write 10% of the code, but you are responsible for 100% of the security. A single vulnerable dependency can compromise your entire application.' },
+          { type: 'callout', variant: 'warning', title: 'Log4Shell (CVE-2021-44228)', content: 'In December 2021, a critical vulnerability in the log4j logging library affected millions of Java applications worldwide. A single dependency — used by almost every Java project — allowed remote code execution with a simple string like ${jndi:ldap://attacker.com/exploit}. CVSS score: 10.0 (maximum severity).' },
+          { type: 'severity-bars', title: 'Typical Dependency Vulnerability Breakdown', items: [
+            { rank: 1, label: 'CRITICAL (CVSS 9.0-10.0)', count: 3, color: '#EF4444' },
+            { rank: 2, label: 'HIGH (CVSS 7.0-8.9)', count: 8, color: '#F97316' },
+            { rank: 3, label: 'MEDIUM (CVSS 4.0-6.9)', count: 14, color: '#F59E0B' },
+            { rank: 4, label: 'LOW (CVSS 0.1-3.9)', count: 7, color: '#3B82F6' },
+          ] },
+        ] },
+        { heading: 'CVEs, CVSS, and NVD', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'CVE', definition: 'Common Vulnerabilities and Exposures — unique identifiers for known vulnerabilities (e.g., CVE-2021-44228 for Log4Shell).' },
+            { term: 'CVSS', definition: 'Common Vulnerability Scoring System — rates severity from 0 to 10. Critical >= 9.0, High >= 7.0, Medium >= 4.0, Low < 4.0.' },
+            { term: 'NVD', definition: 'National Vulnerability Database — the US government\'s central repository of vulnerability data, maintained by NIST.' },
+            { term: 'GHSA', definition: 'GitHub Security Advisory — GitHub\'s own vulnerability database, often faster to update than NVD.' },
+            { term: 'EPSS', definition: 'Exploit Prediction Scoring System — predicts the probability a vulnerability will be exploited in the wild.' },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'Prioritization Strategy', content: 'Don\'t try to fix all vulnerabilities at once. Focus on CRITICAL and HIGH severity with known exploits first. Use EPSS scores to identify vulnerabilities most likely to be actively exploited.' },
+        ] },
+        { heading: 'Direct vs Transitive Dependencies', blocks: [
+          { type: 'text', content: 'Direct dependencies are packages you explicitly install. Transitive dependencies are packages those packages depend on. You might have 20 direct dependencies but 500+ transitive ones — and vulnerabilities in transitive deps are just as dangerous.' },
+          { type: 'comparison', items: [
+            { title: 'Direct Dependencies', color: '#3B82F6', points: [
+              'Listed in your package.json or requirements.txt',
+              'You chose them — you know they exist',
+              'Easy to update: change the version number',
+              'Example: express, lodash, axios',
+            ] },
+            { title: 'Transitive Dependencies', color: '#F59E0B', points: [
+              'Pulled in automatically by your direct deps',
+              'Often invisible — you may not know they exist',
+              'Harder to fix: may need to update the parent dep',
+              'Example: minimist (dep of hundreds of packages)',
+            ] },
+          ] },
+          { type: 'scan-output', tool: 'trivy', title: 'Trivy Dependency Scan', findings: [
+            { type: 'header', text: '$ trivy fs . --scanners vuln' },
+            { type: 'finding', text: 'axios 0.21.1 — SSRF via follow redirects', severity: 'CRITICAL', file: 'Fixed: 0.28.0' },
+            { type: 'finding', text: 'minimist 1.2.5 — Prototype Pollution', severity: 'CRITICAL', file: 'Fixed: 1.2.6' },
+            { type: 'finding', text: 'jsonwebtoken 8.5.0 — Insecure key handling', severity: 'HIGH', file: 'Fixed: 9.0.0' },
+            { type: 'finding', text: 'lodash 4.17.20 — Command Injection', severity: 'HIGH', file: 'Fixed: 4.17.21' },
+            { type: 'finding', text: 'node-fetch 2.6.1 — Exposure of sensitive info', severity: 'HIGH', file: 'Fixed: 2.6.7' },
+            { type: 'summary', text: 'Total: 23 vulnerabilities (LOW: 5, MEDIUM: 7, HIGH: 8, CRITICAL: 3)' },
+          ] },
+        ] },
+        { heading: 'Tool Comparison', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Trivy', color: '#22C55E', points: [
+              'Fast, multi-target (fs, image, IaC)',
+              'Free and open-source (Aqua Security)',
+              'JSON, SARIF, table output formats',
+              'Best all-in-one scanner',
+            ] },
+            { title: 'Grype', color: '#3B82F6', points: [
+              'Fast, focused on SCA',
+              'Anchore-backed, good formatting',
+              '--only-fixed shows actionable results',
+              'Slightly different vuln database',
+            ] },
+            { title: 'Snyk', color: '#A78BFA', points: [
+              'Commercial with free tier',
+              'Auto-creates fix PRs in GitHub',
+              'IDE integration (VS Code, IntelliJ)',
+              'Best developer experience',
+            ] },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'Use Multiple Tools', content: 'Trivy and Grype often report slightly different vulnerability counts because they use different databases and detection methods. Running both provides better coverage than either alone.' },
+        ] },
       ],
     },
     simulation: {
@@ -559,14 +1067,91 @@ const MODULES = {
     ],
   },
   '2.4': {
-    id: '2.4', pathId: 2, title: 'Container Image Scanning', baseXP: 120,
+    id: '2.4', pathId: 2, title: 'Container Image Scanning', baseXP: 120, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Why Scan Container Images?', content: 'Container images bundle your app with an OS and libraries. Each package can have vulnerabilities. An nginx image might have 40+ CVEs just from its base OS packages. Scanning images before deployment catches these before they reach production.' },
-        { heading: 'Build-time vs Registry vs Runtime', content: 'Build-time: scan in CI/CD pipeline during image build. Registry: scan when pushed to container registry. Runtime: scan running containers for new CVEs. A complete strategy uses all three, but build-time is most critical for DevSecOps.', highlight: true },
-        { heading: 'Base Image Selection', content: 'Your base image choice determines your vulnerability baseline. Full images (ubuntu, python:3.12) have hundreds of packages. Slim images (python:3.12-slim) have far fewer. Alpine images are smallest but use musl libc. Distroless images contain only your app runtime.', highlight: true },
-        { heading: 'Dockerfile Linting vs Image Scanning', content: 'Hadolint checks your Dockerfile for best practice violations BEFORE building. Trivy scans the built IMAGE for known CVEs in installed packages. Both are needed — Hadolint catches process issues, Trivy catches vulnerability issues.' },
+        { heading: 'Why Scan Container Images?', blocks: [
+          { type: 'text', content: 'Container images bundle your application with an entire OS and its libraries. Each installed package can have known vulnerabilities. An nginx image might have 40+ CVEs just from its base OS packages — before you add a single line of your own code.' },
+          { type: 'pipeline', stages: [
+            { label: 'Base Image', icon: 'box', desc: 'OS packages (debian, alpine)', security: false, tool: 'docker' },
+            { label: 'App Dependencies', icon: 'package', desc: 'pip, npm, gem installs', security: false, tool: 'package-manager' },
+            { label: 'Your Code', icon: 'code', desc: 'Application source', security: false, tool: 'app' },
+            { label: 'Image Scan', icon: 'shield', desc: 'Trivy finds CVEs in all layers', security: true, tool: 'trivy' },
+            { label: 'Deploy Gate', icon: 'lock', desc: 'Block if CRITICAL found', security: true, tool: 'ci-cd' },
+          ] },
+          { type: 'scan-output', tool: 'trivy', title: 'Trivy Image Scan — nginx:latest', findings: [
+            { type: 'header', text: '$ trivy image nginx:latest' },
+            { type: 'finding', text: 'CVE-2024-0727 openssl 3.0.11 — Denial of Service', severity: 'CRITICAL', file: 'Fixed: 3.0.13' },
+            { type: 'finding', text: 'CVE-2023-44487 nghttp2 1.57.0 — HTTP/2 Rapid Reset', severity: 'CRITICAL', file: 'Fixed: 1.58.0' },
+            { type: 'finding', text: 'CVE-2023-6246 glibc 2.36 — Buffer overflow', severity: 'CRITICAL', file: 'Fixed: 2.36-10' },
+            { type: 'finding', text: 'CVE-2024-1086 libcurl 8.4.0 — Use after free', severity: 'CRITICAL', file: 'Fixed: 8.6.0' },
+            { type: 'summary', text: 'Total: 45 vulnerabilities (LOW: 10, MEDIUM: 19, HIGH: 12, CRITICAL: 4)' },
+          ] },
+        ] },
+        { heading: 'Build-time vs Registry vs Runtime', blocks: [
+          { type: 'text', content: 'A comprehensive container security strategy scans at three stages. Build-time scanning in CI/CD is the most critical for DevSecOps because it catches issues before images are deployed.' },
+          { type: 'steps', steps: [
+            { label: 'Build-time (CI/CD)', detail: 'Scan during image build in your pipeline. Fail the build if CRITICAL vulnerabilities are found. This is the earliest and cheapest place to catch issues.' },
+            { label: 'Registry Scanning', detail: 'Scan images when pushed to your container registry (ECR, GCR, Docker Hub). Blocks vulnerable images from being pulled for deployment.' },
+            { label: 'Runtime Monitoring', detail: 'Periodically rescan running containers for newly disclosed CVEs. A safe image today may become vulnerable tomorrow when a new CVE is published.' },
+          ] },
+          { type: 'callout', variant: 'key-concept', title: 'Shift Left', content: 'Build-time scanning is the most impactful. Catching a vulnerability during CI/CD costs minutes of developer time. Finding it in production costs hours of incident response.' },
+        ] },
+        { heading: 'Base Image Selection', blocks: [
+          { type: 'text', content: 'Your base image determines your vulnerability baseline. Smaller images have fewer packages, which means fewer potential CVEs. Choosing the right base image is the single most impactful security decision for containers.' },
+          { type: 'comparison', items: [
+            { title: 'Full (python:3.12)', color: '#EF4444', points: [
+              'Size: ~1.0 GB',
+              'Hundreds of OS packages installed',
+              'Typically 100+ CVEs',
+              'Good for development, bad for production',
+            ] },
+            { title: 'Slim (python:3.12-slim)', color: '#F59E0B', points: [
+              'Size: ~155 MB',
+              'Minimal OS packages',
+              'Typically 20-40 CVEs',
+              'Good balance for most applications',
+            ] },
+            { title: 'Alpine (python:3.12-alpine)', color: '#22C55E', points: [
+              'Size: ~52 MB',
+              'Uses musl libc (not glibc)',
+              'Typically 5-15 CVEs',
+              'Smallest attack surface, some compatibility issues',
+            ] },
+          ] },
+          { type: 'severity-bars', title: 'Vulnerability Count by Base Image', items: [
+            { rank: 1, label: 'python:3.12 (full)', count: 127, color: '#EF4444' },
+            { rank: 2, label: 'python:3.12-slim', count: 34, color: '#F59E0B' },
+            { rank: 3, label: 'python:3.12-alpine', count: 8, color: '#22C55E' },
+            { rank: 4, label: 'gcr.io/distroless/python3', count: 2, color: '#22C55E' },
+          ] },
+        ] },
+        { heading: 'Dockerfile Linting vs Image Scanning', blocks: [
+          { type: 'text', content: 'Hadolint and Trivy serve different purposes. Hadolint checks your Dockerfile instructions for best practice violations BEFORE building. Trivy scans the built image for known CVEs. Both are needed for a complete container security strategy.' },
+          { type: 'comparison', items: [
+            { title: 'Hadolint (Dockerfile Linter)', color: '#3B82F6', points: [
+              'Checks Dockerfile best practices',
+              'Runs BEFORE the image is built',
+              'Catches: missing USER, latest tag, missing HEALTHCHECK',
+              'Based on Dockerfile best practice rules',
+            ] },
+            { title: 'Trivy (Image Scanner)', color: '#A78BFA', points: [
+              'Scans the built image for CVEs',
+              'Runs AFTER the image is built',
+              'Catches: vulnerable OS packages, library CVEs',
+              'Checks against NVD and vendor databases',
+            ] },
+          ] },
+          { type: 'scan-output', tool: 'hadolint', title: 'Hadolint Dockerfile Lint', findings: [
+            { type: 'header', text: '$ hadolint Dockerfile.bad' },
+            { type: 'finding', text: 'DL3007 — Using latest is prone to errors', severity: 'WARNING', file: 'Dockerfile:1' },
+            { type: 'finding', text: 'DL3006 — Always tag the version explicitly', severity: 'WARNING', file: 'Dockerfile:1' },
+            { type: 'finding', text: 'DL3002 — Last USER should not be root', severity: 'ERROR', file: 'Dockerfile:4' },
+            { type: 'finding', text: 'DL3025 — Use JSON notation for CMD', severity: 'WARNING', file: 'Dockerfile:4' },
+            { type: 'summary', text: '1 error, 3 warnings' },
+          ] },
+        ] },
       ],
     },
     simulation: {
@@ -612,15 +1197,92 @@ const MODULES = {
     ],
   },
   '2.5': {
-    id: '2.5', pathId: 2, title: 'DAST — Dynamic Application Security Testing', baseXP: 120,
+    id: '2.5', pathId: 2, title: 'DAST — Dynamic Application Security Testing', baseXP: 120, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'What is DAST?', content: 'Dynamic Application Security Testing attacks a RUNNING application from the outside, just like a real attacker would. It sends malicious requests and observes responses to find vulnerabilities that only manifest at runtime.' },
-        { heading: 'Passive vs Active Scanning', content: 'Passive: observes traffic and responses without modifying requests. Finds missing headers, information disclosure, cookie issues. Safe for production.\nActive: sends attack payloads (SQLi, XSS, fuzzing). Finds deeper vulnerabilities but can be destructive. Only use on test environments.', highlight: true },
-        { heading: 'SAST vs DAST', content: 'SAST reads code, DAST tests the running app. SAST has full code visibility but high false positives. DAST has low false positives (it proves the vuln exists) but can\'t see code. SAST runs early (build time), DAST runs late (after deployment). Use both.', highlight: true },
-        { heading: 'OWASP ZAP', content: 'The most popular open-source DAST tool. Three scan modes: Baseline (passive, 1 min), Full Scan (active, 10+ min), API Scan (targets API specs). Docker-based, CI/CD friendly, generates HTML/JSON/XML reports.' },
-        { heading: 'When to Use DAST', content: 'After deploying to staging/QA environment. In CI/CD: run baseline (passive) on every build, full scan nightly or before release. Never run active scans against production or systems you don\'t own.' },
+        { heading: 'What is DAST?', blocks: [
+          { type: 'text', content: 'Dynamic Application Security Testing (DAST) attacks a RUNNING application from the outside, just like a real attacker would. It sends malicious requests and observes responses to find vulnerabilities that only manifest at runtime.' },
+          { type: 'callout', variant: 'key-concept', title: 'Black-Box Testing', content: 'DAST tools have no access to source code. They interact with the application through HTTP requests only — testing it the same way an attacker would. This means low false positives: if DAST finds a vulnerability, it has proof the vulnerability is exploitable.' },
+          { type: 'attack-flow', steps: [
+            { type: 'info', label: 'Spider/Crawl', detail: 'DAST discovers all pages, forms, and API endpoints by following links' },
+            { type: 'attack', label: 'Send Payloads', detail: 'Sends attack strings (SQL injection, XSS, path traversal) to every input' },
+            { type: 'info', label: 'Analyze Responses', detail: 'Checks if the application responds in a way that indicates vulnerability' },
+            { type: 'defense', label: 'Generate Report', detail: 'Produces findings with evidence, severity, and remediation guidance' },
+          ] },
+        ] },
+        { heading: 'Passive vs Active Scanning', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Passive Scanning', color: '#22C55E', points: [
+              'Observes traffic without sending attack payloads',
+              'Finds: missing security headers, cookie flags, info leakage',
+              'Safe for production environments',
+              'Fast — typically completes in 1-2 minutes',
+              'Good for: every build in CI/CD pipeline',
+            ] },
+            { title: 'Active Scanning', color: '#EF4444', points: [
+              'Sends actual attack payloads (SQLi, XSS, fuzzing)',
+              'Finds: injection vulnerabilities, auth bypass, CSRF',
+              'Can modify data or cause crashes — NEVER use on production',
+              'Slow — can take 10-60+ minutes',
+              'Good for: staging/QA, nightly scans, pre-release',
+            ] },
+          ] },
+          { type: 'callout', variant: 'warning', title: 'Active Scans Are Destructive', content: 'Active scanning sends real attack payloads that can corrupt data, create accounts, trigger alerts, or crash applications. ONLY run active scans against test environments that you own and can restore.' },
+        ] },
+        { heading: 'SAST vs DAST', blocks: [
+          { type: 'text', content: 'SAST and DAST are complementary — each finds vulnerabilities the other misses. A mature security program uses both, running at different stages of the development lifecycle.' },
+          { type: 'comparison', items: [
+            { title: 'SAST', color: '#3B82F6', points: [
+              'Analyzes source code (white-box)',
+              'Runs at build time — no running app needed',
+              'Full code coverage, finds code-level bugs',
+              'Higher false positive rate',
+              'Misses: runtime config, auth issues, headers',
+            ] },
+            { title: 'DAST', color: '#A78BFA', points: [
+              'Tests running application (black-box)',
+              'Runs after deployment to staging/test',
+              'Proves vulnerabilities are exploitable',
+              'Lower false positive rate',
+              'Misses: code-level issues, dead code paths',
+            ] },
+          ] },
+          { type: 'pipeline', stages: [
+            { label: 'Code Commit', icon: 'git', desc: 'Developer pushes code', security: false, tool: 'git' },
+            { label: 'SAST Scan', icon: 'code', desc: 'Semgrep analyzes source', security: true, tool: 'semgrep' },
+            { label: 'Build & Deploy', icon: 'box', desc: 'Deploy to staging', security: false, tool: 'docker' },
+            { label: 'DAST Scan', icon: 'target', desc: 'ZAP attacks running app', security: true, tool: 'zap' },
+            { label: 'Release Gate', icon: 'lock', desc: 'Pass/fail decision', security: true, tool: 'ci-cd' },
+          ] },
+        ] },
+        { heading: 'OWASP ZAP', blocks: [
+          { type: 'text', content: 'OWASP ZAP (Zed Attack Proxy) is the most popular open-source DAST tool. It runs as a Docker container, making it ideal for CI/CD integration.' },
+          { type: 'steps', steps: [
+            { label: 'Baseline Scan', detail: 'zap-baseline.py — Passive scan only. Runs in ~1 minute. Checks security headers, cookies, info leakage. Safe for any environment.' },
+            { label: 'Full Scan', detail: 'zap-full-scan.py — Passive + active scanning. Runs in 10-60 minutes. Finds injection, XSS, CSRF, and more. Only for test environments.' },
+            { label: 'API Scan', detail: 'zap-api-scan.py — Targets API endpoints using OpenAPI/Swagger specs. Tests each endpoint with relevant attack payloads.' },
+          ] },
+          { type: 'scan-output', tool: 'zap', title: 'ZAP Baseline Scan Output', findings: [
+            { type: 'header', text: '$ zap-baseline.py -t http://localhost:3000' },
+            { type: 'finding', text: 'X-Frame-Options Header Not Set [10020]', severity: 'MEDIUM', file: '3 instances' },
+            { type: 'finding', text: 'Server Leaks Version Info [10036]', severity: 'LOW', file: '2 instances' },
+            { type: 'finding', text: 'Cookie No HttpOnly Flag [10010]', severity: 'MEDIUM', file: '4 instances' },
+            { type: 'finding', text: 'Cookie Without Secure Flag [10011]', severity: 'MEDIUM', file: '4 instances' },
+            { type: 'finding', text: 'Content-Type Header Missing [10019]', severity: 'LOW', file: '1 instance' },
+            { type: 'summary', text: 'FAIL-NEW: 0  WARN-NEW: 7  INFO: 2  PASS: 42' },
+          ] },
+        ] },
+        { heading: 'When to Use DAST', blocks: [
+          { type: 'text', content: 'DAST requires a running application, so it runs later in the pipeline than SAST or SCA. The key is choosing the right scan type for each stage.' },
+          { type: 'pipeline', stages: [
+            { label: 'Every Build', icon: 'refresh', desc: 'Baseline (passive) scan', security: true, tool: 'zap-baseline' },
+            { label: 'Nightly', icon: 'clock', desc: 'Full (active) scan on staging', security: true, tool: 'zap-full' },
+            { label: 'Pre-Release', icon: 'shield', desc: 'Full scan + API scan', security: true, tool: 'zap-api' },
+            { label: 'Production', icon: 'lock', desc: 'Passive monitoring ONLY', security: true, tool: 'monitoring' },
+          ] },
+          { type: 'callout', variant: 'warning', title: 'Never Active Scan Production', content: 'Active DAST scans send attack payloads that can corrupt data, create unwanted records, or crash the application. Run active scans ONLY against staging or test environments. For production, use passive scanning or external monitoring services.' },
+        ] },
       ],
     },
     simulation: {
@@ -663,14 +1325,84 @@ const MODULES = {
     ],
   },
   '2.6': {
-    id: '2.6', pathId: 2, title: 'IaC Security Scanning', baseXP: 120,
+    id: '2.6', pathId: 2, title: 'IaC Security Scanning', baseXP: 120, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'What is IaC?', content: 'Infrastructure as Code defines your cloud infrastructure in files — Terraform (.tf), CloudFormation (YAML/JSON), Kubernetes manifests (YAML), Ansible playbooks. If your infrastructure is code, it can be scanned for security issues just like application code.' },
-        { heading: 'Common Misconfigurations', content: 'Public S3 buckets, overly permissive security groups (0.0.0.0/0), unencrypted databases, missing logging, no MFA, default credentials, privileged containers, missing network policies. These are the #1 cause of cloud breaches.', highlight: true },
-        { heading: 'Compliance Frameworks', content: 'CIS Benchmarks (specific configuration baselines), SOC 2 (security controls), PCI DSS (payment card data), HIPAA (health data). IaC scanners can map findings to these frameworks for compliance reporting.', highlight: true },
-        { heading: 'Tool Comparison', content: 'Checkov: comprehensive, 1000+ policies, multi-framework, free. KICS: Checkmarx-backed, good Dockerfile support. tfsec: Terraform-specific, fast, Aqua-backed. All three are excellent; Checkov is the most popular for multi-cloud.' },
+        { heading: 'What is IaC?', blocks: [
+          { type: 'text', content: 'Infrastructure as Code (IaC) defines your cloud infrastructure in version-controlled files instead of manual console clicks. If your infrastructure is code, it can be scanned for security misconfigurations just like application code.' },
+          { type: 'keyterms', terms: [
+            { term: 'Terraform (.tf)', definition: 'HashiCorp\'s multi-cloud IaC tool. Declarative HCL syntax. The most popular IaC framework.' },
+            { term: 'CloudFormation', definition: 'AWS-native IaC in YAML/JSON. Tightly integrated with AWS services.' },
+            { term: 'Kubernetes YAML', definition: 'Manifests defining pods, deployments, services. Security contexts control container privileges.' },
+            { term: 'Ansible', definition: 'Configuration management and automation. Playbooks define desired system state.' },
+            { term: 'Helm Charts', definition: 'Templated Kubernetes manifests. Package manager for K8s deployments.' },
+          ] },
+          { type: 'callout', variant: 'key-concept', title: 'Shift Left for Infrastructure', content: 'IaC scanning catches misconfigurations at the code review stage — before infrastructure is provisioned. This is orders of magnitude cheaper and safer than finding issues in a running cloud environment.' },
+        ] },
+        { heading: 'Common Misconfigurations', blocks: [
+          { type: 'text', content: 'Misconfigurations are the number one cause of cloud security breaches. Most are preventable with proper IaC scanning. Here are the most common and dangerous misconfigurations that scanners detect.' },
+          { type: 'scan-output', tool: 'checkov', title: 'Checkov Terraform Scan', findings: [
+            { type: 'header', text: '$ checkov -d . --framework terraform' },
+            { type: 'finding', text: 'CKV_AWS_20 — S3 bucket has public ACL', severity: 'CRITICAL', file: 'main.tf:1-4' },
+            { type: 'finding', text: 'CKV_AWS_24 — Security group allows 0.0.0.0/0', severity: 'CRITICAL', file: 'main.tf:6-14' },
+            { type: 'finding', text: 'CKV_AWS_17 — RDS is publicly accessible', severity: 'CRITICAL', file: 'main.tf:16-23' },
+            { type: 'finding', text: 'CKV_AWS_16 — RDS encryption not enabled', severity: 'HIGH', file: 'main.tf:16-23' },
+            { type: 'finding', text: 'CKV_AWS_51 — Hardcoded credentials in resource', severity: 'CRITICAL', file: 'main.tf:20' },
+            { type: 'finding', text: 'CKV_AWS_18 — S3 bucket missing access logging', severity: 'MEDIUM', file: 'main.tf:1-4' },
+            { type: 'summary', text: 'Passed: 5 | Failed: 12 | Skipped: 0' },
+          ] },
+          { type: 'severity-bars', title: 'Most Common IaC Misconfigurations', items: [
+            { rank: 1, label: 'Public S3 Buckets / Storage', count: 31, color: '#EF4444' },
+            { rank: 2, label: 'Open Security Groups (0.0.0.0/0)', count: 27, color: '#EF4444' },
+            { rank: 3, label: 'Unencrypted Data at Rest', count: 22, color: '#F97316' },
+            { rank: 4, label: 'Missing Logging / Monitoring', count: 18, color: '#F59E0B' },
+            { rank: 5, label: 'Privileged Containers (K8s)', count: 15, color: '#F59E0B' },
+          ] },
+        ] },
+        { heading: 'Compliance Frameworks', blocks: [
+          { type: 'text', content: 'IaC scanners can map findings to compliance frameworks, generating reports that satisfy auditors and demonstrate security posture. Checkov supports all major frameworks out of the box.' },
+          { type: 'keyterms', terms: [
+            { term: 'CIS Benchmarks', definition: 'Specific configuration baselines from Center for Internet Security. The most widely adopted cloud security standards.' },
+            { term: 'SOC 2', definition: 'Service Organization Controls — security, availability, and privacy controls. Required by most enterprise customers.' },
+            { term: 'PCI DSS', definition: 'Payment Card Industry Data Security Standard. Required for handling credit card data. Strict encryption and access controls.' },
+            { term: 'HIPAA', definition: 'Health Insurance Portability and Accountability Act. Governs protection of health data. Requires encryption, access logging, and audit trails.' },
+            { term: 'NIST 800-53', definition: 'US federal security controls framework. Comprehensive control catalog used by government agencies.' },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'Compliance as Code', content: 'Run checkov -d . --check CIS to scan against CIS benchmarks. The output maps each finding to a specific CIS control, making compliance reporting automatic and auditable.' },
+        ] },
+        { heading: 'Tool Comparison', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Checkov', color: '#22C55E', points: [
+              '1000+ built-in policies',
+              'Multi-framework: Terraform, K8s, CloudFormation, ARM',
+              'CIS, SOC2, PCI compliance mapping',
+              'Free, open-source (Bridgecrew/Palo Alto)',
+            ] },
+            { title: 'KICS', color: '#3B82F6', points: [
+              'Checkmarx-backed, strong Dockerfile support',
+              '847+ queries across IaC frameworks',
+              'Good for multi-language Docker scanning',
+              'Free, open-source',
+            ] },
+            { title: 'tfsec', color: '#A78BFA', points: [
+              'Terraform-specific, very fast',
+              'Now part of Trivy (Aqua Security)',
+              'Deep HCL understanding',
+              'Integrates with Trivy for unified scanning',
+            ] },
+          ] },
+          { type: 'scan-output', tool: 'checkov', title: 'Checkov Kubernetes Scan', findings: [
+            { type: 'header', text: '$ checkov -f k8s-deployment.yaml --framework kubernetes' },
+            { type: 'finding', text: 'CKV_K8S_1 — Container running as privileged', severity: 'CRITICAL', file: 'container: app' },
+            { type: 'finding', text: 'CKV_K8S_6 — Container running as root (UID 0)', severity: 'HIGH', file: 'container: app' },
+            { type: 'finding', text: 'CKV_K8S_12 — Memory limits not set', severity: 'MEDIUM', file: 'container: app' },
+            { type: 'finding', text: 'CKV_K8S_13 — CPU limits not set', severity: 'MEDIUM', file: 'container: app' },
+            { type: 'finding', text: 'CKV_K8S_22 — readOnlyRootFilesystem not true', severity: 'MEDIUM', file: 'container: app' },
+            { type: 'summary', text: 'Passed: 3 | Failed: 5 | Skipped: 0' },
+          ] },
+          { type: 'callout', variant: 'tip', title: 'Use Multiple Scanners', content: 'Checkov found 12 failures while KICS found 15 on the same code. Different tools have different rule sets — using both gives better coverage.' },
+        ] },
       ],
     },
     simulation: {
@@ -714,14 +1446,88 @@ const MODULES = {
     ],
   },
   '3.1': {
-    id: '3.1', pathId: 3, title: 'Jenkins Pipeline Fundamentals', baseXP: 150,
+    id: '3.1', pathId: 3, title: 'Jenkins Pipeline Fundamentals', baseXP: 150, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Jenkins Architecture', content: 'Jenkins is the most popular open-source CI/CD server. It uses a controller-agent architecture: the controller schedules jobs, the agents execute them. Plugins extend functionality (2000+ available). Jenkins can run almost anything.' },
-        { heading: 'Jenkinsfile Structure', content: 'Declarative Pipeline: structured format with pipeline{}, agent{}, stages{}, steps{} blocks. Scripted Pipeline: full Groovy scripting, more flexible but harder to maintain. For DevSecOps, declarative is preferred for its readability and maintainability.', highlight: true },
-        { heading: 'Key Concepts', content: 'Stages: logical groupings (Build, Test, Security, Deploy). Steps: individual commands within stages. Post: actions after stage/pipeline (success, failure, always). Environment: variables available to all stages. Credentials: secure storage for secrets.', highlight: true },
-        { heading: 'Credentials Management', content: 'NEVER put credentials in Jenkinsfile. Use Jenkins credentials store: credentials("secret-id") injects at runtime. Types: Secret text, Username/Password, SSH key, Certificate. Reference in environment{} block with credentials() helper.' },
+        { heading: 'Jenkins Architecture', blocks: [
+          { type: 'text', content: 'Jenkins is the most popular open-source CI/CD server, powering millions of builds every day. It uses a controller-agent architecture where the controller schedules and orchestrates jobs while distributed agents execute them.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Developer', note: 'Pushes code' },
+            { label: 'Jenkins Controller', note: 'Schedules jobs' },
+            { label: 'Agent 1', note: 'Runs builds' },
+            { label: 'Agent 2', note: 'Runs scans' },
+            { label: 'Artifact Store', note: 'Stores results' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Plugin Ecosystem', content: 'Jenkins has 2,000+ plugins covering everything from Git integration to security scanning. This extensibility is its greatest strength — and its greatest maintenance challenge. Choose plugins carefully and keep them updated.' },
+        ]},
+        { heading: 'Jenkinsfile Structure', blocks: [
+          { type: 'text', content: 'Jenkins pipelines are defined as code in a Jenkinsfile stored in your repository. There are two syntaxes, but Declarative Pipeline is strongly preferred for DevSecOps work.' },
+          { type: 'comparison', items: [
+            { title: 'Declarative Pipeline', color: '#22C55E', points: [
+              'Structured format: pipeline{}, agent{}, stages{}, steps{}',
+              'Easier to read and review in code reviews',
+              'Built-in validation and error checking',
+              'Recommended for DevSecOps pipelines',
+            ]},
+            { title: 'Scripted Pipeline', color: '#F59E0B', points: [
+              'Full Groovy scripting language',
+              'More flexible and powerful',
+              'Harder to maintain and review',
+              'Use only when declarative is insufficient',
+            ]},
+          ]},
+          { type: 'scan-output', tool: 'Jenkinsfile', title: 'Declarative Pipeline Structure', findings: [
+            { type: 'header', text: 'pipeline {' },
+            { type: 'finding', text: '  agent any                    // Where to run', severity: 'info' },
+            { type: 'finding', text: '  environment { ... }           // Variables & credentials', severity: 'info' },
+            { type: 'finding', text: '  stages {                      // Ordered work units', severity: 'info' },
+            { type: 'finding', text: '    stage("Build") { steps { ... } }', severity: 'info' },
+            { type: 'finding', text: '    stage("Test")  { steps { ... } }', severity: 'info' },
+            { type: 'finding', text: '    stage("Deploy"){ steps { ... } }', severity: 'info' },
+            { type: 'finding', text: '  }', severity: 'info' },
+            { type: 'finding', text: '  post { always { ... } failure { ... } }', severity: 'info' },
+            { type: 'header', text: '}' },
+          ]},
+        ]},
+        { heading: 'Key Concepts', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'Stages', definition: 'Logical groupings of work — Build, Test, Security, Deploy. Each stage appears as a column in the Jenkins pipeline view.' },
+            { term: 'Steps', definition: 'Individual commands within stages — shell commands, plugin calls, or built-in Jenkins functions.' },
+            { term: 'Post', definition: 'Actions that run after a stage or the entire pipeline completes. Conditions: always, success, failure, unstable, changed.' },
+            { term: 'Environment', definition: 'Variables available to all stages. Defined at pipeline or stage level. Supports credentials() injection.' },
+            { term: 'Agent', definition: 'Where the pipeline runs. "agent any" means any available executor. Can specify Docker images or labeled nodes.' },
+          ]},
+          { type: 'pipeline', stages: [
+            { label: 'Checkout', icon: '📥', desc: 'Clone source code', security: false, tool: 'git' },
+            { label: 'Build', icon: '🔨', desc: 'Compile & package', security: false, tool: 'docker' },
+            { label: 'Test', icon: '🧪', desc: 'Run test suites', security: false, tool: 'pytest' },
+            { label: 'Security', icon: '🔒', desc: 'Run security scans', security: true, tool: 'trivy' },
+            { label: 'Deploy', icon: '🚀', desc: 'Ship to environment', security: false, tool: 'kubectl' },
+          ]},
+        ]},
+        { heading: 'Credentials Management', blocks: [
+          { type: 'callout', variant: 'warning', title: 'Never Hardcode Credentials', content: 'NEVER put passwords, API keys, or tokens directly in your Jenkinsfile. The file is stored in version control — anyone with repo access can see them. Leaked credentials are the #1 cause of security breaches.' },
+          { type: 'steps', steps: [
+            { label: 'Store in Jenkins Credentials Store', detail: 'Go to Jenkins > Manage Jenkins > Manage Credentials. Add your secret with a unique ID like "docker-registry-creds".' },
+            { label: 'Reference with credentials() helper', detail: 'In your Jenkinsfile environment block: DOCKER_CREDS = credentials("docker-registry-creds"). Jenkins injects the value at runtime.' },
+            { label: 'Use in pipeline steps', detail: 'Reference as ${DOCKER_CREDS} in shell commands. For username/password types, Jenkins creates _USR and _PSW suffix variables automatically.' },
+          ]},
+          { type: 'comparison', items: [
+            { title: 'Supported Credential Types', color: '#3B82F6', points: [
+              'Secret text — API keys, tokens',
+              'Username/Password — registry logins',
+              'SSH Key — Git clone, server access',
+              'Certificate — TLS/SSL certificates',
+            ]},
+            { title: 'Best Practices', color: '#22C55E', points: [
+              'Use unique IDs that describe the purpose',
+              'Scope credentials to specific folders/jobs',
+              'Rotate credentials on a regular schedule',
+              'Audit credential usage in pipeline logs',
+            ]},
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -762,14 +1568,71 @@ const MODULES = {
     ],
   },
   '3.2': {
-    id: '3.2', pathId: 3, title: 'Adding Security Gates to Jenkins', baseXP: 150,
+    id: '3.2', pathId: 3, title: 'Adding Security Gates to Jenkins', baseXP: 150, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Security Gates', content: 'A security gate is a checkpoint in your pipeline that evaluates security scan results and decides: pass or fail? Gates transform security scans from informational to actionable — the pipeline stops if quality standards aren\'t met.' },
-        { heading: 'Hard Fail vs Soft Fail', content: 'Hard fail: pipeline stops and build is marked FAILED. Use for CRITICAL/HIGH findings. Soft fail: warning is logged but pipeline continues. Use for MEDIUM/LOW findings or during initial adoption when you want visibility without blocking.', highlight: true },
-        { heading: 'Quality Gate Design', content: 'Start permissive, tighten over time. Month 1: log everything, fail on nothing. Month 2: fail on CRITICAL only. Month 3: fail on CRITICAL + HIGH. This lets teams adapt gradually without feeling blocked.', highlight: true },
-        { heading: 'Maturity Model', content: 'Level 1: Manual security reviews. Level 2: Automated scans, results logged. Level 3: Automated scans with soft gates (warnings). Level 4: Hard gates on Critical/High. Level 5: Custom policies, SLA-based gates, exception workflow.' },
+        { heading: 'Security Gates', blocks: [
+          { type: 'text', content: 'A security gate is a checkpoint in your pipeline that evaluates security scan results and makes a binary decision: pass or fail. Gates transform security scans from informational to actionable — the pipeline stops if quality standards are not met.' },
+          { type: 'pipeline', stages: [
+            { label: 'Secrets Scan', icon: '🔑', desc: 'Gitleaks detect', security: true, tool: 'gitleaks' },
+            { label: 'SAST Gate', icon: '🔍', desc: 'Semgrep analysis', security: true, tool: 'semgrep' },
+            { label: 'Build', icon: '🔨', desc: 'Docker build', security: false, tool: 'docker' },
+            { label: 'Image Gate', icon: '🛡️', desc: 'Trivy scan', security: true, tool: 'trivy' },
+            { label: 'Deploy', icon: '🚀', desc: 'If all gates pass', security: false, tool: 'kubectl' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Gates vs Scans', content: 'A scan finds vulnerabilities. A gate decides what to do about them. Without gates, scans are just informational noise. Gates enforce your security policy automatically.' },
+        ]},
+        { heading: 'Hard Fail vs Soft Fail', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Hard Fail', color: '#EF4444', points: [
+              'Pipeline STOPS — build marked FAILED',
+              'Use for CRITICAL and HIGH severity findings',
+              'Blocks deployment until issues are fixed',
+              'Example: --exit-code 1 flag in Trivy',
+            ]},
+            { title: 'Soft Fail', color: '#F59E0B', points: [
+              'Warning logged — pipeline CONTINUES',
+              'Use for MEDIUM/LOW findings',
+              'Provides visibility without blocking delivery',
+              'Example: allow_failure: true in GitLab CI',
+            ]},
+          ]},
+          { type: 'scan-output', tool: 'quality-gate.sh', title: 'Quality Gate Script Output', findings: [
+            { type: 'header', text: '=== Quality Gate Evaluation ===' },
+            { type: 'finding', text: 'CRITICAL vulnerabilities: 0', severity: 'low' },
+            { type: 'finding', text: 'HIGH vulnerabilities: 3', severity: 'medium' },
+            { type: 'finding', text: 'MEDIUM vulnerabilities: 12', severity: 'low' },
+            { type: 'summary', text: 'PASSED — No critical findings. HIGH count (3) within threshold (5).' },
+          ]},
+        ]},
+        { heading: 'Quality Gate Design', blocks: [
+          { type: 'text', content: 'The golden rule: start permissive, tighten over time. Blocking everything on day one creates developer frustration and resistance. Gradual rollout builds trust and adoption.' },
+          { type: 'steps', steps: [
+            { label: 'Month 1 — Observe', detail: 'Log everything, fail on nothing. Run all scans but only record results. Establish a baseline of your current vulnerability count.' },
+            { label: 'Month 2 — Gate Critical', detail: 'Hard fail on CRITICAL findings only. These are the must-fix issues (RCE, SQL injection, leaked secrets). Teams can handle this low volume.' },
+            { label: 'Month 3 — Gate High', detail: 'Hard fail on CRITICAL + HIGH. Soft fail (warning) on MEDIUM. By now teams understand the tools and have fixed their backlog.' },
+            { label: 'Month 4+ — Full Policy', detail: 'Custom thresholds per team/repo. SLA-based gates (e.g., fix HIGH within 7 days). Exception workflows for false positives.' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Track the number of pipeline blocks per week. If it spikes after tightening a gate, consider rolling back one level. The goal is sustained improvement, not developer rebellion.' },
+        ]},
+        { heading: 'Maturity Model', blocks: [
+          { type: 'text', content: 'Organizations progress through five levels of DevSecOps pipeline maturity. Most teams start at Level 1 and should aim to reach Level 4 within 6-12 months.' },
+          { type: 'severity-bars', title: 'DevSecOps Pipeline Maturity Levels', items: [
+            { rank: 1, label: 'Level 1: Manual Reviews', count: 20, color: '#EF4444' },
+            { rank: 2, label: 'Level 2: Scans + Logging', count: 40, color: '#F59E0B' },
+            { rank: 3, label: 'Level 3: Soft Gates (Warnings)', count: 60, color: '#F97316' },
+            { rank: 4, label: 'Level 4: Hard Gates (Critical/High)', count: 80, color: '#3B82F6' },
+            { rank: 5, label: 'Level 5: Custom Policies + SLAs', count: 100, color: '#22C55E' },
+          ]},
+          { type: 'attack-flow', steps: [
+            { type: 'info', label: 'Level 1', detail: 'Security team manually reviews code before release. Slow and inconsistent.' },
+            { type: 'info', label: 'Level 2', detail: 'Automated scans run in CI. Results are logged and visible but do not block.' },
+            { type: 'defense', label: 'Level 3', detail: 'Soft gates produce warnings on findings. Developers see issues without being blocked.' },
+            { type: 'defense', label: 'Level 4', detail: 'Hard gates block deployment for Critical/High. Most teams should target this level.' },
+            { type: 'defense', label: 'Level 5', detail: 'Custom policies, SLA-based remediation windows, automated exception workflows.' },
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -810,14 +1673,88 @@ const MODULES = {
     ],
   },
   '3.3': {
-    id: '3.3', pathId: 3, title: 'GitLab CI/CD', baseXP: 150,
+    id: '3.3', pathId: 3, title: 'GitLab CI/CD', baseXP: 150, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'GitLab CI Architecture', content: 'GitLab CI is built into GitLab — no separate server needed. Pipelines are defined in .gitlab-ci.yml at the repo root. GitLab Runners execute jobs. Runners can be shared (GitLab-managed) or self-hosted (your servers).' },
-        { heading: '.gitlab-ci.yml Structure', content: 'Define stages (ordered list), then jobs (belong to stages). Each job has: stage, script, artifacts, rules/only/except, image (Docker image to use). Jobs in the same stage run in parallel.', highlight: true },
-        { heading: 'Built-in Security', content: 'GitLab has built-in security scanning templates: SAST, DAST, SCA, container scanning, secrets detection, license compliance. Include them with: `include: template: Security/SAST.gitlab-ci.yml`. Results show in Merge Request security widget.', highlight: true },
-        { heading: 'Key Directives', content: 'artifacts:reports:sast — uploads SAST results to MR widget. allow_failure: true — soft gate (warning). when: manual — requires human click. needs: [job] — dependency between jobs. rules: — conditional execution.' },
+        { heading: 'GitLab CI Architecture', blocks: [
+          { type: 'text', content: 'GitLab CI is built directly into GitLab — no separate CI server to install or maintain. Pipelines are defined in a .gitlab-ci.yml file at the repository root and executed by GitLab Runners.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Developer', note: 'Pushes code' },
+            { label: 'GitLab Server', note: 'Parses .gitlab-ci.yml' },
+            { label: 'Runner (Shared)', note: 'GitLab-managed' },
+            { label: 'Runner (Self-hosted)', note: 'Your servers' },
+            { label: 'Artifacts', note: 'Reports & builds' },
+          ]},
+          { type: 'comparison', items: [
+            { title: 'Shared Runners', color: '#3B82F6', points: [
+              'Managed by GitLab (gitlab.com)',
+              'No infrastructure to maintain',
+              'Limited compute minutes on free tier',
+              'Good for small-to-medium projects',
+            ]},
+            { title: 'Self-hosted Runners', color: '#A78BFA', points: [
+              'Installed on your own servers',
+              'Full control over environment and resources',
+              'No compute minute limits',
+              'Required for air-gapped or compliance environments',
+            ]},
+          ]},
+        ]},
+        { heading: '.gitlab-ci.yml Structure', blocks: [
+          { type: 'text', content: 'The .gitlab-ci.yml file defines stages (an ordered list), then jobs that belong to those stages. Jobs in the same stage run in parallel by default, giving you fast feedback.' },
+          { type: 'scan-output', tool: '.gitlab-ci.yml', title: 'GitLab CI YAML Structure', findings: [
+            { type: 'header', text: 'stages:' },
+            { type: 'finding', text: '  - build', severity: 'info' },
+            { type: 'finding', text: '  - test', severity: 'info' },
+            { type: 'finding', text: '  - security        # Security scans run here', severity: 'medium' },
+            { type: 'finding', text: '  - deploy', severity: 'info' },
+            { type: 'header', text: 'job_name:' },
+            { type: 'finding', text: '  stage: security   # Which stage this job belongs to', severity: 'info' },
+            { type: 'finding', text: '  image: tool:latest # Docker image for the job', severity: 'info' },
+            { type: 'finding', text: '  script:           # Commands to execute', severity: 'info' },
+            { type: 'finding', text: '  artifacts:        # Files to save after job', severity: 'info' },
+            { type: 'finding', text: '  rules:            # When to run this job', severity: 'info' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Jobs in the same stage run in parallel. Place SAST, secrets scanning, and SCA in the same "security" stage to scan simultaneously and save pipeline time.' },
+        ]},
+        { heading: 'Built-in Security', blocks: [
+          { type: 'text', content: 'GitLab provides built-in security scanning templates that require just a single include line. Results automatically appear in the Merge Request security widget for inline review.' },
+          { type: 'pipeline', stages: [
+            { label: 'SAST', icon: '🔍', desc: 'Source code analysis', security: true, tool: 'semgrep' },
+            { label: 'DAST', icon: '🌐', desc: 'Dynamic app testing', security: true, tool: 'ZAP' },
+            { label: 'SCA', icon: '📦', desc: 'Dependency scanning', security: true, tool: 'gemnasium' },
+            { label: 'Container', icon: '🐳', desc: 'Image scanning', security: true, tool: 'trivy' },
+            { label: 'Secrets', icon: '🔑', desc: 'Secret detection', security: true, tool: 'gitleaks' },
+            { label: 'License', icon: '📜', desc: 'Compliance check', security: true, tool: 'license-finder' },
+          ]},
+          { type: 'callout', variant: 'example', title: 'Including a Security Template', content: 'Add this to your .gitlab-ci.yml to enable SAST scanning:\n\ninclude:\n  - template: Security/SAST.gitlab-ci.yml\n\nThat\'s it. GitLab automatically adds a SAST job, runs it, and displays findings in the Merge Request widget.' },
+        ]},
+        { heading: 'Key Directives', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'artifacts:reports:sast', definition: 'Uploads SAST results to the GitLab MR security widget for inline display of findings on affected lines.' },
+            { term: 'allow_failure: true', definition: 'Converts a job failure into a warning. The pipeline continues, but the failure is visible in the UI. Acts as a soft gate.' },
+            { term: 'when: manual', definition: 'Requires a human to click a button in the GitLab UI to trigger the job. Adds an approval step before deployment.' },
+            { term: 'needs: [job]', definition: 'Creates a dependency between jobs. This job waits for the specified job to complete, even across stages.' },
+            { term: 'rules:', definition: 'Conditional execution logic. Controls when a job runs based on branch, variables, file changes, or other conditions.' },
+          ]},
+          { type: 'comparison', items: [
+            { title: 'GitLab CI', color: '#F97316', points: [
+              'Built into GitLab — zero setup',
+              'YAML-based pipeline config',
+              'Built-in security templates',
+              'MR security widget shows findings inline',
+              'Auto DevOps for zero-config pipelines',
+            ]},
+            { title: 'Jenkins', color: '#3B82F6', points: [
+              'Separate server to install and maintain',
+              'Groovy-based Jenkinsfile',
+              'Security via plugins (more flexible)',
+              'Blue Ocean UI for pipeline visualization',
+              '2,000+ plugins for any integration',
+            ]},
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -846,14 +1783,79 @@ const MODULES = {
     ],
   },
   '3.4': {
-    id: '3.4', pathId: 3, title: 'GitHub Actions', baseXP: 150,
+    id: '3.4', pathId: 3, title: 'GitHub Actions', baseXP: 150, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'GitHub Actions Concepts', content: 'Workflow: a YAML file in .github/workflows/. Triggered by events (push, pull_request, schedule). Contains jobs, which contain steps. Steps use actions (reusable packages from the Marketplace) or run shell commands.' },
-        { heading: 'Key Features', content: 'Marketplace: 15,000+ pre-built actions. Matrix builds: test across OS/language versions. SARIF upload: native security findings display. Environments: approval gates for deployment. Secrets: encrypted storage.', highlight: true },
-        { heading: 'SARIF Integration', content: 'Upload SARIF files with github/codeql-action/upload-sarif. Findings appear in the Security tab of your repo. PRs show security alerts inline. This is the native way to integrate security tools with GitHub.', highlight: true },
-        { heading: 'Comparison', content: 'vs Jenkins: simpler YAML, less flexible, huge marketplace. vs GitLab CI: similar YAML approach, GitHub-native, slightly different semantics (needs vs stages). Best for: open-source projects, GitHub-centric teams.' },
+        { heading: 'GitHub Actions Concepts', blocks: [
+          { type: 'text', content: 'GitHub Actions is GitHub\'s built-in CI/CD platform. Workflows are YAML files stored in .github/workflows/ and triggered by repository events like pushes, pull requests, or schedules.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Event', note: 'push / PR / schedule' },
+            { label: 'Workflow', note: '.github/workflows/*.yml' },
+            { label: 'Job', note: 'runs-on: ubuntu-latest' },
+            { label: 'Steps', note: 'uses: or run:' },
+            { label: 'Artifacts', note: 'Reports & outputs' },
+          ]},
+          { type: 'keyterms', terms: [
+            { term: 'Workflow', definition: 'A YAML file that defines the entire automation. One repo can have many workflows, each triggered by different events.' },
+            { term: 'Job', definition: 'A set of steps that run on the same runner. Jobs run in parallel by default; use "needs:" for sequential ordering.' },
+            { term: 'Step', definition: 'A single task — either a marketplace action (uses:) or a shell command (run:). Steps run sequentially within a job.' },
+            { term: 'Action', definition: 'A reusable package from the GitHub Marketplace. Referenced as owner/repo@version (e.g., actions/checkout@v4).' },
+          ]},
+        ]},
+        { heading: 'Key Features', blocks: [
+          { type: 'text', content: 'GitHub Actions stands out with its massive marketplace ecosystem and native GitHub integration. Here are the features that matter most for DevSecOps.' },
+          { type: 'scan-output', tool: 'security.yml', title: 'GitHub Actions Workflow Example', findings: [
+            { type: 'header', text: 'name: Security Pipeline' },
+            { type: 'finding', text: 'on: [push, pull_request]', severity: 'info' },
+            { type: 'header', text: 'jobs:' },
+            { type: 'finding', text: '  secrets-scan:', severity: 'medium' },
+            { type: 'finding', text: '    uses: gitleaks/gitleaks-action@v2', severity: 'info' },
+            { type: 'finding', text: '  sast:', severity: 'medium' },
+            { type: 'finding', text: '    uses: returntocorp/semgrep-action@v1', severity: 'info' },
+            { type: 'finding', text: '  container-scan:', severity: 'medium' },
+            { type: 'finding', text: '    uses: aquasecurity/trivy-action@master', severity: 'info' },
+            { type: 'finding', text: '    # Upload SARIF to Security tab', severity: 'low' },
+            { type: 'finding', text: '    uses: github/codeql-action/upload-sarif@v3', severity: 'info' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Marketplace Ecosystem', content: 'With 15,000+ pre-built actions, you rarely need to write scanning logic from scratch. Search the GitHub Marketplace for security actions — most popular tools (Trivy, Semgrep, Gitleaks, ZAP) publish official actions.' },
+        ]},
+        { heading: 'SARIF Integration', blocks: [
+          { type: 'text', content: 'SARIF (Static Analysis Results Interchange Format) is the native way to display security findings in GitHub. Upload a SARIF file and findings appear in the Security tab and as inline PR annotations.' },
+          { type: 'steps', steps: [
+            { label: 'Run your security tool', detail: 'Configure the scan to output results in SARIF format. Most tools support this: trivy --format sarif, semgrep --sarif, etc.' },
+            { label: 'Upload with CodeQL action', detail: 'Use github/codeql-action/upload-sarif@v3 with sarif_file parameter pointing to your output file.' },
+            { label: 'View in Security tab', detail: 'Findings appear in the repository Security tab under "Code scanning alerts" with severity, file location, and description.' },
+            { label: 'Review inline on PRs', detail: 'Pull requests show security alerts as inline annotations on the affected lines of code, making review seamless.' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Always use "if: always()" on the SARIF upload step. This ensures findings are uploaded even when the scan step fails (finds vulnerabilities), so you still get visibility into what was found.' },
+        ]},
+        { heading: 'Comparison', blocks: [
+          { type: 'comparison', items: [
+            { title: 'GitHub Actions', color: '#3B82F6', points: [
+              'Built into GitHub — zero setup',
+              '15,000+ marketplace actions',
+              'SARIF integration for security findings',
+              'Matrix builds for multi-OS testing',
+              'Best for: GitHub-centric teams, open-source',
+            ]},
+            { title: 'GitLab CI', color: '#F97316', points: [
+              'Built into GitLab — zero setup',
+              'Built-in security templates (SAST, DAST, SCA)',
+              'MR security widget for findings',
+              'Auto DevOps for zero-config',
+              'Best for: GitLab-centric teams, enterprise',
+            ]},
+            { title: 'Jenkins', color: '#A78BFA', points: [
+              'Separate server — more setup, more control',
+              '2,000+ plugins for any integration',
+              'Groovy scripting for complex logic',
+              'Self-hosted — full data sovereignty',
+              'Best for: complex enterprise pipelines',
+            ]},
+          ]},
+          { type: 'callout', variant: 'example', title: 'Choosing the Right Tool', content: 'Use GitHub Actions if your code lives in GitHub and you want the simplest setup. Use GitLab CI if you need built-in security templates and an all-in-one platform. Use Jenkins if you need maximum flexibility or have complex enterprise requirements.' },
+        ]},
       ],
     },
     simulation: {
@@ -882,14 +1884,76 @@ const MODULES = {
     ],
   },
   '3.5': {
-    id: '3.5', pathId: 3, title: 'Building a Complete Pipeline', baseXP: 150,
+    id: '3.5', pathId: 3, title: 'Building a Complete Pipeline', baseXP: 150, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'End-to-End Architecture', content: 'A complete DevSecOps pipeline: Pre-commit (secrets) → Build (SAST, SCA, Dockerfile lint) → Test (unit, integration) → Image Build (container scan) → Staging (DAST) → Policy Gate → Production. Each stage adds a security layer.' },
-        { heading: 'Tool Selection', content: 'Secrets: Gitleaks (pre-commit + CI). SAST: Semgrep (fast, multi-language). SCA: Trivy (multi-target). Container: Trivy + Hadolint. DAST: ZAP (after staging deploy). IaC: Checkov. This covers all attack vectors.', highlight: true },
-        { heading: 'Scan Ordering', content: 'Fast scans first, slow scans later. Secrets detection (seconds) → SAST (minutes) → SCA (minutes) → Image scan (minutes) → DAST (5-30 min). This gives fast feedback on easy-to-fix issues.', highlight: true },
-        { heading: 'Metrics', content: 'Track: MTTR (Mean Time to Remediate by severity), scan coverage (% of repos with scans), false positive rate (% findings that are noise), developer adoption (% using pre-commit hooks). These prove ROI.' },
+        { heading: 'End-to-End Architecture', blocks: [
+          { type: 'text', content: 'A complete DevSecOps pipeline layers security checks at every stage, from the developer\'s machine all the way to production. Each stage catches different categories of vulnerabilities, creating defense in depth.' },
+          { type: 'pipeline', stages: [
+            { label: 'Pre-commit', icon: '🔑', desc: 'Secrets detection', security: true, tool: 'gitleaks' },
+            { label: 'Build', icon: '🔍', desc: 'SAST + SCA + Lint', security: true, tool: 'semgrep' },
+            { label: 'Test', icon: '🧪', desc: 'Unit + integration', security: false, tool: 'pytest' },
+            { label: 'Image Build', icon: '🐳', desc: 'Container scan', security: true, tool: 'trivy' },
+            { label: 'Staging', icon: '🌐', desc: 'DAST scan', security: true, tool: 'ZAP' },
+            { label: 'Policy Gate', icon: '🛡️', desc: 'Pass/fail decision', security: true, tool: 'OPA' },
+            { label: 'Production', icon: '🚀', desc: 'Deploy if clear', security: false, tool: 'kubectl' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Defense in Depth', content: 'No single scan catches everything. SAST finds code bugs, SCA finds vulnerable dependencies, container scanning finds OS-level issues, DAST finds runtime vulnerabilities. Together they provide comprehensive coverage.' },
+        ]},
+        { heading: 'Tool Selection', blocks: [
+          { type: 'text', content: 'Choosing the right tool for each scan type is critical. Here is a proven, open-source toolkit that covers all major attack vectors in a DevSecOps pipeline.' },
+          { type: 'comparison', items: [
+            { title: 'Code & Dependencies', color: '#3B82F6', points: [
+              'Secrets: Gitleaks — pre-commit hook + CI scan',
+              'SAST: Semgrep — fast, multi-language, custom rules',
+              'SCA: Trivy — scans dependencies for known CVEs',
+              'IaC: Checkov — Terraform, CloudFormation, K8s',
+            ]},
+            { title: 'Containers & Runtime', color: '#22C55E', points: [
+              'Dockerfile Lint: Hadolint — best practices enforcement',
+              'Image Scan: Trivy — OS packages + app dependencies',
+              'DAST: ZAP — scans running applications for vulns',
+              'Runtime: Falco — detects anomalous container behavior',
+            ]},
+          ]},
+          { type: 'scan-output', tool: 'run-all-scans.sh', title: 'Full Scan Suite Output', findings: [
+            { type: 'header', text: '=== DevSecOps Full Scan Suite ===' },
+            { type: 'finding', text: '[1/5] Secrets Detection ............ PASSED (0 leaks)', severity: 'low' },
+            { type: 'finding', text: '[2/5] SAST Scan ................... 3 findings', severity: 'medium' },
+            { type: 'finding', text: '[3/5] SCA Scan .................... 7 vulnerable deps', severity: 'high' },
+            { type: 'finding', text: '[4/5] Dockerfile Lint ............. 2 warnings', severity: 'medium' },
+            { type: 'finding', text: '[5/5] Container Image Scan ........ 1 CRITICAL', severity: 'critical' },
+            { type: 'summary', text: 'Total: 13 findings across 5 scans. 1 CRITICAL blocks deployment.' },
+          ]},
+        ]},
+        { heading: 'Scan Ordering', blocks: [
+          { type: 'text', content: 'Run fast scans first and slow scans later. This gives developers the quickest possible feedback on the easiest-to-fix issues. A leaked secret can be caught in seconds; a DAST scan takes 30 minutes.' },
+          { type: 'severity-bars', title: 'Scan Duration by Type', items: [
+            { rank: 1, label: 'Secrets Detection', count: 5, color: '#22C55E' },
+            { rank: 2, label: 'SAST (Semgrep)', count: 15, color: '#3B82F6' },
+            { rank: 3, label: 'SCA (Trivy fs)', count: 15, color: '#3B82F6' },
+            { rank: 4, label: 'Dockerfile Lint', count: 5, color: '#22C55E' },
+            { rank: 5, label: 'Container Scan', count: 30, color: '#F59E0B' },
+            { rank: 6, label: 'DAST (ZAP)', count: 100, color: '#EF4444' },
+          ]},
+          { type: 'attack-flow', steps: [
+            { type: 'defense', label: 'Seconds', detail: 'Secrets detection runs first — catches leaked credentials instantly. Fastest scan, most critical issue type.' },
+            { type: 'defense', label: 'Minutes', detail: 'SAST and SCA run in parallel — find code vulnerabilities and vulnerable dependencies. Medium speed, high value.' },
+            { type: 'defense', label: 'Minutes', detail: 'Container image scan after build — finds OS-level vulnerabilities in the packaged artifact.' },
+            { type: 'info', label: '5-30 min', detail: 'DAST runs after staging deployment — tests the running application for runtime vulnerabilities. Slowest but catches issues no other scan can find.' },
+          ]},
+        ]},
+        { heading: 'Metrics', blocks: [
+          { type: 'text', content: 'Metrics prove the value of your DevSecOps program and guide continuous improvement. Without measurement, you cannot demonstrate ROI or identify weak spots.' },
+          { type: 'keyterms', terms: [
+            { term: 'MTTR', definition: 'Mean Time to Remediate — average time from vulnerability discovery to fix, tracked by severity. Target: Critical < 24h, High < 7 days.' },
+            { term: 'Scan Coverage', definition: 'Percentage of repositories with automated security scans enabled. Target: 100% of production repos.' },
+            { term: 'False Positive Rate', definition: 'Percentage of reported findings that are not real issues. High FP rates cause alert fatigue. Target: < 15%.' },
+            { term: 'Developer Adoption', definition: 'Percentage of developers using pre-commit hooks and security tools locally. Measures shift-left culture adoption.' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Create a security dashboard that tracks these metrics over time. Show trends monthly. When MTTR goes down and scan coverage goes up, you are proving DevSecOps ROI to leadership.' },
+        ]},
       ],
     },
     simulation: {
@@ -926,15 +1990,83 @@ const MODULES = {
     ],
   },
   '4.1': {
-    id: '4.1', pathId: 4, title: 'Secrets Management with Vault', baseXP: 200,
+    id: '4.1', pathId: 4, title: 'Secrets Management with Vault', baseXP: 200, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Why Secrets Management', content: 'Hardcoded secrets in code, environment variables, and config files are the #1 cause of breaches. A secrets manager provides centralized, audited, access-controlled storage for credentials.' },
-        { heading: 'Vault Architecture', content: 'HashiCorp Vault: a secrets management tool that stores, generates, encrypts, and audits access to secrets. Core components: Storage Backend (where encrypted data lives), Barrier (encryption layer), Secrets Engines (generate/store secrets), Auth Methods (verify identity), Audit Devices (log all access).', highlight: true },
-        { heading: 'Static vs Dynamic Secrets', content: 'Static secrets: stored values you put in (API keys, passwords). Dynamic secrets: generated on-demand with a TTL (database credentials, cloud tokens). Dynamic secrets are more secure — each consumer gets unique, short-lived credentials.' },
-        { heading: 'Auth Methods & Policies', content: 'Auth methods verify identity: Token, AppRole (for machines), LDAP, OIDC, Kubernetes. Policies define what paths a token can access and what operations are allowed (read, write, list, delete). Principle of least privilege.', highlight: true },
-        { heading: 'Secret Rotation', content: 'Secrets should be rotated regularly. Vault can auto-rotate dynamic secrets via TTLs. For static secrets, establish rotation schedules. Leaked secrets must be rotated immediately — revoke first, then rotate.' },
+        { heading: 'Why Secrets Management', blocks: [
+          { type: 'text', content: 'Hardcoded secrets in code, environment variables, and config files are the #1 cause of breaches. A secrets manager provides centralized, audited, access-controlled storage for credentials.' },
+          { type: 'callout', variant: 'warning', title: 'The Hard Truth', content: 'Over 6 million secrets are detected on public GitHub repos every year. Bots scan for exposed credentials in real-time and can exploit them within minutes of exposure.' },
+          { type: 'scan-output', tool: 'gitleaks', title: 'Secrets Found in Codebase', findings: [
+            { type: 'header', text: 'Gitleaks scan results — 3 secrets detected' },
+            { type: 'finding', text: 'AWS Access Key ID found in config.py', severity: 'CRITICAL', file: 'src/config.py:12' },
+            { type: 'finding', text: 'Database password in docker-compose.yml', severity: 'HIGH', file: 'docker-compose.yml:8' },
+            { type: 'finding', text: 'API token in .env committed to repo', severity: 'HIGH', file: '.env:3' },
+            { type: 'summary', text: '3 findings (1 Critical, 2 High) — all must be rotated immediately' },
+          ]},
+        ]},
+        { heading: 'Vault Architecture', blocks: [
+          { type: 'text', content: 'HashiCorp Vault is a secrets management tool that stores, generates, encrypts, and audits access to secrets.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Client', note: 'App or human requests secret' },
+            { label: 'Auth Method', note: 'Verify identity (AppRole, K8s, OIDC)' },
+            { label: 'Policy Check', note: 'Evaluate ACL permissions' },
+            { label: 'Secrets Engine', note: 'Generate or retrieve secret' },
+            { label: 'Audit Log', note: 'Record every access event' },
+          ]},
+          { type: 'keyterms', terms: [
+            { term: 'Storage Backend', definition: 'Where encrypted data lives (Consul, Raft, S3). Vault encrypts before writing.' },
+            { term: 'Barrier', definition: 'Encryption layer protecting all data at rest. Must be unsealed before Vault operates.' },
+            { term: 'Secrets Engines', definition: 'Plugins that generate or store secrets (KV, database, PKI, AWS, transit).' },
+            { term: 'Auth Methods', definition: 'Plugins that verify identity (Token, AppRole, LDAP, OIDC, Kubernetes).' },
+            { term: 'Audit Devices', definition: 'Log every request and response. Critical for compliance and forensics.' },
+          ]},
+        ]},
+        { heading: 'Static vs Dynamic Secrets', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Static Secrets', color: '#F59E0B', points: [
+              'Stored values you put in (API keys, passwords)',
+              'Shared across consumers — one leak affects all',
+              'Must be manually rotated',
+              'No automatic expiration',
+              'Example: database password in KV store',
+            ]},
+            { title: 'Dynamic Secrets', color: '#22C55E', points: [
+              'Generated on-demand with a TTL',
+              'Each consumer gets unique credentials',
+              'Auto-expire — reduced blast radius',
+              'Vault handles creation and revocation',
+              'Example: short-lived DB creds via database engine',
+            ]},
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Why Dynamic Secrets Win', content: 'Dynamic secrets are more secure because each consumer gets unique, short-lived credentials. If one is compromised, only that single credential is affected and it expires automatically.' },
+        ]},
+        { heading: 'Auth Methods & Policies', blocks: [
+          { type: 'text', content: 'Auth methods verify identity. Policies define what paths a token can access and what operations are allowed (read, write, list, delete). Principle of least privilege.' },
+          { type: 'pipeline', stages: [
+            { label: 'Identity', icon: 'User', desc: 'Who is requesting access?', security: true, tool: 'AppRole / K8s / OIDC' },
+            { label: 'Authenticate', icon: 'Lock', desc: 'Verify credentials are valid', security: true, tool: 'Vault Auth Method' },
+            { label: 'Token', icon: 'Key', desc: 'Issue token with attached policies', security: true, tool: 'Vault Token' },
+            { label: 'Authorize', icon: 'Shield', desc: 'Check policy against requested path', security: true, tool: 'HCL Policy' },
+            { label: 'Access', icon: 'Database', desc: 'Read/write secret if permitted', security: false, tool: 'Secrets Engine' },
+          ]},
+          { type: 'scan-output', tool: 'vault', title: 'Vault Policy Example', findings: [
+            { type: 'header', text: 'policy.hcl — app-readonly policy' },
+            { type: 'finding', text: 'path "secret/data/app/*" → capabilities = ["read", "list"]', severity: 'INFO' },
+            { type: 'finding', text: 'path "secret/data/admin/*" → capabilities = ["deny"]', severity: 'INFO' },
+            { type: 'summary', text: 'Least privilege: app can read its own secrets, denied access to admin secrets' },
+          ]},
+        ]},
+        { heading: 'Secret Rotation', blocks: [
+          { type: 'text', content: 'Secrets should be rotated regularly. Vault can auto-rotate dynamic secrets via TTLs. For static secrets, establish rotation schedules. Leaked secrets must be rotated immediately — revoke first, then rotate.' },
+          { type: 'steps', steps: [
+            { label: 'Detect the leak', detail: 'Gitleaks, TruffleHog, or GitHub push protection flags the exposed secret.' },
+            { label: 'Revoke immediately', detail: 'Disable the compromised credential in the provider (AWS, DB, API). Do not wait.' },
+            { label: 'Rotate', detail: 'Generate a new credential and update all consumers via Vault or secrets manager.' },
+            { label: 'Audit', detail: 'Check access logs for unauthorized usage during the exposure window.' },
+            { label: 'Prevent', detail: 'Add pre-commit hooks and CI scanning to catch future leaks before they happen.' },
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -980,16 +2112,104 @@ const MODULES = {
     ],
   },
   '4.2': {
-    id: '4.2', pathId: 4, title: 'Kubernetes Security', baseXP: 200,
+    id: '4.2', pathId: 4, title: 'Kubernetes Security', baseXP: 200, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'The 4C Model of Cloud-Native Security', content: 'Code → Container → Cluster → Cloud. Each layer builds on the one below. If cloud infrastructure is compromised, all layers above are at risk. Security must be addressed at every level.' },
-        { heading: 'Pod Security Standards', content: 'Three levels: Privileged (unrestricted, for system-level workloads), Baseline (prevents known privilege escalations), Restricted (heavily restricted, follows hardening best practices). Apply via namespace labels in K8s 1.25+.', highlight: true },
-        { heading: 'RBAC — Role-Based Access Control', content: 'Control who can do what in the cluster. Roles define permissions (verbs on resources). RoleBindings attach roles to users/service accounts. Use ClusterRole/ClusterRoleBinding for cluster-wide permissions. Always follow least privilege.' },
-        { heading: 'NetworkPolicies', content: 'By default, all pods can talk to all pods. NetworkPolicies restrict traffic: define ingress/egress rules per namespace/pod label. Essential for micro-segmentation and limiting blast radius.', highlight: true },
-        { heading: 'Admission Controllers', content: 'Intercept requests to the K8s API before persistence. OPA Gatekeeper and Kyverno are popular policy engines. They can enforce: no privileged containers, approved image registries only, resource limits required, no host networking.' },
-        { heading: 'CIS Benchmarks', content: 'CIS Kubernetes Benchmark provides a comprehensive security configuration guide. Tools like kube-bench and kubeaudit automate checks against these benchmarks.' },
+        { heading: 'The 4C Model of Cloud-Native Security', blocks: [
+          { type: 'text', content: 'Cloud-native security uses a layered defense model. Each layer builds on the one below — if a lower layer is compromised, all layers above are at risk.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Cloud', note: 'Infrastructure security (IAM, network, encryption)' },
+            { label: 'Cluster', note: 'K8s API, RBAC, NetworkPolicies, admission control' },
+            { label: 'Container', note: 'Image scanning, runtime security, least privilege' },
+            { label: 'Code', note: 'SAST, SCA, secrets detection, secure coding' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Defense in Depth', content: 'Security must be addressed at every level. A hardened container running on an insecure cluster is still vulnerable. The 4C model ensures no layer is neglected.' },
+        ]},
+        { heading: 'Pod Security Standards', blocks: [
+          { type: 'text', content: 'Kubernetes 1.25+ enforces Pod Security Standards via namespace labels. Three levels control what pods can do.' },
+          { type: 'comparison', items: [
+            { title: 'Privileged', color: '#EF4444', points: [
+              'Unrestricted — no security constraints',
+              'For system-level workloads (CNI, storage drivers)',
+              'Can access host namespaces and devices',
+              'Should be limited to kube-system namespace',
+            ]},
+            { title: 'Baseline', color: '#F59E0B', points: [
+              'Prevents known privilege escalations',
+              'No privileged containers or hostNetwork',
+              'No hostPID or hostIPC',
+              'Good default for most workloads',
+            ]},
+            { title: 'Restricted', color: '#22C55E', points: [
+              'Heavily hardened, best practices enforced',
+              'Must run as non-root, drop ALL capabilities',
+              'Read-only root filesystem required',
+              'Seccomp profile must be set',
+            ]},
+          ]},
+          { type: 'scan-output', tool: 'kubeaudit', title: 'Pod Security Audit', findings: [
+            { type: 'header', text: 'kubeaudit all -f insecure-deploy.yaml' },
+            { type: 'finding', text: 'Container "app" is privileged', severity: 'CRITICAL', file: 'insecure-deploy.yaml' },
+            { type: 'finding', text: 'Container "app" runs as root (UID 0)', severity: 'CRITICAL', file: 'insecure-deploy.yaml' },
+            { type: 'finding', text: 'Container "app" allows privilege escalation', severity: 'HIGH', file: 'insecure-deploy.yaml' },
+            { type: 'finding', text: 'Container "app" does not drop all capabilities', severity: 'MEDIUM', file: 'insecure-deploy.yaml' },
+            { type: 'summary', text: '4 findings (2 Critical, 1 High, 1 Medium)' },
+          ]},
+        ]},
+        { heading: 'RBAC — Role-Based Access Control', blocks: [
+          { type: 'text', content: 'RBAC controls who can do what in the cluster. Roles define permissions (verbs on resources). RoleBindings attach roles to users or service accounts.' },
+          { type: 'pipeline', stages: [
+            { label: 'User/SA', icon: 'User', desc: 'Identity making the API request', security: false, tool: 'ServiceAccount' },
+            { label: 'Authentication', icon: 'Lock', desc: 'Verify identity (certs, tokens, OIDC)', security: true, tool: 'K8s Auth' },
+            { label: 'Authorization', icon: 'Shield', desc: 'RBAC check: does this identity have permission?', security: true, tool: 'RBAC' },
+            { label: 'Admission', icon: 'AlertTriangle', desc: 'Policy check (OPA, Kyverno)', security: true, tool: 'Admission Controller' },
+            { label: 'Persist', icon: 'Database', desc: 'Resource created in etcd', security: false, tool: 'etcd' },
+          ]},
+          { type: 'callout', variant: 'tip', title: 'Least Privilege in RBAC', content: 'Use Role/RoleBinding (namespace-scoped) instead of ClusterRole/ClusterRoleBinding whenever possible. Never grant cluster-admin to application service accounts.' },
+        ]},
+        { heading: 'NetworkPolicies', blocks: [
+          { type: 'text', content: 'By default, all pods can talk to all pods. NetworkPolicies restrict traffic with ingress/egress rules per namespace and pod label.' },
+          { type: 'attack-flow', steps: [
+            { type: 'attack', label: 'No NetworkPolicy', detail: 'Attacker compromises one pod and can freely communicate with every other pod in the cluster' },
+            { type: 'defense', label: 'Default-Deny Policy', detail: 'Apply a default-deny policy to block all traffic, then explicitly allow only what is needed' },
+            { type: 'defense', label: 'Allow Specific Traffic', detail: 'Create policies allowing frontend → backend, backend → database, nothing else' },
+            { type: 'info', label: 'Result', detail: 'Blast radius reduced — compromised pod is isolated and cannot reach other services' },
+          ]},
+          { type: 'callout', variant: 'warning', title: 'CNI Requirement', content: 'NetworkPolicies require a CNI plugin that supports them (Calico, Cilium, Weave). The default kubenet CNI does NOT enforce NetworkPolicies — they are silently ignored.' },
+        ]},
+        { heading: 'Admission Controllers', blocks: [
+          { type: 'text', content: 'Admission controllers intercept requests to the K8s API before persistence. Policy engines evaluate every resource creation/update against your security rules.' },
+          { type: 'comparison', items: [
+            { title: 'OPA Gatekeeper', color: '#3B82F6', points: [
+              'Rego policy language (powerful, steep learning curve)',
+              'ConstraintTemplates + Constraints model',
+              'Strong ecosystem and community',
+              'General-purpose — works beyond K8s too',
+            ]},
+            { title: 'Kyverno', color: '#A78BFA', points: [
+              'YAML-native policies (easier to learn)',
+              'Can mutate, validate, and generate resources',
+              'K8s-native design and CRDs',
+              'Lower barrier to entry for K8s teams',
+            ]},
+          ]},
+        ]},
+        { heading: 'CIS Benchmarks', blocks: [
+          { type: 'text', content: 'CIS Kubernetes Benchmark provides a comprehensive security configuration guide. Automated tools check your cluster against these benchmarks.' },
+          { type: 'scan-output', tool: 'kube-bench', title: 'CIS Benchmark Scan', findings: [
+            { type: 'header', text: 'kube-bench run --targets master' },
+            { type: 'finding', text: '1.1.1 Ensure API server --anonymous-auth is set to false', severity: 'CRITICAL' },
+            { type: 'finding', text: '1.2.6 Ensure --kubelet-certificate-authority is set', severity: 'HIGH' },
+            { type: 'finding', text: '1.3.2 Ensure --profiling is set to false', severity: 'MEDIUM' },
+            { type: 'summary', text: '47 checks: 38 PASS, 6 FAIL, 3 WARN' },
+          ]},
+          { type: 'severity-bars', title: 'CIS Benchmark Results', items: [
+            { rank: 1, label: 'PASS', count: 38, color: '#22C55E' },
+            { rank: 2, label: 'FAIL', count: 6, color: '#EF4444' },
+            { rank: 3, label: 'WARN', count: 3, color: '#F59E0B' },
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -1035,15 +2255,75 @@ const MODULES = {
     ],
   },
   '4.3': {
-    id: '4.3', pathId: 4, title: 'Policy as Code with OPA', baseXP: 200,
+    id: '4.3', pathId: 4, title: 'Policy as Code with OPA', baseXP: 200, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'What is Policy as Code?', content: 'Writing security and compliance rules as code that can be version-controlled, tested, and automatically enforced. Instead of manual checklists, policies are executable and integrated into CI/CD pipelines.' },
-        { heading: 'OPA & Rego', content: 'Open Policy Agent (OPA) is a general-purpose policy engine. Policies are written in Rego, a declarative query language. OPA takes JSON input, evaluates against policies, and returns decisions. Used for K8s admission, API authorization, Terraform validation, and more.', highlight: true },
-        { heading: 'Gatekeeper', content: 'OPA Gatekeeper integrates OPA with Kubernetes as an admission controller. Uses ConstraintTemplates (define the policy logic) and Constraints (apply it to specific resources). Blocks non-compliant resources from being created.' },
-        { heading: 'Conftest', content: 'Conftest uses OPA/Rego to test structured configuration files: Dockerfiles, Kubernetes YAML, Terraform HCL, CI configs. Run conftest test in CI to catch misconfigurations before deployment.', highlight: true },
-        { heading: 'Use Cases', content: 'Common policies: only approved base images, no privileged containers, all resources must have labels, S3 buckets must be encrypted, no public security groups, Dockerfiles must use non-root USER. Each rule prevents a class of misconfiguration.' },
+        { heading: 'What is Policy as Code?', blocks: [
+          { type: 'text', content: 'Policy as Code means writing security and compliance rules as executable code that can be version-controlled, tested, and automatically enforced. Instead of manual checklists, policies run in CI/CD pipelines.' },
+          { type: 'comparison', items: [
+            { title: 'Manual Checklists', color: '#EF4444', points: [
+              'Rely on human diligence — people forget',
+              'Not version-controlled or auditable',
+              'Cannot enforce automatically',
+              'Scale poorly with team growth',
+            ]},
+            { title: 'Policy as Code', color: '#22C55E', points: [
+              'Automatically enforced — no human error',
+              'Version-controlled in Git alongside code',
+              'Testable with unit tests and CI',
+              'Scales to any team or org size',
+            ]},
+          ]},
+        ]},
+        { heading: 'OPA & Rego', blocks: [
+          { type: 'text', content: 'Open Policy Agent (OPA) is a general-purpose policy engine. Policies are written in Rego, a declarative query language. OPA takes JSON input, evaluates it against policies, and returns decisions.' },
+          { type: 'keyterms', terms: [
+            { term: 'OPA', definition: 'Open Policy Agent — a general-purpose policy engine that decouples policy decisions from application logic.' },
+            { term: 'Rego', definition: 'Declarative query language for writing OPA policies. Designed for querying nested documents (JSON/YAML).' },
+            { term: 'Input', definition: 'JSON data submitted for evaluation — a K8s resource, Terraform plan, API request, etc.' },
+            { term: 'Decision', definition: 'The result of policy evaluation — allow/deny with optional messages explaining violations.' },
+          ]},
+          { type: 'scan-output', tool: 'opa', title: 'Rego Policy Evaluation', findings: [
+            { type: 'header', text: 'opa eval --input bad-input.json --data policy.rego' },
+            { type: 'finding', text: "Container 'evil-app' uses unapproved image 'ubuntu:latest'", severity: 'HIGH' },
+            { type: 'finding', text: "Container 'evil-app' runs as root (UID 0)", severity: 'CRITICAL' },
+            { type: 'finding', text: "Container 'evil-app' is privileged", severity: 'CRITICAL' },
+            { type: 'summary', text: '3 deny rules fired — pod rejected' },
+          ]},
+        ]},
+        { heading: 'Gatekeeper', blocks: [
+          { type: 'text', content: 'OPA Gatekeeper integrates OPA with Kubernetes as an admission controller. It uses ConstraintTemplates and Constraints to enforce policies on cluster resources.' },
+          { type: 'pipeline', stages: [
+            { label: 'kubectl apply', icon: 'Terminal', desc: 'User submits a resource to the API', security: false, tool: 'kubectl' },
+            { label: 'API Server', icon: 'Server', desc: 'Request received by K8s API', security: false, tool: 'kube-apiserver' },
+            { label: 'Gatekeeper Webhook', icon: 'Shield', desc: 'Admission webhook intercepts request', security: true, tool: 'OPA Gatekeeper' },
+            { label: 'Rego Evaluation', icon: 'Brain', desc: 'Evaluate against ConstraintTemplates', security: true, tool: 'Rego' },
+            { label: 'Allow / Deny', icon: 'Check', desc: 'Compliant resources admitted, violations rejected', security: true, tool: 'Decision' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Two-Part Model', content: 'ConstraintTemplate defines the policy logic in Rego. Constraint applies that template to specific resources (e.g., all Pods in production namespace). This separation lets you reuse templates across many constraints.' },
+        ]},
+        { heading: 'Conftest', blocks: [
+          { type: 'text', content: 'Conftest uses OPA/Rego to test structured configuration files — Dockerfiles, Kubernetes YAML, Terraform HCL, and CI configs. Run it in CI to catch misconfigurations before deployment.' },
+          { type: 'scan-output', tool: 'conftest', title: 'Conftest Dockerfile Scan', findings: [
+            { type: 'header', text: 'conftest test Dockerfile --policy dockerfile-policy/' },
+            { type: 'finding', text: 'Last USER should not be root', severity: 'HIGH', file: 'Dockerfile' },
+            { type: 'finding', text: 'FROM should use specific tag, not latest', severity: 'MEDIUM', file: 'Dockerfile' },
+            { type: 'summary', text: '2 tests, 0 passed, 2 failures' },
+          ]},
+          { type: 'callout', variant: 'tip', title: 'Shift Left with Conftest', content: 'Run conftest in pre-commit hooks or early CI stages. It catches misconfigurations in seconds, long before they reach a cluster.' },
+        ]},
+        { heading: 'Use Cases', blocks: [
+          { type: 'text', content: 'Common policies prevent entire classes of misconfiguration. Each rule codifies a security best practice.' },
+          { type: 'steps', steps: [
+            { label: 'Approved Base Images', detail: 'Only allow containers from your private registry or a whitelist of trusted images.' },
+            { label: 'No Privileged Containers', detail: 'Block any pod spec with securityContext.privileged: true.' },
+            { label: 'Required Labels', detail: 'All resources must have owner, team, and environment labels for accountability.' },
+            { label: 'Encrypted Storage', detail: 'S3 buckets must have encryption enabled. Deny unencrypted bucket creation.' },
+            { label: 'Non-Root USER', detail: 'Dockerfiles must include a USER directive that is not root.' },
+            { label: 'Resource Limits', detail: 'All containers must specify CPU and memory limits to prevent resource exhaustion.' },
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -1083,14 +2363,73 @@ const MODULES = {
     ],
   },
   '4.4': {
-    id: '4.4', pathId: 4, title: 'SonarQube Deep Dive', baseXP: 200,
+    id: '4.4', pathId: 4, title: 'SonarQube Deep Dive', baseXP: 200, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'SonarQube vs Semgrep', content: 'SonarQube: full-featured code quality platform with a web dashboard, quality gates, and historical tracking. Semgrep: fast CLI-first scanner focused on security patterns. SonarQube excels at long-term code health tracking; Semgrep excels at fast CI security scans.' },
-        { heading: 'Quality Profiles & Gates', content: 'Quality Profile: a set of rules activated for a language. Quality Gate: pass/fail conditions (e.g., 0 new critical bugs, 80% coverage on new code, < 3% duplication). Gates block merges if thresholds are not met.', highlight: true },
-        { heading: 'Finding Categories', content: 'Bugs: code that is objectively wrong (null dereference, resource leak). Vulnerabilities: security-sensitive code (SQL injection, XSS). Code Smells: maintainability issues (long methods, deep nesting). Security Hotspots: security-sensitive code that needs manual review.', highlight: true },
-        { heading: 'CI Integration', content: 'Integrate via sonar-scanner CLI or build plugins (Maven, Gradle, npm). Scanner sends analysis to SonarQube server. Results appear on dashboard. Use quality gates in CI to block PRs that introduce issues.' },
+        { heading: 'SonarQube vs Semgrep', blocks: [
+          { type: 'text', content: 'Two popular static analysis tools with different strengths. Choose based on your needs — or use both for complementary coverage.' },
+          { type: 'comparison', items: [
+            { title: 'SonarQube', color: '#3B82F6', points: [
+              'Full-featured platform with web dashboard',
+              'Quality gates with pass/fail thresholds',
+              'Historical tracking of code health over time',
+              'Covers bugs, vulns, smells, duplication, coverage',
+              'Best for: long-term code quality management',
+            ]},
+            { title: 'Semgrep', color: '#A78BFA', points: [
+              'Fast CLI-first scanner, lightweight',
+              'Custom rules in YAML (easy to write)',
+              'Focused on security patterns and misconfigurations',
+              'Runs in seconds, great for CI gates',
+              'Best for: fast security scanning in CI',
+            ]},
+          ]},
+        ]},
+        { heading: 'Quality Profiles & Gates', blocks: [
+          { type: 'text', content: 'Quality Profiles define which rules are active for each language. Quality Gates define pass/fail conditions that block merges if thresholds are not met.' },
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'Code Push', note: 'Developer pushes code or opens PR' },
+            { label: 'sonar-scanner', note: 'Analyzes code against Quality Profile rules' },
+            { label: 'SonarQube Server', note: 'Processes results and evaluates Quality Gate' },
+            { label: 'Quality Gate', note: 'Pass/Fail based on thresholds' },
+            { label: 'PR Status', note: 'Block merge if gate fails' },
+          ]},
+          { type: 'callout', variant: 'example', title: 'Quality Gate Conditions', content: 'Typical gate: 0 new critical bugs, 0 new vulnerabilities, 80%+ coverage on new code, < 3% duplication on new code. Any condition failing blocks the PR.' },
+        ]},
+        { heading: 'Finding Categories', blocks: [
+          { type: 'text', content: 'SonarQube classifies findings into four categories, each representing a different type of code issue.' },
+          { type: 'severity-bars', title: 'SonarQube Finding Categories', items: [
+            { rank: 1, label: 'Bugs', count: 1, color: '#EF4444' },
+            { rank: 2, label: 'Vulnerabilities', count: 2, color: '#F97316' },
+            { rank: 3, label: 'Security Hotspots', count: 1, color: '#F59E0B' },
+            { rank: 4, label: 'Code Smells', count: 3, color: '#3B82F6' },
+          ]},
+          { type: 'keyterms', terms: [
+            { term: 'Bug', definition: 'Code that is objectively wrong and will produce incorrect results (null dereference, resource leak, off-by-one).' },
+            { term: 'Vulnerability', definition: 'Security-sensitive code that is exploitable (SQL injection, XSS, path traversal).' },
+            { term: 'Security Hotspot', definition: 'Security-sensitive code that needs manual review to determine if it is actually vulnerable (crypto usage, auth logic).' },
+            { term: 'Code Smell', definition: 'Maintainability issue that is not a bug but makes code harder to understand and change (deep nesting, long methods, duplication).' },
+          ]},
+          { type: 'scan-output', tool: 'sonar-scanner', title: 'SonarQube Analysis Results', findings: [
+            { type: 'header', text: 'sonar-scanner -Dsonar.login=admin — secops-demo' },
+            { type: 'finding', text: 'SQL Injection in get_user() — use parameterized queries', severity: 'CRITICAL', file: 'src/app.py:7' },
+            { type: 'finding', text: 'Command Injection in run_command() — validate input', severity: 'CRITICAL', file: 'src/app.py:12' },
+            { type: 'finding', text: 'Deeply nested if-statements in process() — refactor', severity: 'MEDIUM', file: 'src/app.py:15' },
+            { type: 'summary', text: 'QUALITY GATE: FAILED — 2 critical vulnerabilities, 0% coverage' },
+          ]},
+        ]},
+        { heading: 'CI Integration', blocks: [
+          { type: 'text', content: 'Integrate SonarQube via sonar-scanner CLI or build plugins (Maven, Gradle, npm). The scanner sends analysis to the SonarQube server, and results appear on the dashboard.' },
+          { type: 'pipeline', stages: [
+            { label: 'Code Push', icon: 'GitBranch', desc: 'Developer pushes to feature branch', security: false, tool: 'Git' },
+            { label: 'CI Build', icon: 'Server', desc: 'Build and run unit tests', security: false, tool: 'Jenkins / GitHub Actions' },
+            { label: 'sonar-scanner', icon: 'Search', desc: 'Analyze code quality and security', security: true, tool: 'SonarQube Scanner' },
+            { label: 'Quality Gate', icon: 'Shield', desc: 'Evaluate pass/fail thresholds', security: true, tool: 'SonarQube Server' },
+            { label: 'PR Feedback', icon: 'Check', desc: 'Report results on pull request', security: false, tool: 'GitHub / GitLab' },
+          ]},
+          { type: 'callout', variant: 'tip', title: 'CI Best Practice', content: 'Run sonar-scanner on every PR, not just main branch. Use the Quality Gate status as a required check to block merges that introduce new bugs or vulnerabilities.' },
+        ]},
       ],
     },
     simulation: {
@@ -1126,15 +2465,88 @@ const MODULES = {
     ],
   },
   '4.5': {
-    id: '4.5', pathId: 4, title: 'Supply Chain Security', baseXP: 200,
+    id: '4.5', pathId: 4, title: 'Supply Chain Security', baseXP: 200, estTime: '20-35 min',
     hasSim: true, hasExecute: true, hasVerify: true,
     theory: {
       sections: [
-        { heading: 'Supply Chain Attacks', content: 'Attackers target upstream: SolarWinds (backdoored build pipeline, 18K orgs), Log4Shell (critical RCE in ubiquitous library), Codecov (modified bash uploader to steal env vars), ua-parser-js (npm package hijacked). One compromised dependency affects thousands.' },
-        { heading: 'SBOM — Software Bill of Materials', content: 'An SBOM lists every component in your software: direct deps, transitive deps, OS packages, libraries. Formats: CycloneDX (OWASP, JSON/XML) and SPDX (Linux Foundation, widely adopted). Executive Order 14028 requires SBOMs for government software.', highlight: true },
-        { heading: 'SLSA Framework', content: 'Supply-chain Levels for Software Artifacts. Levels: L0 (no guarantees), L1 (build process documented), L2 (signed provenance, hosted build service), L3 (hardened build platform, non-falsifiable provenance). Goal: ensure artifacts were built from the expected source by the expected process.', highlight: true },
-        { heading: 'Image Signing', content: 'Sign container images to verify they haven\'t been tampered with. Cosign (from Sigstore) is the standard tool. Sign in CI after build, verify before deploy. Combined with admission controllers, only signed images can run in your cluster.' },
-        { heading: 'Dependency Pinning & Reproducible Builds', content: 'Pin dependency versions exactly (lock files). Use hash verification. Reproducible builds ensure the same source always produces the same binary. This makes it possible to verify that a binary matches its source code.' },
+        { heading: 'Supply Chain Attacks', blocks: [
+          { type: 'text', content: 'Supply chain attacks target upstream dependencies and build systems. One compromised component can affect thousands of organizations.' },
+          { type: 'attack-flow', steps: [
+            { type: 'attack', label: 'SolarWinds (2020)', detail: 'Attackers backdoored the build pipeline, injecting malware into legitimate software updates sent to 18,000+ organizations' },
+            { type: 'attack', label: 'Log4Shell (2021)', detail: 'Critical RCE in Log4j, a ubiquitous Java logging library used by millions of applications worldwide' },
+            { type: 'attack', label: 'Codecov (2021)', detail: 'Modified bash uploader script to steal environment variables (including CI secrets) from customer builds' },
+            { type: 'attack', label: 'ua-parser-js (2021)', detail: 'Popular npm package (8M weekly downloads) hijacked to install cryptominers and password stealers' },
+            { type: 'defense', label: 'Defense', detail: 'SBOMs, dependency pinning, image signing, SLSA provenance, and admission controllers to verify supply chain integrity' },
+          ]},
+          { type: 'callout', variant: 'warning', title: 'Trust Nothing', content: 'Your software is only as secure as its weakest dependency. A single compromised library in your transitive dependency tree can give attackers full access.' },
+        ]},
+        { heading: 'SBOM — Software Bill of Materials', blocks: [
+          { type: 'text', content: 'An SBOM lists every component in your software: direct dependencies, transitive dependencies, OS packages, and libraries. Executive Order 14028 requires SBOMs for US government software.' },
+          { type: 'pipeline', stages: [
+            { label: 'Build Image', icon: 'Layers', desc: 'Create container image from Dockerfile', security: false, tool: 'Docker' },
+            { label: 'Generate SBOM', icon: 'FileCode', desc: 'Scan image and list all components', security: true, tool: 'Trivy / Syft' },
+            { label: 'Scan SBOM', icon: 'Search', desc: 'Check components against vuln databases', security: true, tool: 'Trivy / Grype' },
+            { label: 'Store SBOM', icon: 'Database', desc: 'Attach SBOM to image as attestation', security: true, tool: 'Cosign / OCI Registry' },
+            { label: 'Monitor', icon: 'AlertTriangle', desc: 'Alert when new CVEs affect SBOM components', security: true, tool: 'Dependency-Track' },
+          ]},
+          { type: 'comparison', items: [
+            { title: 'CycloneDX', color: '#3B82F6', points: [
+              'OWASP standard (JSON/XML)',
+              'Security-focused design',
+              'Supports VEX (vulnerability exploitability)',
+              'Rich component metadata',
+            ]},
+            { title: 'SPDX', color: '#A78BFA', points: [
+              'Linux Foundation standard',
+              'Widely adopted for compliance',
+              'ISO/IEC 5962 international standard',
+              'Strong license tracking',
+            ]},
+          ]},
+        ]},
+        { heading: 'SLSA Framework', blocks: [
+          { type: 'text', content: 'Supply-chain Levels for Software Artifacts (SLSA) is a framework for ensuring artifacts were built from the expected source by the expected process.' },
+          { type: 'steps', steps: [
+            { label: 'SLSA L0 — No Guarantees', detail: 'No security practices. No provenance. No guarantees about build integrity.' },
+            { label: 'SLSA L1 — Build Process Documented', detail: 'Build process is defined and produces provenance. Consumers know how the artifact was built.' },
+            { label: 'SLSA L2 — Signed Provenance', detail: 'Provenance is signed and generated by a hosted build service. Tamper detection for the build process.' },
+            { label: 'SLSA L3 — Hardened Build Platform', detail: 'Build platform is hardened. Non-falsifiable provenance. Strongest supply chain guarantees.' },
+          ]},
+          { type: 'scan-output', tool: 'slsa-verifier', title: 'SLSA Provenance Verification', findings: [
+            { type: 'header', text: 'slsa-verifier verify-artifact app.tar.gz' },
+            { type: 'finding', text: 'Provenance signature: VERIFIED', severity: 'INFO' },
+            { type: 'finding', text: 'Build platform: GitHub Actions (trusted builder)', severity: 'INFO' },
+            { type: 'finding', text: 'Source repo: github.com/org/app (matches expectation)', severity: 'INFO' },
+            { type: 'summary', text: 'SLSA Level 3 — provenance verified, artifact integrity confirmed' },
+          ]},
+        ]},
+        { heading: 'Image Signing', blocks: [
+          { type: 'text', content: 'Sign container images to verify they have not been tampered with. Cosign (from Sigstore) is the standard tool.' },
+          { type: 'pipeline', stages: [
+            { label: 'Build', icon: 'Layers', desc: 'Build container image in CI', security: false, tool: 'Docker / Buildah' },
+            { label: 'Sign', icon: 'Lock', desc: 'Sign image digest with Cosign', security: true, tool: 'Cosign' },
+            { label: 'Push', icon: 'Server', desc: 'Push image + signature to registry', security: false, tool: 'OCI Registry' },
+            { label: 'Verify', icon: 'Shield', desc: 'Admission controller verifies signature', security: true, tool: 'Kyverno / Gatekeeper' },
+            { label: 'Deploy', icon: 'Check', desc: 'Only signed images allowed to run', security: true, tool: 'Kubernetes' },
+          ]},
+          { type: 'callout', variant: 'key-concept', title: 'Keyless Signing', content: 'Cosign supports keyless signing via Sigstore. No keys to manage — identity is verified via OIDC (GitHub Actions, Google, etc.) and signatures are stored in a transparency log (Rekor).' },
+        ]},
+        { heading: 'Dependency Pinning & Reproducible Builds', blocks: [
+          { type: 'text', content: 'Pin dependency versions exactly using lock files and hash verification. Reproducible builds ensure the same source always produces the same binary.' },
+          { type: 'scan-output', tool: 'trivy', title: 'SBOM Vulnerability Scan', findings: [
+            { type: 'header', text: 'trivy sbom sbom.json — nginx:1.25' },
+            { type: 'finding', text: 'CVE-2024-0727 openssl 3.0.11 → fix: 3.0.13', severity: 'CRITICAL', file: 'openssl' },
+            { type: 'finding', text: 'CVE-2023-44487 nghttp2 1.57.0 → fix: 1.58.0', severity: 'CRITICAL', file: 'nghttp2' },
+            { type: 'finding', text: 'CVE-2024-2511 openssl 3.0.11 → fix: 3.0.14', severity: 'HIGH', file: 'openssl' },
+            { type: 'summary', text: 'Total: 34 vulnerabilities (3 Critical, 9 High, 14 Medium, 8 Low)' },
+          ]},
+          { type: 'severity-bars', title: 'SBOM Vulnerability Summary', items: [
+            { rank: 1, label: 'Critical', count: 3, color: '#EF4444' },
+            { rank: 2, label: 'High', count: 9, color: '#F97316' },
+            { rank: 3, label: 'Medium', count: 14, color: '#F59E0B' },
+            { rank: 4, label: 'Low', count: 8, color: '#3B82F6' },
+          ]},
+        ]},
       ],
     },
     simulation: {
@@ -1170,16 +2582,65 @@ const MODULES = {
     ],
   },
   '4.6': {
-    id: '4.6', pathId: 4, title: 'Runtime Security & Monitoring', baseXP: 200,
+    id: '4.6', pathId: 4, title: 'Runtime Security & Monitoring', baseXP: 200, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'Shift Right — Runtime Security', content: 'Shift Left catches issues early; Shift Right detects threats at runtime. Both are needed. Runtime security monitors running containers, processes, network connections, and file access for suspicious behavior.' },
-        { heading: 'Falco', content: 'Cloud-native runtime security tool. Uses kernel-level system call monitoring to detect anomalous behavior: unexpected process execution, file access outside allowed paths, network connections to unexpected destinations, privilege escalation attempts, container escape attempts.', highlight: true },
-        { heading: 'Container Security Configs', content: 'Seccomp: restricts which system calls a container can make. AppArmor: restricts file access, network access, and capabilities. These are Linux kernel security modules that add defense-in-depth layers.', highlight: true },
-        { heading: 'Security Logging', content: 'Log: authentication events, authorization decisions, privilege changes, network connections, file modifications, API calls. Ship logs to SIEM (Splunk, ELK, Datadog). Set alerts for anomalous patterns.' },
-        { heading: 'Incident Response', content: 'NIST framework: Preparation → Detection → Containment → Eradication → Recovery → Post-Incident. Key: contain first (isolate affected systems), then investigate. Document everything. Blameless postmortem.' },
-        { heading: 'Observability Stack', content: 'Metrics (Prometheus), Logs (Loki/ELK), Traces (Jaeger/Zipkin), Alerts (Alertmanager/PagerDuty). Combine with security-specific tools (Falco, audit logs) for a complete picture.' },
+        { heading: 'Shift Right — Runtime Security', blocks: [
+          { type: 'text', content: 'Shift Left catches known issues early in development. Shift Right detects unknown threats, zero-days, and anomalous behavior at runtime. You need both.' },
+          { type: 'comparison', items: [
+            { title: 'Shift Left (Prevention)', color: '#3B82F6', points: ['SAST, SCA, secrets scanning', 'Catches known vulnerability patterns', 'Runs during build/CI', 'Fast feedback to developers'] },
+            { title: 'Shift Right (Detection)', color: '#A78BFA', points: ['Runtime monitoring, Falco, SIEM', 'Catches zero-days and novel attacks', 'Runs in production 24/7', 'Alerts security/ops teams'] },
+          ]},
+        ]},
+        { heading: 'Falco — Runtime Threat Detection', blocks: [
+          { type: 'callout', variant: 'key-concept', title: 'What is Falco?', content: 'A cloud-native runtime security tool that monitors system calls at the kernel level (via eBPF) to detect anomalous container behavior in real-time.' },
+          { type: 'scan-output', tool: 'falco', title: 'Falco Alert Examples', findings: [
+            { type: 'finding', severity: 'CRITICAL', text: 'Shell spawned in container (bash in nginx)', file: 'container: web-frontend' },
+            { type: 'finding', severity: 'HIGH', text: 'Sensitive file read: /etc/shadow', file: 'container: api-server' },
+            { type: 'finding', severity: 'HIGH', text: 'Outbound connection to crypto mining pool', file: 'container: worker-3' },
+            { type: 'finding', severity: 'MEDIUM', text: 'Package manager invoked in running container', file: 'container: web-frontend' },
+            { type: 'summary', text: 'Falco detects what static scanning cannot — actual runtime behavior that deviates from expected patterns.' },
+          ]},
+        ]},
+        { heading: 'Container Hardening', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'Seccomp', definition: 'Restricts which system calls a container can make. Blocks dangerous syscalls like ptrace, mount, and reboot.' },
+            { term: 'AppArmor', definition: 'Restricts file access, network access, and capabilities per container. Defines allowed behavior profiles.' },
+            { term: 'Read-only FS', definition: 'Mount the container filesystem as read-only. Prevents attackers from writing malware or modifying binaries.' },
+            { term: 'Drop Capabilities', definition: 'Remove Linux kernel capabilities the container doesn\'t need. Drop ALL, then add back only what\'s required.' },
+          ]},
+        ]},
+        { heading: 'Security Logging & SIEM', blocks: [
+          { type: 'text', content: 'Comprehensive logging is essential for detecting and investigating security incidents.' },
+          { type: 'severity-bars', title: 'What to Log for Security', items: [
+            { rank: '1', label: 'Authentication events (login/logout/fail)', count: 95, color: '#EF4444' },
+            { rank: '2', label: 'Authorization decisions (access denied)', count: 90, color: '#EF4444' },
+            { rank: '3', label: 'Privilege changes (sudo, role change)', count: 85, color: '#F97316' },
+            { rank: '4', label: 'Network connections (new outbound)', count: 75, color: '#F59E0B' },
+            { rank: '5', label: 'File modifications (config changes)', count: 65, color: '#3B82F6' },
+            { rank: '6', label: 'API calls (especially admin endpoints)', count: 60, color: '#3B82F6' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Ship logs to a SIEM (Splunk, ELK/OpenSearch, Datadog) and set alerts for anomalous patterns. Logs on the compromised server itself cannot be trusted.' },
+        ]},
+        { heading: 'Incident Response Framework', blocks: [
+          { type: 'attack-flow', steps: [
+            { type: 'defense', label: '1. Preparation', detail: 'Runbooks, communication plans, tool access, training. Done BEFORE incidents happen.' },
+            { type: 'info', label: '2. Detection & Analysis', detail: 'Alert fires (Falco, SIEM). Triage: is this real? Determine scope and severity.' },
+            { type: 'defense', label: '3. Containment', detail: 'Isolate affected systems. Stop the bleeding FIRST. Don\'t investigate while the attacker is still active.' },
+            { type: 'defense', label: '4. Eradication', detail: 'Remove the threat: patch the vulnerability, rotate credentials, rebuild compromised containers.' },
+            { type: 'info', label: '5. Recovery', detail: 'Restore services from known-good state. Monitor closely for re-compromise.' },
+            { type: 'defense', label: '6. Post-Incident (Blameless)', detail: 'What happened? Why? How do we prevent it? Document everything. Focus on systemic fixes, not blame.' },
+          ]},
+        ]},
+        { heading: 'Observability Stack', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Metrics', color: '#3B82F6', points: ['Prometheus + Grafana', 'CPU, memory, request rates', 'Alertmanager for thresholds'] },
+            { title: 'Logs', color: '#22C55E', points: ['Loki, ELK, or Datadog', 'Structured JSON logging', 'Centralized search and correlation'] },
+            { title: 'Traces', color: '#A78BFA', points: ['Jaeger or Zipkin', 'Request flow across services', 'Latency bottleneck identification'] },
+          ]},
+          { type: 'callout', variant: 'warning', content: 'Observability without security context is blind. Combine Prometheus metrics + ELK logs + Falco runtime alerts for a complete picture. Security is not just about finding bugs — it\'s about detecting attackers.' },
+        ]},
       ],
     },
     quiz: [
@@ -1191,14 +2652,50 @@ const MODULES = {
     ],
   },
   '5.1': {
-    id: '5.1', pathId: 5, title: 'Core Interview Questions', baseXP: 100,
+    id: '5.1', pathId: 5, title: 'Core Interview Questions', baseXP: 100, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'Conceptual Questions', content: '1. What is DevSecOps? → DevOps with security embedded at every stage. Culture + automation, not a tool.\n\n2. Explain "Shift Left" → Moving security testing earlier (IDE, pre-commit, CI). Bugs cost 100x more in production.\n\n3. SAST vs DAST vs SCA vs IAST → SAST=static code, DAST=running app, SCA=dependencies, IAST=instrumented runtime.\n\n4. How do you measure success? → MTTR, scan coverage %, false positive rate, developer adoption rate.\n\n5. What is Policy as Code? → Security rules as executable code (OPA/Rego), version-controlled, automatically enforced.' },
-        { heading: 'Technical Questions', content: '6. Design a pipeline → Pre-commit (secrets) → CI (SAST, SCA) → Build (image scan) → Staging (DAST) → Policy gate → Prod + monitoring.\n\n7. Handle critical CVE in prod → Assess exploitability → scope blast radius → patch + rebuild → deploy → monitor → postmortem.\n\n8. Choose between tools → Coverage, FP rate, language support, CI integration, speed, cost, community.\n\n9. Manage secrets in CI/CD → Never in code. Use Vault/cloud KMS → inject at runtime → short-lived tokens → rotate.\n\n10. Handle false positives → Tune rules, allowlists, severity-based filtering, track FP rate, custom org rules.', highlight: true },
-        { heading: 'Behavioral Questions', content: '11. "Security slows us down" → Fast scans (parallel, incremental), IDE plugins, show prevented breaches, only block on critical.\n\n12. No security culture → Start small (secrets detection), security champions, lunch-and-learns, gamification, gradual enforcement.\n\n13. Prioritize 500 findings → Severity + exploitability + exposure + fix availability. Critical/High externally-facing first.\n\n14. Security vs deadline → Risk assessment, temporary compensating controls, documented exception with fix timeline.\n\n15. Staying current → Advisory feeds (NVD, GitHub), communities, tool mailing lists, periodic reassessment.', highlight: true },
-        { heading: 'Your Unique Angle', content: '"I approach DevSecOps from an attacker\'s perspective. I know what adversaries look for — exposed secrets, vulnerable dependencies, misconfigured infrastructure — because I\'ve studied and tested for these. My pipelines are designed to catch what I would target as an attacker."' },
+        { heading: 'Conceptual Questions (1-5)', blocks: [
+          { type: 'keyterms', terms: [
+            { term: '1. What is DevSecOps?', definition: 'DevOps with security embedded at every stage. Culture + automation, not just a tool. Security is everyone\'s responsibility.' },
+            { term: '2. Explain "Shift Left"', definition: 'Moving security testing earlier (IDE → pre-commit → CI). Finding bugs in design costs 1x; in production costs 100x.' },
+            { term: '3. SAST vs DAST vs SCA vs IAST?', definition: 'SAST = static code analysis. DAST = testing running app. SCA = dependency scanning. IAST = instrumented runtime. Each catches different things.' },
+            { term: '4. How measure success?', definition: 'MTTR by severity, scan coverage %, false positive rate, developer adoption rate, time-to-fix trends.' },
+            { term: '5. What is Policy as Code?', definition: 'Security rules as executable code (OPA/Rego). Version-controlled, testable, automatically enforced in CI/CD.' },
+          ]},
+        ]},
+        { heading: 'Technical Questions (6-10)', blocks: [
+          { type: 'keyterms', terms: [
+            { term: '6. Design a pipeline', definition: 'Pre-commit (secrets) → CI (SAST, SCA) → Build (image scan) → Staging (DAST) → Policy gate → Prod + runtime monitoring.' },
+            { term: '7. Handle critical CVE in prod', definition: 'Assess exploitability → scope blast radius → patch + rebuild → deploy through pipeline → monitor → blameless postmortem.' },
+            { term: '8. Choose between tools', definition: 'Evaluate: coverage, false positive rate, language support, CI integration ease, scan speed, cost, community support.' },
+            { term: '9. Manage secrets in CI/CD', definition: 'Never in code or env vars. Use Vault/cloud KMS → inject at runtime → short-lived tokens → auto-rotation.' },
+            { term: '10. Handle false positives', definition: 'Tune rules, create allowlists, severity-based filtering, track FP rate metric, write custom org-specific rules.' },
+          ]},
+          { type: 'pipeline', stages: [
+            { label: 'Secrets', icon: '🔐', desc: 'Pre-commit', security: true, tool: 'Gitleaks' },
+            { label: 'SAST', icon: '🔍', desc: 'Code scan', security: true, tool: 'Semgrep' },
+            { label: 'SCA', icon: '📦', desc: 'Deps scan', security: true, tool: 'Trivy' },
+            { label: 'Image', icon: '🐳', desc: 'Container scan', security: true, tool: 'Trivy' },
+            { label: 'DAST', icon: '🎯', desc: 'Runtime scan', security: true, tool: 'ZAP' },
+            { label: 'Gate', icon: '🚦', desc: 'Policy check', security: true, tool: 'OPA' },
+            { label: 'Prod', icon: '🚀', desc: 'Deploy + monitor', security: false },
+          ]},
+        ]},
+        { heading: 'Behavioral Questions (11-15)', blocks: [
+          { type: 'keyterms', terms: [
+            { term: '11. "Security slows us down"', definition: 'Empathize first. Then: fast scans (parallel), IDE plugins (instant feedback), show prevented breaches, only hard-block on critical.' },
+            { term: '12. No security culture', definition: 'Start small (secrets detection = low friction). Security champions, lunch-and-learns, gamification, gradual enforcement (warn → block).' },
+            { term: '13. Prioritize 500 findings', definition: 'Severity × exploitability × exposure × fix availability. Critical+High internet-facing first. Accept risk on informational.' },
+            { term: '14. Security vs deadline', definition: 'Risk assessment, temporary compensating controls (WAF rules), documented exception with fix timeline. Never silently skip.' },
+            { term: '15. Staying current', definition: 'NVD/GitHub advisory feeds, security communities (Reddit, Twitter), tool mailing lists, periodic tool reassessment.' },
+          ]},
+        ]},
+        { heading: 'Your Unique Angle', blocks: [
+          { type: 'callout', variant: 'key-concept', title: 'The Attacker\'s Perspective', content: '"I approach DevSecOps from an attacker\'s perspective. I know what adversaries look for — exposed secrets, vulnerable dependencies, misconfigured infrastructure — because I\'ve studied and tested for these. My pipelines are designed to catch what I would target as an attacker."' },
+          { type: 'callout', variant: 'tip', content: 'This angle differentiates you from candidates who only know the tools. Interviewers want to know you understand WHY each scan matters, not just HOW to run it.' },
+        ]},
       ],
     },
     quiz: [
@@ -1210,16 +2707,54 @@ const MODULES = {
     ],
   },
   '5.2': {
-    id: '5.2', pathId: 5, title: 'Scenario — Secrets Leaked to GitHub', baseXP: 100,
+    id: '5.2', pathId: 5, title: 'Scenario — Secrets Leaked to GitHub', baseXP: 100, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'The Scenario', content: 'A developer accidentally pushed AWS access keys to a public GitHub repository. Bots scan GitHub in real-time for credentials. You have minutes, not hours.' },
-        { heading: 'Step 1: IMMEDIATE (Minutes)', content: '• Revoke the exposed AWS credentials in the AWS console immediately\n• Generate new credentials\n• Update any systems using the old credentials\n• Do NOT waste time trying to delete the commit first — bots already have it', highlight: true },
-        { heading: 'Step 2: ASSESS (Hours)', content: '• Check CloudTrail for unauthorized API calls using the compromised keys\n• Check for new IAM users, roles, or policies created\n• Check for running EC2 instances, Lambda functions, or S3 access\n• Determine blast radius: what could these keys access?' },
-        { heading: 'Step 3: SCAN (Same Day)', content: '• Run Gitleaks/TruffleHog on the entire repository history\n• Scan all other repos the developer has access to\n• Check if other secrets are embedded in the codebase' },
-        { heading: 'Step 4: PREVENT (Week)', content: '• Install pre-commit hooks with Gitleaks\n• Add Gitleaks/TruffleHog to CI pipeline\n• Implement GitHub push protection\n• Move all secrets to Vault or AWS Secrets Manager\n• Establish secret rotation policy' },
-        { heading: 'Step 5: PROCESS (Ongoing)', content: '• Blameless postmortem with the team\n• Document the incident and response\n• Create runbook for future secret leaks\n• Train team on secrets management\n• Review and update security policies' },
+        { heading: 'The Scenario', blocks: [
+          { type: 'callout', variant: 'warning', title: 'Incident Alert', content: 'A developer accidentally pushed AWS access keys to a public GitHub repository. Bots scan GitHub in real-time for credentials. You have minutes, not hours.' },
+        ]},
+        { heading: 'Step 1: IMMEDIATE (Minutes)', blocks: [
+          { type: 'attack-flow', steps: [
+            { type: 'defense', label: 'Revoke the exposed AWS credentials NOW', detail: 'Go to AWS IAM console → deactivate/delete the compromised access key. This is your #1 priority.' },
+            { type: 'defense', label: 'Generate new credentials', detail: 'Create a new access key pair for legitimate services that need it.' },
+            { type: 'defense', label: 'Update dependent systems', detail: 'Any system using the old credentials needs the new ones immediately.' },
+          ]},
+          { type: 'callout', variant: 'warning', content: 'Do NOT waste time trying to delete the git commit first. Bots scrape GitHub in real-time — they likely captured the key within seconds of your push.' },
+        ]},
+        { heading: 'Step 2: ASSESS (Hours)', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Check CloudTrail for unauthorized API calls', detail: 'Filter by the compromised access key ID. Look for any activity you didn\'t initiate.' },
+            { label: 'Check for new IAM users/roles/policies', detail: 'Attackers often create backdoor accounts. Check for any IAM changes in the timeframe.' },
+            { label: 'Check for running resources', detail: 'Look for new EC2 instances (crypto mining), Lambda functions, S3 access, or data exfiltration.' },
+            { label: 'Determine blast radius', detail: 'What IAM permissions did the compromised key have? What could an attacker access?' },
+          ]},
+        ]},
+        { heading: 'Step 3: SCAN (Same Day)', blocks: [
+          { type: 'scan-output', tool: 'gitleaks + trufflehog', title: 'Full Repository Scan', findings: [
+            { type: 'finding', severity: 'CRITICAL', text: 'AWS Access Key ID (current commit)', file: 'config.py:5' },
+            { type: 'finding', severity: 'CRITICAL', text: 'AWS Key found in git history (deleted 2 weeks ago)', file: 'old-config.py (commit a1b2c3)' },
+            { type: 'finding', severity: 'HIGH', text: 'Database password in plaintext', file: '.env:8' },
+            { type: 'summary', text: 'Scan ALL repos the developer has access to. Check for other embedded secrets across the codebase.' },
+          ]},
+        ]},
+        { heading: 'Step 4: PREVENT (Week)', blocks: [
+          { type: 'pipeline', stages: [
+            { label: 'Pre-commit', icon: '🔐', desc: 'Gitleaks hooks', security: true, tool: 'Gitleaks' },
+            { label: 'CI Scan', icon: '🔍', desc: 'Pipeline scan', security: true, tool: 'TruffleHog' },
+            { label: 'Push Protection', icon: '🛡', desc: 'GitHub blocks', security: true, tool: 'GitHub' },
+            { label: 'Vault', icon: '🏦', desc: 'Secrets manager', security: true, tool: 'Vault' },
+            { label: 'Rotation', icon: '🔄', desc: 'Auto-rotate', security: true },
+          ]},
+        ]},
+        { heading: 'Step 5: PROCESS (Ongoing)', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Blameless postmortem with the team', detail: 'Focus on systemic failures, not individual blame. What process gap allowed this?' },
+            { label: 'Document the incident and response', detail: 'Timeline, actions taken, impact assessment, lessons learned.' },
+            { label: 'Create runbook for future secret leaks', detail: 'Step-by-step playbook so the next response is faster.' },
+            { label: 'Train team on secrets management', detail: 'Lunch-and-learn on why secrets in code are dangerous, demo the tools.' },
+          ]},
+        ]},
       ],
     },
     quiz: [
@@ -1231,16 +2766,54 @@ const MODULES = {
     ],
   },
   '5.3': {
-    id: '5.3', pathId: 5, title: 'Scenario — Critical CVE in Production', baseXP: 100,
+    id: '5.3', pathId: 5, title: 'Scenario — Critical CVE in Production', baseXP: 100, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'The Scenario', content: 'A CVSS 9.8 critical RCE vulnerability is announced in a library your production services depend on. Multiple services are affected. Exploit code is public.' },
-        { heading: 'Step 1: ASSESS (First Hour)', content: '• Identify all affected services using SBOM or dependency scanning\n• Determine if the vulnerability is exploitable in your deployment\n• Check if a patch/updated version is available\n• Classify blast radius: internet-facing services are highest priority', highlight: true },
-        { heading: 'Step 2: SCOPE (Hours 1-4)', content: '• Run Trivy/Grype against all container images and repositories\n• Map affected services to business criticality\n• Check if any compensating controls exist (WAF rules, network policies)\n• Brief leadership on scope and response plan' },
-        { heading: 'Step 3: FIX (Hours 4-24)', content: '• Update the vulnerable dependency to the patched version\n• Run full test suite to verify no regressions\n• Build and scan new container images\n• Deploy through your normal pipeline (don\'t skip security gates!)\n• Internet-facing critical services first, internal services next', highlight: true },
-        { heading: 'Step 4: VERIFY (Day 2)', content: '• Confirm all affected services are running the patched version\n• Re-scan with Trivy/Grype to verify the CVE no longer appears\n• Check runtime monitoring for any exploitation attempts during the window\n• Update SBOM records' },
-        { heading: 'Step 5: IMPROVE (Week)', content: '• Postmortem: how long did detection → fix take (MTTR)?\n• Could SCA scanning have caught this earlier?\n• Add the CVE to your monitoring/alerting if not already covered\n• Review dependency update cadence and automation' },
+        { heading: 'The Scenario', blocks: [
+          { type: 'callout', variant: 'warning', title: 'Critical CVE Alert — CVSS 9.8', content: 'A critical RCE vulnerability is announced in a library your production services depend on. Multiple services are affected. Exploit code is already public. The clock is ticking.' },
+        ]},
+        { heading: 'Step 1: ASSESS (First Hour)', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Identify all affected services', detail: 'Use your SBOM or run Trivy/Grype against all repos and container images.' },
+            { label: 'Determine exploitability', detail: 'Is the vulnerable code path actually reachable in your deployment? Internet-facing = highest priority.' },
+            { label: 'Check for a patch', detail: 'Is an updated version available? If yes, assess upgrade difficulty. If no, identify compensating controls.' },
+            { label: 'Classify blast radius', detail: 'Map affected services to business criticality. Internet-facing critical services first.' },
+          ]},
+        ]},
+        { heading: 'Step 2: SCOPE (Hours 1-4)', blocks: [
+          { type: 'scan-output', tool: 'trivy', title: 'Scanning All Services for CVE-2024-XXXX', findings: [
+            { type: 'finding', severity: 'CRITICAL', text: 'CVE-2024-XXXX in libexample 2.3.1 (fix: 2.3.2)', file: 'api-gateway (internet-facing)' },
+            { type: 'finding', severity: 'CRITICAL', text: 'CVE-2024-XXXX in libexample 2.3.0 (fix: 2.3.2)', file: 'payment-service (PCI scope)' },
+            { type: 'finding', severity: 'CRITICAL', text: 'CVE-2024-XXXX in libexample 2.2.9 (fix: 2.3.2)', file: 'user-service (internal)' },
+            { type: 'summary', text: '3 services affected. API gateway and payment service are highest priority (internet-facing + PCI).' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Brief leadership now: "3 services affected, 2 are internet-facing. Patch available. ETA for full remediation: 12 hours."' },
+        ]},
+        { heading: 'Step 3: FIX (Hours 4-24)', blocks: [
+          { type: 'attack-flow', steps: [
+            { type: 'defense', label: 'Update dependency to patched version', detail: 'Bump libexample from 2.3.1 to 2.3.2 in all affected services.' },
+            { type: 'defense', label: 'Run full test suite', detail: 'Verify no regressions. Do NOT skip this even under time pressure.' },
+            { type: 'defense', label: 'Build and scan new container images', detail: 'Rebuild images, then re-scan with Trivy to confirm CVE is gone.' },
+            { type: 'defense', label: 'Deploy through normal pipeline', detail: 'Do NOT skip security gates! Internet-facing services first, then internal.' },
+          ]},
+          { type: 'callout', variant: 'warning', content: 'Never skip security gates to deploy faster. The patch itself could introduce new issues. Your pipeline exists to catch problems — use it.' },
+        ]},
+        { heading: 'Step 4: VERIFY (Day 2)', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Confirm all services are patched', detail: 'Re-scan every image and repo. The CVE should no longer appear in any scan.' },
+            { label: 'Check for exploitation attempts', detail: 'Review runtime logs (Falco, WAF, SIEM) for any exploitation during the vulnerability window.' },
+            { label: 'Update SBOM records', detail: 'Regenerate SBOMs to reflect the new dependency versions.' },
+          ]},
+        ]},
+        { heading: 'Step 5: IMPROVE (Week)', blocks: [
+          { type: 'severity-bars', title: 'Postmortem Metrics to Track', items: [
+            { rank: '⏱', label: 'Time to detect (how fast did we learn about the CVE?)', count: 85, color: '#3B82F6' },
+            { rank: '🔧', label: 'Time to remediate (MTTR from detection to deployed fix)', count: 100, color: '#EF4444' },
+            { rank: '📊', label: 'Scan coverage (% of services with SCA scanning)', count: 70, color: '#F59E0B' },
+            { rank: '🤖', label: 'Automation gap (could earlier scanning have caught this?)', count: 60, color: '#A78BFA' },
+          ]},
+        ]},
       ],
     },
     quiz: [
@@ -1252,16 +2825,56 @@ const MODULES = {
     ],
   },
   '5.4': {
-    id: '5.4', pathId: 5, title: 'Scenario — DevSecOps from Zero', baseXP: 100,
+    id: '5.4', pathId: 5, title: 'Scenario — DevSecOps from Zero', baseXP: 100, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'The Scenario', content: 'You\'re hired to implement DevSecOps at a company that has never done it. 50 developers, 20 microservices, no security scanning, secrets in config files, manual deployments.' },
-        { heading: 'Month 1: Quick Wins', content: '• Install pre-commit hooks with Gitleaks (blocks secrets before they enter git)\n• Add Trivy container scanning to CI (catches vulnerable base images)\n• Audit and rotate any known exposed secrets\n• Create a shared #security Slack channel for awareness\n• Identify 2-3 Security Champions (developers who are interested in security)', highlight: true },
-        { heading: 'Month 2: Foundation', content: '• Add Semgrep SAST scanning to all CI pipelines\n• Set up a secrets manager (Vault) — migrate 5 highest-risk secrets first\n• Establish severity-based SLAs: Critical=24h, High=7d, Medium=30d\n• Run a lunch-and-learn on OWASP Top 10\n• Start tracking metrics: scan coverage, open vulnerabilities by severity' },
-        { heading: 'Month 3-4: Maturity', content: '• Add SCA scanning (Trivy fs for dependency vulnerabilities)\n• Set up DAST scanning on staging environments\n• Implement quality gates: block PRs with critical findings\n• Start IaC scanning with Checkov if using Terraform/K8s\n• Regular security champion meetups (biweekly)' },
-        { heading: 'Month 5-6: Advanced', content: '• SonarQube for code quality tracking and historical trends\n• SBOM generation for all production images\n• Policy-as-Code with OPA for K8s admission control\n• Runtime monitoring with Falco (if K8s)\n• Full metrics dashboard: MTTR, coverage, FP rate, adoption', highlight: true },
-        { heading: 'Key Principles', content: '• Start with LOW friction tools (pre-commit hooks, not blocking CI gates)\n• Gradually increase enforcement (warn → soft block → hard block)\n• Never blame developers — make secure = easy\n• Show value: "we caught X secrets this month that would have been breaches"\n• Get executive sponsorship for budget and mandate' },
+        { heading: 'The Scenario', blocks: [
+          { type: 'callout', variant: 'example', title: 'Your Mission', content: 'You\'re hired to implement DevSecOps at a company that has never done it. 50 developers, 20 microservices, no security scanning, secrets in config files, manual deployments. Where do you start?' },
+        ]},
+        { heading: 'Month 1: Quick Wins', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Install pre-commit hooks with Gitleaks', detail: 'Blocks secrets before they enter git. Zero impact on CI speed. Highest ROI first action.' },
+            { label: 'Add Trivy container scanning to CI', detail: 'Catches vulnerable base images. Quick to set up, immediate visibility.' },
+            { label: 'Audit and rotate known exposed secrets', detail: 'Check git history, config files, env vars. Rotate everything found.' },
+            { label: 'Create #security Slack channel', detail: 'Awareness and culture building starts with visibility and communication.' },
+            { label: 'Identify 2-3 Security Champions', detail: 'Find developers who are interested in security. They\'ll be your force multipliers.' },
+          ]},
+        ]},
+        { heading: 'Month 2: Foundation', blocks: [
+          { type: 'steps', steps: [
+            { label: 'Add Semgrep SAST to all CI pipelines', detail: 'Start with --config auto (warnings only, don\'t block). Let teams see findings.' },
+            { label: 'Set up Vault — migrate top 5 secrets', detail: 'Don\'t try to migrate everything at once. Start with the highest-risk credentials.' },
+            { label: 'Establish severity SLAs', detail: 'Critical = 24h, High = 7 days, Medium = 30 days. Written policy, leadership-approved.' },
+            { label: 'OWASP Top 10 lunch-and-learn', detail: 'Make it interactive. Show real examples from your own codebase if possible.' },
+            { label: 'Start tracking metrics', detail: 'Scan coverage %, open vulns by severity, MTTR. You can\'t improve what you don\'t measure.' },
+          ]},
+        ]},
+        { heading: 'Month 3-4: Maturity', blocks: [
+          { type: 'pipeline', stages: [
+            { label: 'Secrets', icon: '🔐', desc: 'Pre-commit', security: true, tool: 'Gitleaks' },
+            { label: 'SAST', icon: '🔍', desc: 'Code scan', security: true, tool: 'Semgrep' },
+            { label: 'SCA', icon: '📦', desc: 'Deps scan', security: true, tool: 'Trivy' },
+            { label: 'Image', icon: '🐳', desc: 'Container', security: true, tool: 'Trivy' },
+            { label: 'IaC', icon: '📋', desc: 'Infra scan', security: true, tool: 'Checkov' },
+            { label: 'DAST', icon: '🎯', desc: 'Staging', security: true, tool: 'ZAP' },
+            { label: 'Gate', icon: '🚦', desc: 'Block critical', security: true },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'This is when you switch from warnings to soft blocks. Block PRs with CRITICAL findings only. Keep HIGH as warnings. This gives teams time to adapt without creating frustration.' },
+        ]},
+        { heading: 'Month 5-6: Advanced', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Code Quality', color: '#3B82F6', points: ['SonarQube for historical tracking', 'Quality gates on new code', 'Technical debt visibility'] },
+            { title: 'Supply Chain', color: '#A78BFA', points: ['SBOM for all production images', 'Image signing with Cosign', 'Dependency update automation'] },
+            { title: 'Runtime', color: '#22C55E', points: ['Policy-as-Code with OPA/Gatekeeper', 'Runtime monitoring with Falco', 'Full metrics dashboard'] },
+          ]},
+        ]},
+        { heading: 'Key Principles', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Do This', color: '#22C55E', points: ['Start with LOW friction tools', 'Gradually increase enforcement (warn → soft block → hard block)', 'Show value monthly: "X secrets caught, Y CVEs blocked"', 'Get executive sponsorship early'] },
+            { title: 'Avoid This', color: '#EF4444', points: ['Don\'t hard-block on day one — creates enemies', 'Don\'t blame developers — make secure = easy', 'Don\'t try to boil the ocean — incremental wins', 'Don\'t skip metrics — you need proof of ROI'] },
+          ]},
+        ]},
       ],
     },
     quiz: [
@@ -1273,16 +2886,56 @@ const MODULES = {
     ],
   },
   '5.5': {
-    id: '5.5', pathId: 5, title: 'Scenario — Developer Resistance', baseXP: 100,
+    id: '5.5', pathId: 5, title: 'Scenario — Developer Resistance', baseXP: 100, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'The Scenario', content: 'Developers are pushing back on security scanning. Common complaints: "It slows us down," "Too many false positives," "Security is not my job," "We have deadlines."' },
-        { heading: 'Strategy 1: Empathy First', content: '• Listen to specific complaints — they\'re often valid\n• If scans are slow: optimize (parallel execution, incremental scanning, caching)\n• If too many false positives: tune rules, create allowlists, prioritize by severity\n• If blocking deploys: switch to warnings first, block only on critical\n• Acknowledge that bad tooling IS a legitimate problem', highlight: true },
-        { heading: 'Strategy 2: Make Security Invisible', content: '• IDE plugins (Semgrep, Snyk) give instant feedback while coding — no pipeline wait\n• Pre-commit hooks catch issues before they even enter git\n• Fast scans in CI (Gitleaks: 2s, Semgrep: 30s) don\'t meaningfully slow pipelines\n• Auto-fix suggestions where possible (dependabot, npm audit fix)' },
-        { heading: 'Strategy 3: Show the Value', content: '• Monthly report: "X secrets caught, Y critical CVEs blocked, Z misconfigs prevented"\n• Translate to business impact: "That AWS key we caught? It had admin access to all production data"\n• Reference real breaches with costs: Uber ($148M), Equifax ($575M), Capital One ($80M)\n• Demonstrate an attack path: "With this misconfiguration, an attacker could..."', highlight: true },
-        { heading: 'Strategy 4: Gamification & Recognition', content: '• Security Champion of the Month\n• Fix-rate leaderboards (positive framing, not shame boards)\n• Lunch-and-learns where developers present security wins\n• CTF events and bug bounty programs' },
-        { heading: 'Strategy 5: Executive Sponsorship', content: '• Get leadership to mandate security as a non-negotiable\n• Frame as risk management, not developer burden\n• Compliance requirements (SOC2, ISO 27001, PCI-DSS) often require these controls\n• Security incidents are far more expensive than prevention' },
+        { heading: 'The Scenario', blocks: [
+          { type: 'callout', variant: 'warning', title: 'The Pushback', content: 'Developers are resisting security scanning. You\'re hearing: "It slows us down," "Too many false positives," "Security is not my job," "We have deadlines." How do you win them over?' },
+        ]},
+        { heading: 'Strategy 1: Empathy First', blocks: [
+          { type: 'text', content: 'Listen to specific complaints — they\'re often valid. Bad tooling IS a legitimate problem.' },
+          { type: 'keyterms', terms: [
+            { term: '"Scans are too slow"', definition: 'Measure actual impact. Optimize: parallel execution, incremental scanning, caching. Show before/after metrics.' },
+            { term: '"Too many false positives"', definition: 'Tune rules, create allowlists, prioritize by severity, track FP rate. Devs should only see actionable findings.' },
+            { term: '"It blocks my deploys"', definition: 'Switch to warnings first, block only on CRITICAL. Gradual enforcement builds trust.' },
+            { term: '"Not my job"', definition: 'Make it invisible: IDE plugins give feedback while coding. Pre-commit hooks catch issues before git.' },
+          ]},
+        ]},
+        { heading: 'Strategy 2: Make Security Invisible', blocks: [
+          { type: 'severity-bars', title: 'How Fast Are These Scans Really?', items: [
+            { rank: '⚡', label: 'Gitleaks pre-commit (secrets)', count: 2, color: '#22C55E' },
+            { rank: '⚡', label: 'Hadolint (Dockerfile lint)', count: 1, color: '#22C55E' },
+            { rank: '🔍', label: 'Semgrep SAST (code scan)', count: 30, color: '#3B82F6' },
+            { rank: '📦', label: 'Trivy SCA (dependencies)', count: 45, color: '#3B82F6' },
+            { rank: '🐳', label: 'Trivy image scan', count: 60, color: '#F59E0B' },
+            { rank: '🎯', label: 'ZAP DAST (baseline)', count: 120, color: '#F97316' },
+          ]},
+          { type: 'callout', variant: 'tip', content: 'Secrets detection adds 2 seconds. SAST adds 30 seconds. That\'s less than the time it takes to get coffee. And it\'s infinitely faster than incident response (days to weeks).' },
+        ]},
+        { heading: 'Strategy 3: Show the Value', blocks: [
+          { type: 'severity-bars', title: 'The Cost of NOT Doing DevSecOps', items: [
+            { rank: '💰', label: 'Uber breach (2016)', count: 148, color: '#EF4444' },
+            { rank: '💰', label: 'Equifax breach (2017)', count: 575, color: '#EF4444' },
+            { rank: '💰', label: 'Capital One breach (2019)', count: 80, color: '#F97316' },
+            { rank: '💰', label: 'SolarWinds incident (2020)', count: 100, color: '#F97316' },
+          ]},
+          { type: 'callout', variant: 'key-concept', content: 'Concrete examples from YOUR organization are most compelling. "We caught 12 secrets this month" is good. "That AWS key we caught had admin access to all production databases" is powerful.' },
+        ]},
+        { heading: 'Strategy 4: Gamification', blocks: [
+          { type: 'comparison', items: [
+            { title: 'Recognition', color: '#3B82F6', points: ['Security Champion of the Month', 'Fix-rate leaderboards (positive framing)', 'Developers present security wins at all-hands'] },
+            { title: 'Engagement', color: '#A78BFA', points: ['CTF competitions with prizes', 'Bug bounty programs (internal)', 'Lunch-and-learns (developers teach developers)'] },
+          ]},
+        ]},
+        { heading: 'Strategy 5: Executive Sponsorship', blocks: [
+          { type: 'text', content: 'Executive sponsorship provides mandate, budget, and signals that security is a company priority.' },
+          { type: 'steps', steps: [
+            { label: 'Frame as risk management, not developer burden', detail: 'Executives understand risk. "A leaked credential costs $X. Prevention costs $Y. Y << X."' },
+            { label: 'Leverage compliance requirements', detail: 'SOC2, ISO 27001, PCI-DSS often require these controls. Compliance is non-negotiable.' },
+            { label: 'Show incident cost vs prevention cost', detail: 'Security incidents cost 10-100x more than the tools and process to prevent them.' },
+          ]},
+        ]},
       ],
     },
     quiz: [
@@ -1294,16 +2947,59 @@ const MODULES = {
     ],
   },
   '5.6': {
-    id: '5.6', pathId: 5, title: 'Architecture & Frameworks', baseXP: 100,
+    id: '5.6', pathId: 5, title: 'Architecture & Frameworks', baseXP: 100, estTime: '5 min',
     hasSim: false, hasExecute: false, hasVerify: false,
     theory: {
       sections: [
-        { heading: 'Key Diagrams to Draw in Interviews', content: 'Be ready to whiteboard:\n\n1. DevSecOps Pipeline: Source → Secrets Scan → Build → SAST/SCA → Image Build → Image Scan → Staging → DAST → Policy Gate → Production → Runtime Monitoring\n\n2. Secrets Flow: App → Vault API → Auth (AppRole/K8s) → Policy Check → Secret Delivery → Short TTL → Auto-Rotation\n\n3. Container Lifecycle: Dockerfile → Build → Lint (Hadolint) → Scan (Trivy) → Sign (Cosign) → Registry → Admission Control → Deploy → Runtime Monitor' },
-        { heading: 'OWASP', content: 'OWASP Top 10 (2021): The ten most critical web application security risks. A01 Broken Access Control, A02 Cryptographic Failures, A03 Injection. OWASP also publishes the DevSecOps Guideline — best practices for integrating security into every DevOps stage.', highlight: true },
-        { heading: 'NIST SSDF', content: 'NIST Secure Software Development Framework (SP 800-218): A set of recommended practices for secure software development. Groups: Prepare the Organization, Protect the Software, Produce Well-Secured Software, Respond to Vulnerabilities.' },
-        { heading: 'SLSA', content: 'Supply-chain Levels for Software Artifacts: a framework for ensuring the integrity of software artifacts. L0 (no guarantees) → L1 (documented build) → L2 (signed provenance) → L3 (hardened build platform). Focuses on build integrity and provenance.', highlight: true },
-        { heading: 'CIS Benchmarks', content: 'Center for Internet Security Benchmarks: detailed configuration guidelines for securing systems. Available for Docker, Kubernetes, AWS, Azure, GCP, Linux, Windows. Tools like kube-bench and Docker Bench automate CIS checks.' },
-        { heading: 'MITRE ATT&CK', content: 'A knowledge base of adversary tactics and techniques based on real-world observations. Tactics: Initial Access, Execution, Persistence, Privilege Escalation, Defense Evasion, Credential Access, Discovery, Lateral Movement, Collection, Exfiltration, Impact. Use it to understand what attackers do and design defenses accordingly.' },
+        { heading: 'Key Diagrams to Draw in Interviews', blocks: [
+          { type: 'text', content: 'Be ready to whiteboard these three diagrams. They demonstrate comprehensive understanding:' },
+          { type: 'pipeline', stages: [
+            { label: 'Source', icon: '📥', desc: 'git push', security: false },
+            { label: 'Secrets', icon: '🔐', desc: 'Gitleaks', security: true, tool: 'Gitleaks' },
+            { label: 'Build', icon: '🔨', desc: 'Compile', security: false },
+            { label: 'SAST/SCA', icon: '🔍', desc: 'Semgrep+Trivy', security: true, tool: 'Scan' },
+            { label: 'Image', icon: '🐳', desc: 'Trivy image', security: true, tool: 'Trivy' },
+            { label: 'Stage', icon: '🎭', desc: 'Deploy staging', security: false },
+            { label: 'DAST', icon: '🎯', desc: 'ZAP scan', security: true, tool: 'ZAP' },
+            { label: 'Gate', icon: '🚦', desc: 'OPA policy', security: true, tool: 'OPA' },
+            { label: 'Prod', icon: '🚀', desc: 'Deploy', security: false },
+            { label: 'Monitor', icon: '👁', desc: 'Falco+SIEM', security: true, tool: 'Falco' },
+          ]},
+          { type: 'diagram', variant: 'linear', nodes: [
+            { label: 'App', note: 'Requests secret' },
+            { label: 'Vault API', note: 'Auth check' },
+            { label: 'Policy', note: 'Least privilege' },
+            { label: 'Secret', note: 'Short TTL' },
+            { label: 'Rotate', note: 'Auto-rotation' },
+          ]},
+        ]},
+        { heading: 'Frameworks Overview', blocks: [
+          { type: 'keyterms', terms: [
+            { term: 'OWASP Top 10 (2025)', definition: 'The ten most critical web app security risks. A01 Broken Access Control, A02 Crypto Failures, A03 Injection. Updated for supply chain and AI threats.' },
+            { term: 'NIST SSDF (SP 800-218)', definition: 'Secure Software Development Framework. Groups: Prepare Organization, Protect Software, Produce Secure Software, Respond to Vulnerabilities.' },
+            { term: 'SLSA', definition: 'Supply-chain Levels for Software Artifacts. L0 (none) → L1 (documented) → L2 (signed provenance) → L3 (hardened build). Build integrity framework.' },
+            { term: 'CIS Benchmarks', definition: 'Configuration security guidelines for Docker, K8s, AWS, Azure, GCP, Linux. Automated with kube-bench, Docker Bench.' },
+            { term: 'MITRE ATT&CK', definition: 'Knowledge base of adversary tactics: Initial Access, Execution, Persistence, Privilege Escalation, Lateral Movement, Exfiltration. Map threats to defenses.' },
+          ]},
+        ]},
+        { heading: 'SLSA Levels Deep Dive', blocks: [
+          { type: 'steps', steps: [
+            { label: 'SLSA L0 — No guarantees', detail: 'No provenance, no integrity checks. Most projects start here.' },
+            { label: 'SLSA L1 — Documented build', detail: 'Build process is documented. You know how the artifact was built.' },
+            { label: 'SLSA L2 — Signed provenance', detail: 'Build service generates signed provenance. You can verify who built it and from what source.' },
+            { label: 'SLSA L3 — Hardened build', detail: 'Build platform is hardened. Provenance is non-falsifiable. Highest supply chain integrity.' },
+          ]},
+        ]},
+        { heading: 'MITRE ATT&CK — Think Like an Attacker', blocks: [
+          { type: 'attack-flow', steps: [
+            { type: 'attack', label: 'Initial Access', detail: 'Phishing, exploiting public-facing app, supply chain compromise, valid accounts' },
+            { type: 'attack', label: 'Execution + Persistence', detail: 'Run malicious code, install backdoor, create accounts, modify startup scripts' },
+            { type: 'attack', label: 'Privilege Escalation', detail: 'Exploit misconfig, container escape, kernel vuln, credential theft' },
+            { type: 'attack', label: 'Lateral Movement + Exfiltration', detail: 'Move to other systems, access databases, exfiltrate data to external servers' },
+            { type: 'defense', label: 'DevSecOps Defense at Every Stage', detail: 'SAST/SCA prevent initial vulns. Runtime monitoring detects anomalous behavior. NetworkPolicies limit lateral movement. Encryption protects data at rest.' },
+          ]},
+          { type: 'callout', variant: 'key-concept', content: 'Understanding ATT&CK is what separates a tool operator from a security engineer. You need to know what you\'re defending against to build effective defenses.' },
+        ]},
       ],
     },
     quiz: [
@@ -1536,7 +3232,7 @@ const INTEL_COMPARISON_CICD = {
 };
 
 const INTEL_FRAMEWORKS = [
-  { name: 'OWASP Top 10 (2021)', desc: 'The ten most critical web application security risks. Industry-standard awareness document covering Broken Access Control, Injection, Cryptographic Failures, and more.' },
+  { name: 'OWASP Top 10 (2025)', desc: 'The ten most critical web application security risks. Updated in 2025 to reflect modern threats including supply chain risks and AI security. Covers Broken Access Control, Injection, Cryptographic Failures, and more.' },
   { name: 'OWASP DevSecOps Guideline', desc: 'Best practices for integrating security into every stage of the DevOps lifecycle, from pre-commit to production monitoring.' },
   { name: 'NIST SSDF (SP 800-218)', desc: 'Secure Software Development Framework — recommended practices for organizations to prepare, protect, produce secure software, and respond to vulnerabilities.' },
   { name: 'SLSA', desc: 'Supply-chain Levels for Software Artifacts — a framework for ensuring build integrity, from L0 (no guarantees) to L3 (hardened platform with non-falsifiable provenance).' },
@@ -1595,7 +3291,7 @@ const LABS_LIST = [
 // ============================================================================
 // DESIGN TOKENS
 // ============================================================================
-const DT = {
+let DT = {
   bg: '#09090B', surface: '#18181B', surfaceRaised: '#27272A',
   border: '#27272A', borderSubtle: '#3F3F46',
   textPrimary: '#FAFAFA', textSecondary: '#A1A1AA', textTertiary: '#71717A',
@@ -1605,6 +3301,31 @@ const DT = {
   success: '#22C55E', successMuted: 'rgba(34,197,94,0.1)',
   error: '#EF4444', errorMuted: 'rgba(239,68,68,0.1)',
   termGreen: '#4ADE80', termBg: '#0C0C0C',
+};
+
+const THEMES = {
+  dark: {
+    bg: '#09090B', surface: '#18181B', surfaceRaised: '#27272A',
+    border: '#27272A', borderSubtle: '#3F3F46',
+    textPrimary: '#FAFAFA', textSecondary: '#A1A1AA', textTertiary: '#71717A',
+    blue: '#3B82F6', blueMuted: 'rgba(59,130,246,0.1)',
+    purple: '#A78BFA', purpleMuted: 'rgba(167,139,250,0.1)',
+    amber: '#F59E0B', amberMuted: 'rgba(245,158,11,0.1)',
+    success: '#22C55E', successMuted: 'rgba(34,197,94,0.1)',
+    error: '#EF4444', errorMuted: 'rgba(239,68,68,0.1)',
+    termGreen: '#4ADE80', termBg: '#0C0C0C',
+  },
+  light: {
+    bg: '#FFFFFF', surface: '#F4F4F5', surfaceRaised: '#E4E4E7',
+    border: '#D4D4D8', borderSubtle: '#A1A1AA',
+    textPrimary: '#09090B', textSecondary: '#3F3F46', textTertiary: '#71717A',
+    blue: '#2563EB', blueMuted: 'rgba(37,99,235,0.08)',
+    purple: '#7C3AED', purpleMuted: 'rgba(124,58,237,0.08)',
+    amber: '#D97706', amberMuted: 'rgba(217,119,6,0.08)',
+    success: '#16A34A', successMuted: 'rgba(22,163,74,0.08)',
+    error: '#DC2626', errorMuted: 'rgba(220,38,38,0.08)',
+    termGreen: '#16A34A', termBg: '#1E1E1E',
+  }
 };
 
 const CALLOUT_VARIANTS = {
@@ -1697,14 +3418,132 @@ function ComparisonBlock({ items }) {
   );
 }
 
+function PipelineBlock({ stages }) {
+  return (
+    <div className="rounded-xl p-6 overflow-x-auto" style={{ background: DT.surface }}>
+      <div className="flex items-stretch gap-0 min-w-max">
+        {stages.map((stage, i) => (
+          <React.Fragment key={i}>
+            <div className="flex flex-col items-center" style={{ minWidth: 100 }}>
+              <div className="relative w-full">
+                <div className={`mx-auto w-16 h-16 rounded-2xl flex items-center justify-center text-lg ${stage.security ? 'ring-2 ring-offset-2 ring-offset-[#18181B]' : ''}`} style={{ background: stage.security ? DT.successMuted : DT.surfaceRaised, border: `1px solid ${stage.security ? DT.success : DT.border}`, ...(stage.security ? { ringColor: DT.success } : {}) }}>
+                  {stage.icon || stage.label.slice(0, 2)}
+                </div>
+                {stage.security && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px]" style={{ background: DT.success, color: '#fff' }}>
+                    <Shield size={10} />
+                  </div>
+                )}
+              </div>
+              <div className="text-xs font-semibold mt-2 text-center" style={{ color: DT.textPrimary }}>{stage.label}</div>
+              {stage.tool && <div className="text-[10px] mt-0.5 text-center px-1.5 py-0.5 rounded-full" style={{ background: DT.blueMuted, color: DT.blue }}>{stage.tool}</div>}
+              {stage.desc && <div className="text-[10px] mt-0.5 text-center" style={{ color: DT.textTertiary }}>{stage.desc}</div>}
+            </div>
+            {i < stages.length - 1 && (
+              <div className="flex items-center px-1 pt-2">
+                <div className="w-6 h-0.5 rounded" style={{ background: stage.security ? DT.success : DT.borderSubtle }} />
+                <ArrowRight size={12} style={{ color: stage.security ? DT.success : DT.borderSubtle }} />
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ScanOutputBlock({ title, tool, findings }) {
+  return (
+    <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${DT.border}` }}>
+      <div className="flex items-center gap-2 px-4 py-2" style={{ background: DT.surfaceRaised }}>
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-[#EF4444]" />
+          <div className="w-3 h-3 rounded-full bg-[#F59E0B]" />
+          <div className="w-3 h-3 rounded-full bg-[#22C55E]" />
+        </div>
+        <span className="text-xs font-mono ml-2" style={{ color: DT.textTertiary }}>{tool || 'terminal'}</span>
+        {title && <span className="text-xs ml-auto" style={{ color: DT.textTertiary }}>{title}</span>}
+      </div>
+      <div className="p-4 font-mono text-xs leading-relaxed" style={{ background: DT.termBg }}>
+        {findings.map((f, i) => (
+          <div key={i} className="mb-2">
+            {f.type === 'header' && <div style={{ color: DT.textTertiary }}>{f.text}</div>}
+            {f.type === 'finding' && (
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold" style={{
+                  background: f.severity === 'CRITICAL' ? DT.errorMuted : f.severity === 'HIGH' ? 'rgba(249,115,22,0.1)' : f.severity === 'MEDIUM' ? DT.amberMuted : DT.blueMuted,
+                  color: f.severity === 'CRITICAL' ? DT.error : f.severity === 'HIGH' ? '#F97316' : f.severity === 'MEDIUM' ? DT.amber : DT.blue,
+                }}>{f.severity}</span>
+                <div>
+                  <span style={{ color: '#D4D4D8' }}>{f.text}</span>
+                  {f.file && <span style={{ color: DT.textTertiary }}> — {f.file}</span>}
+                </div>
+              </div>
+            )}
+            {f.type === 'summary' && <div className="mt-2 pt-2" style={{ borderTop: `1px solid ${DT.border}`, color: DT.textSecondary }}>{f.text}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SeverityBarsBlock({ title, items }) {
+  const maxVal = Math.max(...items.map(i => i.count));
+  return (
+    <div className="rounded-xl p-5" style={{ background: DT.surface }}>
+      {title && <div className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: DT.textTertiary }}>{title}</div>}
+      <div className="space-y-3">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div className="w-8 text-right text-xs font-bold" style={{ color: item.color || DT.textSecondary }}>{item.rank || (i + 1)}</div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm" style={{ color: DT.textPrimary }}>{item.label}</span>
+                <span className="text-xs font-medium" style={{ color: item.color || DT.textTertiary }}>{item.count}</span>
+              </div>
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: DT.surfaceRaised }}>
+                <div className="h-full rounded-full transition-all" style={{ width: `${(item.count / maxVal) * 100}%`, background: item.color || DT.blue }} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AttackFlowBlock({ steps }) {
+  return (
+    <div className="rounded-xl p-5" style={{ background: DT.surface }}>
+      <div className="space-y-0">
+        {steps.map((step, i) => (
+          <div key={i} className="flex gap-4 pb-4">
+            <div className="flex flex-col items-center">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm shrink-0" style={{ background: step.type === 'attack' ? DT.errorMuted : step.type === 'defense' ? DT.successMuted : DT.blueMuted, color: step.type === 'attack' ? DT.error : step.type === 'defense' ? DT.success : DT.blue, border: `2px solid ${step.type === 'attack' ? DT.error : step.type === 'defense' ? DT.success : DT.blue}` }}>
+                {step.type === 'attack' ? '⚠' : step.type === 'defense' ? '🛡' : (i + 1)}
+              </div>
+              {i < steps.length - 1 && <div className="w-0.5 flex-1 mt-1" style={{ background: step.type === 'attack' ? DT.error + '44' : step.type === 'defense' ? DT.success + '44' : DT.border }} />}
+            </div>
+            <div className="pt-1.5 flex-1">
+              <div className="font-semibold text-sm" style={{ color: step.type === 'attack' ? DT.error : step.type === 'defense' ? DT.success : DT.textPrimary }}>{step.label}</div>
+              <div className="text-sm mt-1 leading-relaxed" style={{ color: DT.textSecondary }}>{step.detail}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function DiagramBlock({ nodes }) {
   return (
-    <div className="rounded-xl p-5 overflow-x-auto" style={{ background: DT.surface }}>
+    <div className="rounded-xl p-6 overflow-x-auto" style={{ background: DT.surface }}>
       <div className="flex items-start gap-1 min-w-max">
         {nodes.map((node, i) => (
           <React.Fragment key={i}>
-            <div className="flex flex-col items-center w-20">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: DT.blueMuted, color: DT.blue, border: `1px solid ${DT.border}` }}>
+            <div className="flex flex-col items-center w-24">
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: DT.blueMuted, color: DT.blue, border: `1px solid ${DT.border}` }}>
                 {node.label.slice(0, 3)}
               </div>
               <div className="text-xs font-semibold text-[#FAFAFA] mt-2 text-center">{node.label}</div>
@@ -1744,7 +3583,7 @@ function KeytermsBlock({ terms }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {terms.map((t, i) => (
         <div key={i} className="rounded-lg p-4" style={{ background: DT.surface }}>
-          <div className="font-mono text-sm font-semibold mb-1" style={{ color: DT.blue }}>{t.term}</div>
+          <div className="text-sm font-semibold mb-1" style={{ color: DT.blue }}>{t.term}</div>
           <div className="text-sm text-[#A1A1AA] leading-relaxed">{t.definition}</div>
         </div>
       ))}
@@ -1762,6 +3601,10 @@ function ContentBlock({ block }) {
     case 'diagram': return <DiagramBlock nodes={block.nodes} />;
     case 'steps': return <StepsBlock steps={block.steps} />;
     case 'keyterms': return <KeytermsBlock terms={block.terms} />;
+    case 'pipeline': return <PipelineBlock stages={block.stages} />;
+    case 'scan-output': return <ScanOutputBlock title={block.title} tool={block.tool} findings={block.findings} />;
+    case 'severity-bars': return <SeverityBarsBlock title={block.title} items={block.items} />;
+    case 'attack-flow': return <AttackFlowBlock steps={block.steps} />;
     default: return <TextBlock content={block.content || ''} />;
   }
 }
@@ -1818,7 +3661,7 @@ function CopyButton({ text }) {
     });
   }, [text]);
   return (
-    <button onClick={handleCopy} className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs border border-[#1a1a2e] hover:border-[#00ff41] text-[#8b949e] hover:text-[#00ff41] transition-colors" title="Copy">
+    <button onClick={handleCopy} className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs border border-[#27272A] hover:border-[#3B82F6] text-[#71717A] hover:text-[#3B82F6] transition-colors" title="Copy">
       {copied ? <Check size={12} /> : <Copy size={12} />}
       {copied ? 'Copied' : 'Copy'}
     </button>
@@ -1830,8 +3673,8 @@ function ProgressRing({ pct, size = 40, stroke = 3 }) {
   const circ = 2 * Math.PI * r;
   return (
     <svg width={size} height={size} className="transform -rotate-90">
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#1a1a2e" strokeWidth={stroke} />
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#00ff41" strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={circ * (1 - pct / 100)} strokeLinecap="round" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#27272A" strokeWidth={stroke} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#3B82F6" strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={circ * (1 - pct / 100)} strokeLinecap="round" />
     </svg>
   );
 }
@@ -1854,9 +3697,9 @@ function FileBrowser({ files, selectedFile, onSelectFile }) {
       if (isDir) {
         return (
           <div key={path}>
-            <button onClick={() => toggle(path)} className="flex items-center gap-1 w-full px-2 py-1 text-left text-[#c9d1d9] hover:bg-[#1a1a2e] rounded text-xs font-mono">
+            <button onClick={() => toggle(path)} className="flex items-center gap-1 w-full px-2 py-1 text-left text-[#FAFAFA] hover:bg-[#27272A] rounded text-xs font-mono">
               {expanded[path] ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-              <Folder size={12} className="text-[#00d4ff]" />
+              <Folder size={12} className="text-[#3B82F6]" />
               <span>{name}</span>
             </button>
             {expanded[path] && <div className="ml-3">{renderTree(content, path)}</div>}
@@ -1864,7 +3707,7 @@ function FileBrowser({ files, selectedFile, onSelectFile }) {
         );
       }
       return (
-        <button key={path} onClick={() => onSelectFile({ name: path, content })} className={`flex items-center gap-1 w-full px-2 py-1 text-left rounded text-xs font-mono ${selectedFile?.name === path ? 'bg-[#1a1a2e] text-[#00ff41]' : 'text-[#8b949e] hover:bg-[#1a1a2e] hover:text-[#c9d1d9]'}`}>
+        <button key={path} onClick={() => onSelectFile({ name: path, content })} className={`flex items-center gap-1 w-full px-2 py-1 text-left rounded text-xs font-mono ${selectedFile?.name === path ? 'bg-[#27272A] text-[#3B82F6]' : 'text-[#71717A] hover:bg-[#27272A] hover:text-[#FAFAFA]'}`}>
           <File size={12} />
           <span>{name}</span>
         </button>
@@ -1873,24 +3716,60 @@ function FileBrowser({ files, selectedFile, onSelectFile }) {
   };
 
   return (
-    <div className="bg-[#0a0a0f] border-r border-[#1a1a2e] p-2 overflow-y-auto" style={{ minWidth: 180, maxWidth: 220 }}>
-      <div className="text-[#00d4ff] text-xs font-bold mb-2 uppercase tracking-wider">Files</div>
+    <div className="bg-[#09090B] border-r border-[#27272A] p-2 overflow-y-auto" style={{ minWidth: 180, maxWidth: 220 }}>
+      <div className="text-[#3B82F6] text-xs font-bold mb-2 uppercase tracking-wider">Files</div>
       {renderTree(files)}
     </div>
   );
 }
 
+function highlightLine(line) {
+  const tokens = [];
+  let remaining = line;
+  let key = 0;
+  const push = (text, color, bg) => { if (text) tokens.push(<span key={key++} style={{ color, background: bg || 'transparent' }}>{text}</span>); };
+
+  // Comment lines
+  if (/^\s*(\/\/|#)/.test(remaining)) {
+    push(remaining, '#71717A');
+    return tokens;
+  }
+
+  const regex = /(["'])(?:(?!\1|\\).|\\.)*\1|(?:^|\s)(FROM|RUN|COPY|CMD|EXPOSE|WORKDIR|USER|HEALTHCHECK|import|const|let|var|function|if|else|return|def|class)(?=\s|$|\(|;)|\b\d+\.?\d*\b|(AKIA[A-Z0-9]{12,}|password|secret|token|key)\s*[=:]/gi;
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(remaining)) !== null) {
+    if (match.index > lastIndex) push(remaining.slice(lastIndex, match.index), '#FAFAFA');
+    const m = match[0];
+    if (/^["']/.test(m)) {
+      push(m, '#CE9178');
+    } else if (/^\s?(FROM|RUN|COPY|CMD|EXPOSE|WORKDIR|USER|HEALTHCHECK|import|const|let|var|function|if|else|return|def|class)$/i.test(m.trim())) {
+      push(m, '#A78BFA');
+    } else if (/^\d+\.?\d*$/.test(m)) {
+      push(m, '#B5CEA8');
+    } else if (/AKIA|password|secret|token|key/i.test(m)) {
+      push(m, '#EF4444', 'rgba(239,68,68,0.1)');
+    } else {
+      push(m, '#FAFAFA');
+    }
+    lastIndex = match.index + m.length;
+  }
+  if (lastIndex < remaining.length) push(remaining.slice(lastIndex), '#FAFAFA');
+  if (tokens.length === 0) push(remaining, '#FAFAFA');
+  return tokens;
+}
+
 function FileViewer({ file }) {
-  if (!file) return <div className="flex-1 flex items-center justify-center text-[#8b949e] text-sm font-mono">Select a file to view</div>;
+  if (!file) return <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm font-mono">Select a file to view</div>;
   const lines = file.content.split('\n');
   return (
-    <div className="flex-1 overflow-auto bg-[#0a0a0f] p-3">
-      <div className="text-[#00d4ff] text-xs mb-2 font-mono">{file.name}</div>
+    <div className="flex-1 overflow-auto bg-[#09090B] p-3">
+      <div className="text-[#3B82F6] text-xs mb-2 font-mono">{file.name}</div>
       <pre className="text-xs font-mono leading-relaxed">
         {lines.map((line, i) => (
           <div key={i} className="flex">
             <span className="text-[#3a3a4e] select-none w-8 text-right mr-3 shrink-0">{i + 1}</span>
-            <span className="text-[#c9d1d9]">{line}</span>
+            <span>{highlightLine(line)}</span>
           </div>
         ))}
       </pre>
@@ -1958,42 +3837,54 @@ function SimulatedTerminal({ steps, onComplete }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="bg-[#0d1117] border-b border-[#1a1a2e] px-4 py-2 flex items-center justify-between">
-        <div className="text-[#00ff41] text-xs font-mono">Step {currentStep + 1}/{steps.length}: {step.objective}</div>
-        <button onClick={() => setShowHint(true)} className="text-xs px-2 py-1 rounded border border-[#1a1a2e] text-[#ffb800] hover:border-[#ffb800] font-mono">
+      <div className="bg-[#18181B] border-b border-[#27272A] px-4 py-2 flex items-center justify-between">
+        <div className="text-[#3B82F6] text-xs font-mono">Step {currentStep + 1}/{steps.length}: {step.objective}</div>
+        <button onClick={() => setShowHint(true)} className="text-xs px-2 py-1 rounded border border-[#27272A] text-[#F59E0B] hover:border-[#F59E0B] font-mono">
           {showHint ? step.command : 'Hint'}
         </button>
       </div>
-      <div className="flex-1 bg-black p-3 overflow-y-auto font-mono text-sm">
+      <div className="flex-1 bg-[#0C0C0C] p-3 overflow-y-auto text-sm font-mono">
         {history.map((entry, i) => (
-          <div key={i} className={`mb-1 ${entry.type === 'input' ? 'text-[#00ff41]' : entry.type === 'error' ? 'text-[#ff3366]' : entry.type === 'success' ? 'text-[#00ff41] font-bold' : entry.type === 'followup-q' ? 'text-[#00d4ff]' : entry.type === 'followup-a' ? 'text-[#00ff41]' : 'text-[#c9d1d9]'}`}>
-            {entry.type === 'input' && <span className="text-[#00d4ff]">secops&gt; </span>}
+          <div key={i} className={`mb-1 ${entry.type === 'input' ? 'text-[#4ADE80]' : entry.type === 'error' ? 'text-[#EF4444]' : entry.type === 'success' ? 'text-[#22C55E] font-bold' : entry.type === 'followup-q' ? 'text-[#3B82F6]' : entry.type === 'followup-a' ? 'text-[#22C55E]' : 'text-[#D4D4D8]'}`}>
+            {entry.type === 'input' && <span className="text-[#3B82F6]">secops&gt; </span>}
             <span className="whitespace-pre-wrap">{entry.text}</span>
           </div>
         ))}
         {awaitingAnswer ? (
           <div className="mt-2">
-            <div className="text-[#00d4ff] mb-1">{step.followUp}</div>
+            <div className="text-[#3B82F6] mb-1">{step.followUp}</div>
             <div className="flex items-center gap-2">
-              <span className="text-[#ffb800]">answer&gt;</span>
+              <span className="text-[#F59E0B]">answer&gt;</span>
               <input
                 value={followUpInput}
                 onChange={e => setFollowUpInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleFollowUp()}
-                className="flex-1 bg-transparent text-[#00ff41] outline-none font-mono text-sm"
+                className="flex-1 bg-transparent text-[#4ADE80] outline-none text-sm font-mono"
                 autoFocus
               />
             </div>
           </div>
         ) : (
           <div className="flex items-center">
-            <span className="text-[#00d4ff]">secops&gt; </span>
+            <span className="text-[#3B82F6]">secops&gt; </span>
             <input
               ref={inputRef}
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleCommand()}
-              className="flex-1 bg-transparent text-[#00ff41] outline-none font-mono text-sm"
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleCommand();
+                if (e.key === 'Tab') {
+                  e.preventDefault();
+                  const curr = input.trim().toLowerCase();
+                  if (curr && step) {
+                    const cmd = step.command;
+                    if (cmd.toLowerCase().startsWith(curr)) {
+                      setInput(cmd);
+                    }
+                  }
+                }
+              }}
+              className="flex-1 bg-transparent text-[#4ADE80] outline-none text-sm font-mono"
             />
           </div>
         )}
@@ -2027,37 +3918,37 @@ function Quiz({ questions, bestScore, onSubmit }) {
   return (
     <div className="space-y-6">
       {questions.map((q, qi) => (
-        <div key={qi} className={`p-4 rounded-lg border ${submitted ? (answers[qi] === q.answer ? 'border-[#00ff41] bg-[rgba(0,255,65,0.05)]' : 'border-[#ff3366] bg-[rgba(255,51,102,0.05)]') : 'border-[#1a1a2e] bg-[#0d1117]'}`}>
-          <div className="text-[#c9d1d9] font-mono text-sm mb-3">{qi + 1}. {q.q}</div>
+        <div key={qi} className={`p-4 rounded-lg border ${submitted ? (answers[qi] === q.answer ? 'border-[#22C55E] bg-[rgba(34,197,94,0.05)]' : 'border-[#EF4444] bg-[rgba(239,68,68,0.05)]') : 'border-[#27272A] bg-[#18181B]'}`}>
+          <div className="text-[#FAFAFA] text-sm mb-3">{qi + 1}. {q.q}</div>
           <div className="space-y-2">
             {q.opts.map((opt, oi) => (
-              <label key={oi} className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer font-mono text-xs ${submitted ? (oi === q.answer ? 'bg-[rgba(0,255,65,0.1)] text-[#00ff41]' : answers[qi] === oi ? 'bg-[rgba(255,51,102,0.1)] text-[#ff3366]' : 'text-[#8b949e]') : answers[qi] === oi ? 'bg-[#1a1a2e] text-[#00ff41]' : 'text-[#8b949e] hover:bg-[#1a1a2e]'}`}>
+              <label key={oi} className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer text-xs ${submitted ? (oi === q.answer ? 'bg-[rgba(59,130,246,0.1)] text-[#3B82F6]' : answers[qi] === oi ? 'bg-[rgba(239,68,68,0.1)] text-[#EF4444]' : 'text-[#71717A]') : answers[qi] === oi ? 'bg-[#27272A] text-[#3B82F6]' : 'text-[#71717A] hover:bg-[#27272A]'}`}>
                 <input
                   type="radio"
                   name={`q-${qi}`}
                   checked={answers[qi] === oi}
                   onChange={() => !submitted && setAnswers(a => { const n = [...a]; n[qi] = oi; return n; })}
                   disabled={submitted}
-                  className="accent-[#00ff41]"
+                  className="accent-[#3B82F6]"
                 />
                 {opt}
-                {submitted && oi === q.answer && <CheckCircle size={14} className="ml-auto text-[#00ff41]" />}
-                {submitted && answers[qi] === oi && oi !== q.answer && <XCircle size={14} className="ml-auto text-[#ff3366]" />}
+                {submitted && oi === q.answer && <CheckCircle size={14} className="ml-auto text-[#3B82F6]" />}
+                {submitted && answers[qi] === oi && oi !== q.answer && <XCircle size={14} className="ml-auto text-[#EF4444]" />}
               </label>
             ))}
           </div>
-          {submitted && <div className="mt-2 text-xs text-[#8b949e] font-mono border-t border-[#1a1a2e] pt-2">{q.explanation}</div>}
+          {submitted && <div className="mt-2 text-xs text-[#71717A] font-mono border-t border-[#27272A] pt-2">{q.explanation}</div>}
         </div>
       ))}
       <div className="flex items-center gap-4">
         {!submitted ? (
-          <button onClick={handleSubmit} disabled={answers.includes(-1)} className="px-4 py-2 rounded border border-[#00ff41] text-[#00ff41] font-mono text-sm hover:bg-[rgba(0,255,65,0.1)] disabled:opacity-30 disabled:cursor-not-allowed">Submit Quiz</button>
+          <button onClick={handleSubmit} disabled={answers.includes(-1)} className="px-4 py-2 rounded border border-[#3B82F6] text-[#3B82F6] text-sm hover:bg-[rgba(59,130,246,0.1)] disabled:opacity-30 disabled:cursor-not-allowed">Submit Quiz</button>
         ) : (
           <>
-            <div className={`font-mono text-lg ${score >= 3 ? 'text-[#00ff41]' : 'text-[#ff3366]'}`}>{score}/{questions.length} {score >= 3 ? '— Passed!' : '— Need 3/5 to pass'}</div>
-            {score < 5 && <button onClick={handleRetake} className="px-4 py-2 rounded border border-[#00d4ff] text-[#00d4ff] font-mono text-sm hover:bg-[rgba(0,212,255,0.1)]">Retake</button>}
-            {score === 5 && <div className="text-[#ffb800] font-mono text-sm">Perfect score! +50 bonus XP</div>}
-            {bestScore > 0 && <div className="text-[#8b949e] font-mono text-xs">Best: {bestScore}/5</div>}
+            <div className={`text-lg ${score >= 3 ? 'text-[#3B82F6]' : 'text-[#EF4444]'}`}>{score}/{questions.length} {score >= 3 ? '— Passed!' : '— Need 3/5 to pass'}</div>
+            {score < 5 && <button onClick={handleRetake} className="px-4 py-2 rounded border border-[#3B82F6] text-[#3B82F6] text-sm hover:bg-[rgba(167,139,250,0.1)]">Retake</button>}
+            {score === 5 && <div className="text-[#F59E0B] text-sm">Perfect score! +50 bonus XP</div>}
+            {bestScore > 0 && <div className="text-[#71717A] text-xs">Best: {bestScore}/5</div>}
           </>
         )}
       </div>
@@ -2080,7 +3971,9 @@ function ModuleView({ moduleId, progress, onUpdateProgress, onBack }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [verifyAnswers, setVerifyAnswers] = useState({});
   const [verifySubmitted, setVerifySubmitted] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
   const mp = progress?.modules?.[moduleId] || {};
+  const [notes, setNotes] = useState(mp.notes || '');
 
   const tabLabels = { learn: 'Learn', simulate: 'Simulate', execute: 'Execute', verify: 'Verify', quiz: 'Quiz' };
   const tabIcons = { learn: BookOpen, simulate: Terminal, execute: Play, verify: CheckCircle, quiz: Brain };
@@ -2105,7 +3998,7 @@ function ModuleView({ moduleId, progress, onUpdateProgress, onBack }) {
         <button onClick={onBack} className="hover:opacity-80 transition-opacity" style={{ color: DT.textTertiary }}><ChevronRight size={16} className="transform rotate-180" /></button>
         <div>
           <div className="text-sm font-semibold" style={{ color: DT.textPrimary }}>{mod.id}: {mod.title}</div>
-          <div className="text-xs mt-0.5" style={{ color: DT.textTertiary }}>{mod.baseXP} XP</div>
+          <div className="text-xs mt-0.5 flex items-center gap-2" style={{ color: DT.textTertiary }}><span>{mod.baseXP} XP</span>{mod.estTime && <span className="flex items-center gap-1"><Clock size={10} /> {mod.estTime}</span>}</div>
         </div>
         <div className="ml-auto flex gap-2">
           {mp.simulationComplete && <span className="text-xs px-2 py-0.5 rounded-md font-medium" style={{ background: DT.successMuted, color: DT.success }}>Sim ✓</span>}
@@ -2125,7 +4018,7 @@ function ModuleView({ moduleId, progress, onUpdateProgress, onBack }) {
       </div>
       <div className="flex-1 overflow-y-auto p-8">
         {activeTab === 'learn' && (
-          <div className="max-w-[680px] mx-auto space-y-10">
+          <div className="max-w-4xl mx-auto space-y-10">
             {mod.theory.sections.map((s, i) => (
               <div key={i}>
                 <div className="flex items-baseline gap-3 mb-4 border-b pb-3" style={{ borderColor: DT.border }}>
@@ -2143,38 +4036,58 @@ function ModuleView({ moduleId, progress, onUpdateProgress, onBack }) {
                 )}
               </div>
             ))}
+            <div className="mt-8 border rounded-lg overflow-hidden" style={{ borderColor: DT.border }}>
+              <button onClick={() => setNotesOpen(!notesOpen)} className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm font-medium" style={{ background: DT.surface, color: DT.textSecondary }}>
+                <StickyNote size={14} style={{ color: DT.amber }} />
+                Notes {notes ? '(has notes)' : ''}
+                {notesOpen ? <ChevronDown size={14} className="ml-auto" /> : <ChevronRight size={14} className="ml-auto" />}
+              </button>
+              {notesOpen && (
+                <div className="p-4" style={{ background: DT.bg }}>
+                  <textarea
+                    value={notes}
+                    onChange={e => setNotes(e.target.value)}
+                    onBlur={() => onUpdateProgress(moduleId, { notes })}
+                    placeholder="Add your notes for this module..."
+                    className="w-full h-32 rounded-lg p-3 text-sm resize-y outline-none"
+                    style={{ background: DT.surface, border: `1px solid ${DT.border}`, color: DT.textPrimary }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         )}
         {activeTab === 'simulate' && mod.simulation && (
           <div className="flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
-            <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-3 mb-3">
-              <div className="text-[#ffb800] font-mono text-xs uppercase tracking-wider mb-1">Scenario</div>
-              <div className="text-[#c9d1d9] font-mono text-sm">{mod.simulation.scenario}</div>
+            <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-3 mb-3">
+              <div className="text-[#F59E0B] text-xs uppercase tracking-wider mb-1">Scenario</div>
+              <div className="text-[#FAFAFA] text-sm">{mod.simulation.scenario}</div>
             </div>
-            <div className="flex flex-1 border border-[#1a1a2e] rounded-lg overflow-hidden" style={{ minHeight: 400 }}>
+            <div className="flex flex-col md:flex-row flex-1 border border-[#27272A] rounded-lg overflow-hidden" style={{ minHeight: 400 }}>
               {mod.simulation.files && (
                 <>
                   <FileBrowser files={mod.simulation.files} selectedFile={selectedFile} onSelectFile={setSelectedFile} />
                   <FileViewer file={selectedFile} />
-                  <div className="w-px bg-[#1a1a2e]" />
+                  <div className="hidden md:block w-px bg-[#27272A]" />
+                  <div className="md:hidden h-px bg-[#27272A]" />
                 </>
               )}
               <div className="flex-1">
                 <SimulatedTerminal steps={mod.simulation.steps} onComplete={handleSimComplete} />
               </div>
             </div>
-            {mp.simulationComplete && <div className="mt-3 text-[#00ff41] font-mono text-sm">✅ Simulation complete — {mod.baseXP} XP earned!</div>}
+            {mp.simulationComplete && <div className="mt-3 text-[#3B82F6] text-sm">✅ Simulation complete — {mod.baseXP} XP earned!</div>}
           </div>
         )}
         {activeTab === 'execute' && mod.execute && (
-          <div className="max-w-3xl space-y-4">
-            <div className="text-[#c9d1d9] font-mono text-sm mb-4">{mod.execute.intro}</div>
-            <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg divide-y divide-[#1a1a2e]">
+          <div className="max-w-4xl space-y-4">
+            <div className="text-[#FAFAFA] text-sm mb-4">{mod.execute.intro}</div>
+            <div className="bg-[#18181B] border border-[#27272A] rounded-lg divide-y divide-[#27272A]">
               {mod.execute.commands.map((c, i) => (
                 <div key={i} className="px-4 py-3">
-                  <div className="text-[#8b949e] font-mono text-xs mb-1">{c.desc}</div>
+                  <div className="text-[#71717A] text-xs mb-1">{c.desc}</div>
                   <div className="flex items-center gap-2">
-                    <code className="text-[#00ff41] font-mono text-sm flex-1">{c.cmd}</code>
+                    <code className="text-[#3B82F6] text-sm flex-1">{c.cmd}</code>
                     <CopyButton text={c.cmd} />
                   </div>
                 </div>
@@ -2183,31 +4096,31 @@ function ModuleView({ moduleId, progress, onUpdateProgress, onBack }) {
           </div>
         )}
         {activeTab === 'verify' && mod.verify && (
-          <div className="max-w-3xl space-y-4">
-            <div className="text-[#c9d1d9] font-mono text-sm mb-2">Answer these questions from your real tool output to verify you ran the commands.</div>
-            <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-4 space-y-4">
+          <div className="max-w-4xl space-y-4">
+            <div className="text-[#FAFAFA] text-sm mb-2">Answer these questions from your real tool output to verify you ran the commands.</div>
+            <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-4 space-y-4">
               {mod.verify.map((q, i) => (
                 <div key={i}>
-                  <label className="text-[#00d4ff] font-mono text-sm block mb-1">{q}</label>
+                  <label className="text-[#3B82F6] text-sm block mb-1">{q}</label>
                   <input
                     value={verifyAnswers[i] || ''}
                     onChange={e => setVerifyAnswers(a => ({ ...a, [i]: e.target.value }))}
                     disabled={verifySubmitted}
-                    className="w-full bg-[#0a0a0f] border border-[#1a1a2e] rounded px-3 py-2 text-[#c9d1d9] font-mono text-sm focus:border-[#00ff41] outline-none"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded px-3 py-2 text-[#FAFAFA] text-sm focus:border-[#3B82F6] outline-none"
                     placeholder="Your answer..."
                   />
                 </div>
               ))}
               {!verifySubmitted ? (
-                <button onClick={handleVerifySubmit} disabled={Object.keys(verifyAnswers).length < mod.verify.length || Object.values(verifyAnswers).some(v => !v.trim())} className="px-4 py-2 rounded border border-[#00d4ff] text-[#00d4ff] font-mono text-sm hover:bg-[rgba(0,212,255,0.1)] disabled:opacity-30 disabled:cursor-not-allowed">Submit Verification</button>
+                <button onClick={handleVerifySubmit} disabled={Object.keys(verifyAnswers).length < mod.verify.length || Object.values(verifyAnswers).some(v => !v.trim())} className="px-4 py-2 rounded border border-[#3B82F6] text-[#3B82F6] text-sm hover:bg-[rgba(167,139,250,0.1)] disabled:opacity-30 disabled:cursor-not-allowed">Submit Verification</button>
               ) : (
-                <div className="text-[#00ff41] font-mono text-sm">✅ Self-verified! +{Math.round(mod.baseXP * 0.3)} bonus XP earned. Be honest — the only person you're cheating is yourself.</div>
+                <div className="text-[#3B82F6] text-sm">✅ Self-verified! +{Math.round(mod.baseXP * 0.3)} bonus XP earned. Be honest — the only person you're cheating is yourself.</div>
               )}
             </div>
           </div>
         )}
         {activeTab === 'quiz' && mod.quiz && (
-          <div className="max-w-3xl">
+          <div className="max-w-4xl">
             <Quiz questions={mod.quiz} bestScore={mp.quizBestScore || 0} onSubmit={handleQuizSubmit} />
           </div>
         )}
@@ -2240,12 +4153,12 @@ function DashboardScreen({ profile, progress, badges, terminal, onNavigate, onOp
   const nextMod = findNext();
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
-      <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-6" style={{ boxShadow: '0 0 30px rgba(0,255,65,0.05)' }}>
-        <div className="text-[#00ff41] font-mono text-lg font-bold">
+    <div className="p-6 space-y-6 max-w-full">
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+        <div className="text-[#3B82F6] text-lg font-bold">
           {profile.callsign ? `Welcome back, ${profile.callsign}` : 'Welcome to SecOps Academy'}
         </div>
-        <div className="text-[#8b949e] font-mono text-sm mt-1">
+        <div className="text-[#71717A] text-sm mt-1">
           {profile.callsign ? `${rank.icon} ${rank.name} — ${rank.tagline}` : 'Master DevSecOps from zero to production-ready'}
         </div>
       </div>
@@ -2257,20 +4170,20 @@ function DashboardScreen({ profile, progress, badges, terminal, onNavigate, onOp
           { label: 'Total XP', value: profile.totalXP.toLocaleString(), sub: `${rank.icon} ${rank.name}`, pct: nextRank ? ((profile.totalXP - rank.minXP) / (nextRank.minXP - rank.minXP)) * 100 : 100 },
           { label: 'Streak', value: `${profile.streak} days ${streakEmoji}`, sub: `Best: ${profile.longestStreak}`, pct: Math.min(profile.streak * 14, 100) },
         ].map((stat, i) => (
-          <div key={i} className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-4">
-            <div className="text-[#8b949e] font-mono text-xs uppercase tracking-wider">{stat.label}</div>
-            <div className="text-[#00ff41] font-mono text-xl font-bold mt-1">{stat.value}</div>
-            <div className="text-[#8b949e] font-mono text-xs mt-1">{stat.sub}</div>
-            <div className="w-full h-1 bg-[#1a1a2e] rounded mt-2">
-              <div className="h-full bg-[#00ff41] rounded transition-all" style={{ width: `${Math.min(stat.pct, 100)}%` }} />
+          <div key={i} className="bg-[#18181B] border border-[#27272A] rounded-lg p-4">
+            <div className="text-[#71717A] text-xs uppercase tracking-wider">{stat.label}</div>
+            <div className="text-[#3B82F6] text-xl font-bold mt-1">{stat.value}</div>
+            <div className="text-[#71717A] text-xs mt-1">{stat.sub}</div>
+            <div className="w-full h-1 bg-[#27272A] rounded mt-2">
+              <div className="h-full bg-gradient-to-r from-[#3B82F6] to-[#A78BFA] rounded transition-all" style={{ width: `${Math.min(stat.pct, 100)}%` }} />
             </div>
           </div>
         ))}
       </div>
 
       <div>
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">Learning Paths</div>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">Learning Paths</div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {PATHS.map(p => {
             const pathMods = Object.keys(MODULES).filter(k => MODULES[k].pathId === p.id);
             const done = pathMods.filter(k => progress.modules?.[k]?.simulationComplete || (!MODULES[k].hasSim && progress.modules?.[k]?.quizBestScore >= 3)).length;
@@ -2283,15 +4196,15 @@ function DashboardScreen({ profile, progress, badges, terminal, onNavigate, onOp
               });
             })();
             return (
-              <div key={p.id} onClick={() => unlocked && onNavigate('paths', p.id)} className={`bg-[#0d1117] border rounded-lg p-3 cursor-pointer transition-all ${unlocked ? 'border-[#1a1a2e] hover:border-[#00ff41]' : 'border-[#1a1a2e] opacity-50 cursor-not-allowed'}`} style={unlocked ? { boxShadow: '0 0 15px rgba(0,255,65,0.05)' } : {}}>
+              <div key={p.id} onClick={() => unlocked && onNavigate('paths', p.id)} className={`bg-[#18181B] border rounded-lg p-3 cursor-pointer transition-all ${unlocked ? 'border-[#27272A] hover:border-[#3B82F6]' : 'border-[#27272A] opacity-50 cursor-not-allowed'}`} style={unlocked ? { boxShadow: '0 1px 3px rgba(0,0,0,0.2)' } : {}}>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">{p.icon}</span>
-                  {!unlocked && <Lock size={12} className="text-[#8b949e]" />}
+                  {!unlocked && <Lock size={12} className="text-[#71717A]" />}
                 </div>
-                <div className="text-[#c9d1d9] font-mono text-xs font-bold">{p.name}</div>
-                <div className="text-[#8b949e] font-mono text-[10px] mt-1">{done}/{pathMods.length} modules</div>
-                <div className="w-full h-1 bg-[#1a1a2e] rounded mt-2">
-                  <div className="h-full bg-[#00ff41] rounded" style={{ width: `${pct}%` }} />
+                <div className="text-[#FAFAFA] text-xs font-bold">{p.name}</div>
+                <div className="text-[#71717A] text-[10px] mt-1">{done}/{pathMods.length} modules</div>
+                <div className="w-full h-1 bg-[#27272A] rounded mt-2">
+                  <div className="h-full bg-gradient-to-r from-[#3B82F6] to-[#A78BFA] rounded" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             );
@@ -2300,13 +4213,13 @@ function DashboardScreen({ profile, progress, badges, terminal, onNavigate, onOp
       </div>
 
       {nextMod && (
-        <div className="bg-[#0d1117] border border-[#00ff41] rounded-lg p-4 flex items-center justify-between" style={{ boxShadow: '0 0 20px rgba(0,255,65,0.1)' }}>
+        <div className="bg-[#18181B] border border-[#3B82F6] rounded-lg p-4 flex items-center justify-between" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
           <div>
-            <div className="text-[#8b949e] font-mono text-xs uppercase">Recommended Next</div>
-            <div className="text-[#00ff41] font-mono text-sm font-bold mt-1">{MODULES[nextMod].id}: {MODULES[nextMod].title}</div>
-            <div className="text-[#8b949e] font-mono text-xs mt-1">Path {MODULES[nextMod].pathId} — {MODULES[nextMod].baseXP} XP</div>
+            <div className="text-[#71717A] text-xs uppercase">Recommended Next</div>
+            <div className="text-[#3B82F6] text-sm font-bold mt-1">{MODULES[nextMod].id}: {MODULES[nextMod].title}</div>
+            <div className="text-[#71717A] text-xs mt-1">Path {MODULES[nextMod].pathId} — {MODULES[nextMod].baseXP} XP</div>
           </div>
-          <button onClick={() => onOpenModule(nextMod)} className="px-4 py-2 rounded border border-[#00ff41] text-[#00ff41] font-mono text-sm hover:bg-[rgba(0,255,65,0.1)] flex items-center gap-1">
+          <button onClick={() => onOpenModule(nextMod)} className="px-4 py-2 rounded border border-[#3B82F6] text-[#3B82F6] text-sm hover:bg-[rgba(59,130,246,0.1)] flex items-center gap-1">
             Start <ArrowRight size={14} />
           </button>
         </div>
@@ -2314,17 +4227,47 @@ function DashboardScreen({ profile, progress, badges, terminal, onNavigate, onOp
 
       {Object.values(badges).some(b => b.unlocked) && (
         <div>
-          <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">Badges</div>
+          <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">Badges</div>
           <div className="flex gap-2 flex-wrap">
             {Object.entries(badges).filter(([, b]) => b.unlocked).map(([id]) => {
               const badge = BADGES.find(b => b.id === id);
               return badge ? (
-                <span key={id} className="px-2 py-1 rounded text-xs font-mono bg-[rgba(255,184,0,0.1)] text-[#ffb800] border border-[rgba(255,184,0,0.2)]">{badge.icon} {badge.name}</span>
+                <span key={id} className="px-2 py-1 rounded text-xs font-mono bg-[rgba(245,158,11,0.1)] text-[#F59E0B] border border-[rgba(245,158,11,0.15)]">{badge.icon} {badge.name}</span>
               ) : null;
             })}
           </div>
         </div>
       )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-[#18181B] border border-[#27272A] rounded-xl p-6">
+          <div className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: DT.textPrimary }}>Quick Start Guide</div>
+          <div className="space-y-3">
+            {[
+              { step: '1', text: 'Start with Path 1: DevSecOps Fundamentals', done: completedMods > 0 },
+              { step: '2', text: 'Complete all 6 modules to unlock Security Scanning', done: completedMods >= 6 },
+              { step: '3', text: 'Practice commands in the Terminal simulator', done: (terminal.masteredCommands || []).length > 0 },
+              { step: '4', text: 'Use the Intel tab as your cheat sheet', done: false },
+              { step: '5', text: 'Try the Interview Prep path (always unlocked!)', done: false },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: item.done ? DT.successMuted : DT.surfaceRaised, color: item.done ? DT.success : DT.textTertiary, border: `1px solid ${item.done ? DT.success : DT.border}` }}>
+                  {item.done ? '\u2713' : item.step}
+                </div>
+                <span className="text-sm" style={{ color: item.done ? DT.textTertiary : DT.textSecondary, textDecoration: item.done ? 'line-through' : 'none' }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="bg-[#18181B] border border-[#27272A] rounded-xl p-6">
+          <div className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: DT.textPrimary }}>Tools You'll Master</div>
+          <div className="flex flex-wrap gap-2">
+            {['Gitleaks', 'TruffleHog', 'Semgrep', 'Trivy', 'Grype', 'Hadolint', 'OWASP ZAP', 'Checkov', 'Vault', 'OPA', 'Jenkins', 'GitLab CI', 'GitHub Actions', 'Docker', 'kubectl', 'SonarQube'].map(tool => (
+              <span key={tool} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: DT.surfaceRaised, color: DT.textSecondary, border: `1px solid ${DT.border}` }}>{tool}</span>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -2348,7 +4291,7 @@ function PathsScreen({ progress, onOpenModule, focusPath }) {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-4">
+    <div className="p-6 max-w-6xl mx-auto space-y-4">
       {PATHS.map(p => {
         const unlocked = isPathUnlocked(p.id);
         const pathMods = Object.keys(MODULES).filter(k => MODULES[k].pathId === p.id).sort();
@@ -2356,47 +4299,49 @@ function PathsScreen({ progress, onOpenModule, focusPath }) {
         const pct = pathMods.length ? Math.round((done / pathMods.length) * 100) : 0;
 
         return (
-          <div key={p.id} className={`bg-[#0d1117] border rounded-lg overflow-hidden ${unlocked ? 'border-[#1a1a2e]' : 'border-[#1a1a2e] opacity-60'}`}>
+          <div key={p.id} className={`bg-[#18181B] border rounded-lg overflow-hidden ${unlocked ? 'border-[#27272A]' : 'border-[#27272A] opacity-60'}`}>
             <button onClick={() => unlocked && setOpenPath(openPath === p.id ? null : p.id)} className="w-full flex items-center gap-4 p-4 text-left">
               <span className="text-2xl">{p.icon}</span>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[#c9d1d9] font-mono font-bold text-sm">{p.name}</span>
-                  {!unlocked && <Lock size={14} className="text-[#8b949e]" />}
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${p.difficulty === 'Beginner' ? 'bg-[rgba(0,255,65,0.1)] text-[#00ff41]' : p.difficulty === 'Intermediate' ? 'bg-[rgba(0,212,255,0.1)] text-[#00d4ff]' : p.difficulty === 'Advanced' ? 'bg-[rgba(255,184,0,0.1)] text-[#ffb800]' : 'bg-[rgba(128,0,255,0.1)] text-[#a855f7]'}`}>{p.difficulty}</span>
+                  <span className="text-[#FAFAFA] font-semibold text-sm">{p.name}</span>
+                  {!unlocked && <Lock size={14} className="text-[#71717A]" />}
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${p.difficulty === 'Beginner' ? 'bg-[rgba(59,130,246,0.1)] text-[#3B82F6]' : p.difficulty === 'Intermediate' ? 'bg-[rgba(167,139,250,0.1)] text-[#3B82F6]' : p.difficulty === 'Advanced' ? 'bg-[rgba(245,158,11,0.1)] text-[#F59E0B]' : 'bg-[rgba(167,139,250,0.1)] text-[#A78BFA]'}`}>{p.difficulty}</span>
                 </div>
-                <div className="text-[#8b949e] font-mono text-xs mt-1">{p.desc}</div>
+                <div className="text-[#71717A] text-xs mt-1">{p.desc}</div>
                 <div className="flex items-center gap-2 mt-2">
-                  <div className="flex-1 h-1 bg-[#1a1a2e] rounded"><div className="h-full bg-[#00ff41] rounded" style={{ width: `${pct}%` }} /></div>
-                  <span className="text-[#8b949e] font-mono text-xs">{done}/{pathMods.length}</span>
+                  <div className="flex-1 h-1 bg-[#27272A] rounded"><div className="h-full bg-gradient-to-r from-[#3B82F6] to-[#A78BFA] rounded" style={{ width: `${pct}%` }} /></div>
+                  <span className="text-[#71717A] text-xs">{done}/{pathMods.length}</span>
                 </div>
               </div>
-              {unlocked && (openPath === p.id ? <ChevronDown size={16} className="text-[#8b949e]" /> : <ChevronRight size={16} className="text-[#8b949e]" />)}
+              {unlocked && (openPath === p.id ? <ChevronDown size={16} className="text-[#71717A]" /> : <ChevronRight size={16} className="text-[#71717A]" />)}
             </button>
             {openPath === p.id && unlocked && (
-              <div className="border-t border-[#1a1a2e] divide-y divide-[#1a1a2e]">
+              <div className="border-t border-[#27272A] divide-y divide-[#27272A]">
                 {pathMods.map(mid => {
                   const mod = MODULES[mid];
                   const mp = progress.modules?.[mid] || {};
                   const isDone = mp.simulationComplete || (!mod.hasSim && mp.quizBestScore >= 3);
                   return (
-                    <button key={mid} onClick={() => onOpenModule(mid)} className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-[#1a1a2e] transition-colors">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono ${isDone ? 'bg-[rgba(0,255,65,0.1)] text-[#00ff41]' : 'bg-[#1a1a2e] text-[#8b949e]'}`}>
+                    <button key={mid} onClick={() => onOpenModule(mid)} className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-[#27272A] transition-colors">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono ${isDone ? 'bg-[rgba(59,130,246,0.1)] text-[#3B82F6]' : 'bg-[#27272A] text-[#71717A]'}`}>
                         {isDone ? <Check size={12} /> : mod.id.split('.')[1]}
                       </div>
                       <div className="flex-1">
-                        <div className={`font-mono text-sm ${isDone ? 'text-[#00ff41]' : 'text-[#c9d1d9]'}`}>{mod.title}</div>
+                        <div className={`text-sm ${isDone ? 'text-[#3B82F6]' : 'text-[#FAFAFA]'}`}>{mod.title}</div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[#8b949e] font-mono text-xs">{mod.baseXP} XP</span>
-                          {mod.hasSim && <span className="text-[10px] px-1 rounded bg-[rgba(0,212,255,0.1)] text-[#00d4ff]">Lab</span>}
+                          <span className="text-[#71717A] text-xs">{mod.baseXP} XP</span>
+                          {mod.estTime && <span className="text-[#71717A] text-xs flex items-center gap-0.5"><Clock size={9} /> {mod.estTime}</span>}
+                          {mod.hasSim && <span className="text-[10px] px-1 rounded bg-[rgba(167,139,250,0.1)] text-[#3B82F6]">Lab</span>}
+                          {mp.notes && <StickyNote size={10} className="text-[#F59E0B]" />}
                         </div>
                       </div>
                       <div className="flex gap-1">
-                        {mp.simulationComplete && <span className="text-[10px] text-[#00ff41]">Sim✓</span>}
-                        {mp.verified && <span className="text-[10px] text-[#00d4ff]">Ver✓</span>}
-                        {mp.quizBestScore >= 3 && <span className="text-[10px] text-[#ffb800]">Q{mp.quizBestScore}/5</span>}
+                        {mp.simulationComplete && <span className="text-[10px] text-[#3B82F6]">Sim✓</span>}
+                        {mp.verified && <span className="text-[10px] text-[#3B82F6]">Ver✓</span>}
+                        {mp.quizBestScore >= 3 && <span className="text-[10px] text-[#F59E0B]">Q{mp.quizBestScore}/5</span>}
                       </div>
-                      <ChevronRight size={14} className="text-[#8b949e]" />
+                      <ChevronRight size={14} className="text-[#71717A]" />
                     </button>
                   );
                 })}
@@ -2425,36 +4370,39 @@ function LabsScreen({ progress, onOpenModule }) {
   });
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-full">
       <div className="flex flex-wrap gap-2 mb-4">
         {diffs.map(d => (
-          <button key={d} onClick={() => setDiffFilter(diffFilter === d ? null : d)} className={`px-3 py-1 rounded font-mono text-xs border ${diffFilter === d ? (d === 'beginner' ? 'border-[#00ff41] text-[#00ff41] bg-[rgba(0,255,65,0.1)]' : d === 'intermediate' ? 'border-[#00d4ff] text-[#00d4ff] bg-[rgba(0,212,255,0.1)]' : 'border-[#ffb800] text-[#ffb800] bg-[rgba(255,184,0,0.1)]') : 'border-[#1a1a2e] text-[#8b949e] hover:border-[#8b949e]'}`}>
+          <button key={d} onClick={() => setDiffFilter(diffFilter === d ? null : d)} className={`px-3 py-1 rounded text-xs border ${diffFilter === d ? (d === 'beginner' ? 'border-[#3B82F6] text-[#3B82F6] bg-[rgba(59,130,246,0.1)]' : d === 'intermediate' ? 'border-[#3B82F6] text-[#3B82F6] bg-[rgba(167,139,250,0.1)]' : 'border-[#F59E0B] text-[#F59E0B] bg-[rgba(245,158,11,0.1)]') : 'border-[#27272A] text-[#71717A] hover:border-[#3F3F46]'}`}>
             {d}
           </button>
         ))}
-        <span className="mx-2 text-[#1a1a2e]">|</span>
+        <span className="mx-2 text-[#27272A]">|</span>
         {cats.map(c => (
-          <button key={c} onClick={() => setCatFilter(catFilter === c ? null : c)} className={`px-3 py-1 rounded font-mono text-xs border ${catFilter === c ? 'border-[#00d4ff] text-[#00d4ff] bg-[rgba(0,212,255,0.1)]' : 'border-[#1a1a2e] text-[#8b949e] hover:border-[#8b949e]'}`}>
+          <button key={c} onClick={() => setCatFilter(catFilter === c ? null : c)} className={`px-3 py-1 rounded text-xs border ${catFilter === c ? 'border-[#3B82F6] text-[#3B82F6] bg-[rgba(167,139,250,0.1)]' : 'border-[#27272A] text-[#71717A] hover:border-[#3F3F46]'}`}>
             {c}
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         {filtered.map(lab => {
           const mp = progress.modules?.[lab.moduleId] || {};
           const done = mp.simulationComplete;
           return (
-            <button key={lab.id} onClick={() => onOpenModule(lab.moduleId)} className={`bg-[#0d1117] border rounded-lg p-4 text-left transition-all hover:border-[#00ff41] ${done ? 'border-[#00ff41]' : 'border-[#1a1a2e]'}`} style={{ boxShadow: done ? '0 0 15px rgba(0,255,65,0.08)' : 'none' }}>
+            <button key={lab.id} onClick={() => onOpenModule(lab.moduleId)} className={`group bg-[#18181B] border rounded-lg p-4 text-left transition-all hover:border-[#3B82F6] ${done ? 'border-[#3B82F6]' : 'border-[#27272A]'}`} style={{ boxShadow: done ? '0 2px 8px rgba(0,0,0,0.2)' : 'none' }}>
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${lab.difficulty === 'beginner' ? 'bg-[rgba(0,255,65,0.1)] text-[#00ff41]' : lab.difficulty === 'intermediate' ? 'bg-[rgba(0,212,255,0.1)] text-[#00d4ff]' : 'bg-[rgba(255,184,0,0.1)] text-[#ffb800]'}`}>{lab.difficulty}</span>
-                {done && <CheckCircle size={14} className="text-[#00ff41]" />}
+                <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${lab.difficulty === 'beginner' ? 'bg-[rgba(59,130,246,0.1)] text-[#3B82F6]' : lab.difficulty === 'intermediate' ? 'bg-[rgba(167,139,250,0.1)] text-[#3B82F6]' : 'bg-[rgba(245,158,11,0.1)] text-[#F59E0B]'}`}>{lab.difficulty}</span>
+                {done && <CheckCircle size={14} className="text-[#3B82F6]" />}
               </div>
-              <div className="text-[#c9d1d9] font-mono text-sm font-bold mb-1">{lab.title}</div>
+              <div className="text-[#FAFAFA] text-sm font-bold mb-1">{lab.title}</div>
               <div className="flex flex-wrap gap-1 mb-2">
-                {lab.tools.map(t => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-[#1a1a2e] text-[#8b949e] font-mono">{t}</span>)}
+                {lab.tools.map(t => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-[#27272A] text-[#71717A] font-mono">{t}</span>)}
               </div>
-              <div className="flex items-center gap-2 text-[#8b949e] font-mono text-xs">
-                <Clock size={10} /> {lab.time}
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-2 text-[#71717A] text-xs">
+                  <Clock size={10} /> {lab.time}
+                </div>
+                <span className="text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: DT.blue }}>{`Start \u2192`}</span>
               </div>
             </button>
           );
@@ -2525,35 +4473,49 @@ function TerminalScreen({ profile, terminal, onMasterCommand, onCompleteChalleng
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-4 py-2 bg-[#0d1117] border-b border-[#1a1a2e]">
-        <button onClick={() => { setMode('free'); setHistory([{ type: 'system', text: 'Free practice mode. Type any command.' }]); }} className={`px-3 py-1 rounded font-mono text-xs border ${mode === 'free' ? 'border-[#00ff41] text-[#00ff41]' : 'border-[#1a1a2e] text-[#8b949e]'}`}>Free Practice</button>
-        <button onClick={() => { setMode('challenge'); setHistory([{ type: 'system', text: 'Challenge mode. Complete objectives to earn XP.' }]); setCurrentChallenge(0); }} className={`px-3 py-1 rounded font-mono text-xs border ${mode === 'challenge' ? 'border-[#00ff41] text-[#00ff41]' : 'border-[#1a1a2e] text-[#8b949e]'}`}>Challenges</button>
-        <span className="ml-auto text-[#8b949e] font-mono text-xs">Commands mastered: {mastered.length}/{Object.keys(TERMINAL_COMMANDS).length - 2}</span>
+      <div className="flex items-center gap-3 px-4 py-2 bg-[#18181B] border-b border-[#27272A]">
+        <button onClick={() => { setMode('free'); setHistory([{ type: 'system', text: 'Free practice mode. Type any command.' }]); }} className={`px-3 py-1 rounded text-xs border ${mode === 'free' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#27272A] text-[#71717A]'}`}>Free Practice</button>
+        <button onClick={() => { setMode('challenge'); setHistory([{ type: 'system', text: 'Challenge mode. Complete objectives to earn XP.' }]); setCurrentChallenge(0); }} className={`px-3 py-1 rounded text-xs border ${mode === 'challenge' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#27272A] text-[#71717A]'}`}>Challenges</button>
+        <span className="ml-auto text-[#71717A] text-xs">Commands mastered: {mastered.length}/{Object.keys(TERMINAL_COMMANDS).length - 2}</span>
       </div>
       {mode === 'challenge' && challenge && (
-        <div className="px-4 py-2 bg-[rgba(255,184,0,0.05)] border-b border-[#1a1a2e] flex items-center justify-between">
+        <div className="px-4 py-2 bg-[rgba(245,158,11,0.05)] border-b border-[#27272A] flex items-center justify-between">
           <div>
-            <span className="text-[#ffb800] font-mono text-xs">Challenge {currentChallenge + 1}/{TERMINAL_CHALLENGES.length}: {challenge.objective}</span>
-            {challengesDone.includes(challenge.id) && <span className="text-[#00ff41] font-mono text-xs ml-2">✓ Completed</span>}
+            <span className="text-[#F59E0B] text-xs">Challenge {currentChallenge + 1}/{TERMINAL_CHALLENGES.length}: {challenge.objective}</span>
+            {challengesDone.includes(challenge.id) && <span className="text-[#3B82F6] text-xs ml-2">✓ Completed</span>}
           </div>
-          <button onClick={() => setHistory(h => [...h, { type: 'system', text: `Hint: ${challenge.hint}` }])} className="text-xs px-2 py-1 rounded border border-[#1a1a2e] text-[#ffb800] hover:border-[#ffb800] font-mono">Hint</button>
+          <button onClick={() => setHistory(h => [...h, { type: 'system', text: `Hint: ${challenge.hint}` }])} className="text-xs px-2 py-1 rounded border border-[#27272A] text-[#F59E0B] hover:border-[#F59E0B] font-mono">Hint</button>
         </div>
       )}
-      <div className="flex-1 bg-black p-4 overflow-y-auto font-mono text-sm cursor-text" onClick={() => inputRef.current?.focus()}>
+      <div className="flex-1 bg-[#0C0C0C] p-4 overflow-y-auto text-sm font-mono cursor-text" onClick={() => inputRef.current?.focus()}>
         {history.map((entry, i) => (
-          <div key={i} className={`mb-1 ${entry.type === 'input' ? 'text-[#00ff41]' : entry.type === 'error' ? 'text-[#ff3366]' : entry.type === 'success' ? 'text-[#00ff41]' : entry.type === 'system' ? 'text-[#00d4ff]' : 'text-[#c9d1d9]'}`}>
-            {entry.type === 'input' && <span className="text-[#00d4ff]">secops&gt; </span>}
+          <div key={i} className={`mb-1 ${entry.type === 'input' ? 'text-[#4ADE80]' : entry.type === 'error' ? 'text-[#EF4444]' : entry.type === 'success' ? 'text-[#22C55E]' : entry.type === 'system' ? 'text-[#3B82F6]' : 'text-[#D4D4D8]'}`}>
+            {entry.type === 'input' && <span className="text-[#3B82F6]">secops&gt; </span>}
             <span className="whitespace-pre-wrap">{entry.text}</span>
           </div>
         ))}
         <div className="flex items-center">
-          <span className="text-[#00d4ff]">secops&gt; </span>
+          <span className="text-[#3B82F6]">secops&gt; </span>
           <input
             ref={inputRef}
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && (mode === 'free' ? handleFreeCommand() : handleChallengeCommand())}
-            className="flex-1 bg-transparent text-[#00ff41] outline-none font-mono text-sm"
+            onKeyDown={e => {
+              if (e.key === 'Enter') { mode === 'free' ? handleFreeCommand() : handleChallengeCommand(); }
+              if (e.key === 'Tab') {
+                e.preventDefault();
+                const curr = input.trim().toLowerCase();
+                if (!curr) return;
+                const allCmds = Object.keys(TERMINAL_COMMANDS).filter(c => c !== 'help' && c !== 'whoami' && c !== 'clear');
+                const matches = allCmds.filter(c => c.toLowerCase().startsWith(curr));
+                if (matches.length === 1) {
+                  setInput(matches[0]);
+                } else if (matches.length > 1) {
+                  setHistory(h => [...h, { type: 'system', text: matches.join('  ') }]);
+                }
+              }
+            }}
+            className="flex-1 bg-transparent text-[#4ADE80] outline-none text-sm font-mono"
             autoFocus
           />
         </div>
@@ -2577,32 +4539,51 @@ function IntelScreen() {
   const effectiveOpen = s ? 'all' : openSection;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <div className="relative">
-        <Search size={16} className="absolute left-3 top-2.5 text-[#8b949e]" />
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tools, commands, frameworks..." className="w-full bg-[#0d1117] border border-[#1a1a2e] rounded-lg pl-10 pr-4 py-2 text-[#c9d1d9] font-mono text-sm focus:border-[#00ff41] outline-none" />
+    <div className="p-6 max-w-6xl mx-auto space-y-6">
+      <div className="flex gap-3 items-center">
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-3 top-2.5 text-[#71717A]" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tools, commands, frameworks..." className="w-full bg-[#18181B] border border-[#27272A] rounded-lg pl-10 pr-4 py-2 text-[#FAFAFA] text-sm focus:border-[#3B82F6] outline-none no-print" />
+        </div>
+        <button onClick={() => window.print()} className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border no-print" style={{ borderColor: DT.border, color: DT.textSecondary, background: DT.surface }}>
+          <Printer size={14} /> Print Cheat Sheet
+        </button>
+      </div>
+
+      <div className="flex gap-2 flex-wrap no-print">
+        {[
+          { label: 'Tools', id: 'tools' },
+          { label: 'SAST vs DAST', id: 'compare-sast' },
+          { label: 'CI/CD Platforms', id: 'compare-cicd' },
+          { label: 'Frameworks', id: 'frameworks' },
+          { label: 'Interview Prep', id: 'interview' },
+        ].map(link => (
+          <button key={link.id} onClick={() => document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80" style={{ background: DT.surfaceRaised, color: DT.textSecondary, border: `1px solid ${DT.border}` }}>
+            {link.label}
+          </button>
+        ))}
       </div>
 
       <div>
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">Tool Quick Reference</div>
+        <div id="tools" className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">Tool Quick Reference</div>
         <div className="space-y-2">
           {filteredTools.map((t, i) => {
             const isOpen = effectiveOpen === 'all' || openSection === t.origIdx;
             return (
-            <div key={t.origIdx} className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg overflow-hidden">
+            <div key={t.origIdx} className="bg-[#18181B] border border-[#27272A] rounded-lg overflow-hidden">
               <button onClick={() => setOpenSection(openSection === t.origIdx ? null : t.origIdx)} className="w-full flex items-center gap-3 px-4 py-3 text-left">
                 <div className="flex-1">
-                  <span className="text-[#00ff41] font-mono text-sm font-bold">{t.name}</span>
-                  <span className="text-[#8b949e] font-mono text-xs ml-2">{t.tools}</span>
+                  <span className="text-[#3B82F6] text-sm font-bold">{t.name}</span>
+                  <span className="text-[#71717A] text-xs ml-2">{t.tools}</span>
                 </div>
-                {isOpen ? <ChevronDown size={14} className="text-[#8b949e]" /> : <ChevronRight size={14} className="text-[#8b949e]" />}
+                {isOpen ? <ChevronDown size={14} className="text-[#71717A]" /> : <ChevronRight size={14} className="text-[#71717A]" />}
               </button>
               {isOpen && (
-                <div className="border-t border-[#1a1a2e] divide-y divide-[#1a1a2e]">
+                <div className="border-t border-[#27272A] divide-y divide-[#27272A]">
                   {t.commands.map((c, j) => (
                     <div key={j} className="px-4 py-2 flex items-center gap-2">
-                      <code className="text-[#00ff41] font-mono text-xs flex-1">{c.cmd}</code>
-                      <span className="text-[#8b949e] font-mono text-xs shrink-0 max-w-[200px] truncate">{c.desc}</span>
+                      <code className="text-[#3B82F6] text-xs flex-1">{c.cmd}</code>
+                      <span className="text-[#71717A] text-xs shrink-0 max-w-[200px] truncate">{c.desc}</span>
                       <CopyButton text={c.cmd} />
                     </div>
                   ))}
@@ -2615,48 +4596,48 @@ function IntelScreen() {
       </div>
 
       <div>
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">SAST vs DAST vs SCA vs IAST</div>
+        <div id="compare-sast" className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">SAST vs DAST vs SCA vs IAST</div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs font-mono">
-            <thead><tr>{INTEL_COMPARISON_SAST.headers.map((h, i) => <th key={i} className="text-left px-3 py-2 text-[#00d4ff] border-b border-[#1a1a2e]">{h}</th>)}</tr></thead>
-            <tbody>{INTEL_COMPARISON_SAST.rows.map((row, i) => <tr key={i} className="border-b border-[#1a1a2e]">{row.map((cell, j) => <td key={j} className={`px-3 py-2 ${j === 0 ? 'text-[#00ff41] font-bold' : 'text-[#c9d1d9]'}`}>{cell}</td>)}</tr>)}</tbody>
+            <thead><tr>{INTEL_COMPARISON_SAST.headers.map((h, i) => <th key={i} className="text-left px-3 py-2 text-[#3B82F6] border-b border-[#27272A]">{h}</th>)}</tr></thead>
+            <tbody>{INTEL_COMPARISON_SAST.rows.map((row, i) => <tr key={i} className="border-b border-[#27272A]">{row.map((cell, j) => <td key={j} className={`px-3 py-2 ${j === 0 ? 'text-[#3B82F6] font-bold' : 'text-[#FAFAFA]'}`}>{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
       </div>
 
       <div>
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">CI/CD Platform Comparison</div>
+        <div id="compare-cicd" className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">CI/CD Platform Comparison</div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs font-mono">
-            <thead><tr>{INTEL_COMPARISON_CICD.headers.map((h, i) => <th key={i} className="text-left px-3 py-2 text-[#00d4ff] border-b border-[#1a1a2e]">{h}</th>)}</tr></thead>
-            <tbody>{INTEL_COMPARISON_CICD.rows.map((row, i) => <tr key={i} className="border-b border-[#1a1a2e]">{row.map((cell, j) => <td key={j} className={`px-3 py-2 ${j === 0 ? 'text-[#00ff41] font-bold' : 'text-[#c9d1d9]'}`}>{cell}</td>)}</tr>)}</tbody>
+            <thead><tr>{INTEL_COMPARISON_CICD.headers.map((h, i) => <th key={i} className="text-left px-3 py-2 text-[#3B82F6] border-b border-[#27272A]">{h}</th>)}</tr></thead>
+            <tbody>{INTEL_COMPARISON_CICD.rows.map((row, i) => <tr key={i} className="border-b border-[#27272A]">{row.map((cell, j) => <td key={j} className={`px-3 py-2 ${j === 0 ? 'text-[#3B82F6] font-bold' : 'text-[#FAFAFA]'}`}>{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
       </div>
 
       <div>
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">Frameworks Reference</div>
+        <div id="frameworks" className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">Frameworks Reference</div>
         <div className="space-y-2">
           {INTEL_FRAMEWORKS.filter(f => !s || f.name.toLowerCase().includes(s) || f.desc.toLowerCase().includes(s)).map((f, i) => (
-            <div key={i} className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg px-4 py-3">
-              <div className="text-[#00d4ff] font-mono text-sm font-bold">{f.name}</div>
-              <div className="text-[#c9d1d9] font-mono text-xs mt-1">{f.desc}</div>
+            <div key={i} className="bg-[#18181B] border border-[#27272A] rounded-lg px-4 py-3">
+              <div className="text-[#3B82F6] text-sm font-bold">{f.name}</div>
+              <div className="text-[#FAFAFA] text-xs mt-1">{f.desc}</div>
             </div>
           ))}
         </div>
       </div>
 
       <div>
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-3">Interview Quick Reference</div>
-        <div className="bg-[#0d1117] border border-[#ffb800] rounded-lg p-4 mb-4" style={{ boxShadow: '0 0 15px rgba(255,184,0,0.08)' }}>
-          <div className="text-[#ffb800] font-mono text-xs uppercase tracking-wider mb-1">Your Unique Angle</div>
-          <div className="text-[#c9d1d9] font-mono text-xs italic">"I approach DevSecOps from an attacker's perspective. I know what adversaries look for — exposed secrets, vulnerable dependencies, misconfigured infrastructure — because I've studied and tested for these. My pipelines are designed to catch what I would target as an attacker."</div>
+        <div id="interview" className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-3">Interview Quick Reference</div>
+        <div className="bg-[#18181B] border border-[#F59E0B] rounded-lg p-4 mb-4" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+          <div className="text-[#F59E0B] text-xs uppercase tracking-wider mb-1">Your Unique Angle</div>
+          <div className="text-[#FAFAFA] text-xs italic">"I approach DevSecOps from an attacker's perspective. I know what adversaries look for — exposed secrets, vulnerable dependencies, misconfigured infrastructure — because I've studied and tested for these. My pipelines are designed to catch what I would target as an attacker."</div>
         </div>
         <div className="space-y-1">
           {INTEL_INTERVIEW_QUICK.filter(q => !s || q.q.toLowerCase().includes(s) || q.a.toLowerCase().includes(s)).map((q, i) => (
-            <div key={i} className="bg-[#0d1117] border border-[#1a1a2e] rounded px-4 py-2 flex gap-4">
-              <div className="text-[#00d4ff] font-mono text-xs font-bold shrink-0 w-48">{q.q}</div>
-              <div className="text-[#c9d1d9] font-mono text-xs">{q.a}</div>
+            <div key={i} className="bg-[#18181B] border border-[#27272A] rounded px-4 py-2 flex gap-4">
+              <div className="text-[#3B82F6] text-xs font-bold shrink-0 w-48">{q.q}</div>
+              <div className="text-[#FAFAFA] text-xs">{q.a}</div>
             </div>
           ))}
         </div>
@@ -2668,10 +4649,52 @@ function IntelScreen() {
 // ============================================================================
 // SCREEN: PROFILE
 // ============================================================================
+function CertificateModal({ profile, progress, rank, onClose }) {
+  const completedMods = Object.values(progress.modules || {}).filter(m => m.simulationComplete || m.quizBestScore >= 3).length;
+  const [copied, setCopied] = useState(false);
+  const shareText = `I'm a ${rank.name} on SecOps Academy with ${profile.totalXP} XP! Completed ${completedMods} modules in DevSecOps. Free platform: https://secops.academy #DevSecOps #CyberSecurity`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://secops.academy')}&summary=${encodeURIComponent(shareText)}`;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      <div className="w-full max-w-lg mx-4 rounded-xl overflow-hidden" style={{ background: DT.surface, border: `1px solid ${DT.border}` }}>
+        <div className="p-8 text-center" style={{ background: `linear-gradient(135deg, ${DT.bg}, ${DT.surface})`, borderBottom: `2px solid ${DT.blue}` }}>
+          <div className="text-xs uppercase tracking-widest mb-2" style={{ color: DT.blue }}>SecOps Academy</div>
+          <div className="text-2xl font-bold mb-1" style={{ color: DT.textPrimary }}>Certificate of Completion</div>
+          <div className="w-16 h-0.5 mx-auto my-4" style={{ background: DT.blue }} />
+          <div className="text-3xl font-bold mb-2" style={{ color: DT.blue }}>{profile.callsign || 'Operator'}</div>
+          <div className="text-sm mb-1" style={{ color: DT.textSecondary }}>{rank.icon} {rank.name}</div>
+          <div className="text-xs mt-4" style={{ color: DT.textTertiary }}>
+            {completedMods} Modules Completed | {profile.totalXP.toLocaleString()} XP Earned
+          </div>
+          <div className="text-xs mt-2" style={{ color: DT.textTertiary }}>{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          <div className="text-[10px] mt-4 uppercase tracking-wider" style={{ color: DT.textTertiary }}>Fractal AI Security Team</div>
+        </div>
+        <div className="p-4 flex flex-wrap gap-2 justify-center">
+          <button onClick={() => { navigator.clipboard.writeText(shareText); setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border" style={{ borderColor: DT.blue, color: DT.blue }}>
+            {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? 'Copied!' : 'Copy Share Text'}
+          </button>
+          <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border" style={{ borderColor: DT.border, color: DT.textSecondary }}>
+            <Share2 size={14} /> Share on X
+          </a>
+          <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border" style={{ borderColor: DT.border, color: DT.textSecondary }}>
+            <Share2 size={14} /> Share on LinkedIn
+          </a>
+          <button onClick={onClose} className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border" style={{ borderColor: DT.border, color: DT.textTertiary }}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProfileScreen({ profile, progress, badges, terminal, onUpdateProfile, onReset }) {
   const [callsign, setCallsign] = useState(profile.callsign || '');
   const [showReset, setShowReset] = useState(false);
   const [resetConfirm, setResetConfirm] = useState('');
+  const [showCert, setShowCert] = useState(false);
   const rank = getRank(profile.totalXP);
   const nextRank = getNextRank(profile.totalXP);
 
@@ -2690,32 +4713,32 @@ function ProfileScreen({ profile, progress, badges, terminal, onUpdateProfile, o
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
-      <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-6">
-        <div className="text-[#8b949e] font-mono text-xs uppercase tracking-wider mb-2">Callsign</div>
+    <div className="p-6 max-w-5xl mx-auto space-y-6">
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
+        <div className="text-[#71717A] text-xs uppercase tracking-wider mb-2">Callsign</div>
         <div className="flex items-center gap-2">
-          <input value={callsign} onChange={e => setCallsign(e.target.value.replace(/\s/g, ''))} maxLength={20} className="bg-[#0a0a0f] border border-[#1a1a2e] rounded px-3 py-2 text-[#00ff41] font-mono text-lg focus:border-[#00ff41] outline-none w-64" placeholder="Enter callsign..." />
-          <button onClick={handleSaveCallsign} className="px-3 py-2 rounded border border-[#00ff41] text-[#00ff41] font-mono text-sm hover:bg-[rgba(0,255,65,0.1)]">Save</button>
+          <input value={callsign} onChange={e => setCallsign(e.target.value.replace(/\s/g, ''))} maxLength={20} className="bg-[#09090B] border border-[#27272A] rounded px-3 py-2 text-[#3B82F6] text-lg focus:border-[#3B82F6] outline-none w-64" placeholder="Enter callsign..." />
+          <button onClick={handleSaveCallsign} className="px-3 py-2 rounded border border-[#3B82F6] text-[#3B82F6] text-sm hover:bg-[rgba(59,130,246,0.1)]">Save</button>
         </div>
       </div>
 
-      <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-6 text-center">
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6 text-center">
         <div className="text-5xl mb-2">{rank.icon}</div>
-        <div className="text-[#00ff41] font-mono text-xl font-bold">{rank.name}</div>
-        <div className="text-[#8b949e] font-mono text-sm mt-1">{rank.tagline}</div>
-        <div className="text-[#00d4ff] font-mono text-lg mt-2">{profile.totalXP.toLocaleString()} XP</div>
+        <div className="text-[#3B82F6] text-xl font-bold">{rank.name}</div>
+        <div className="text-[#71717A] text-sm mt-1">{rank.tagline}</div>
+        <div className="text-[#3B82F6] text-lg mt-2">{profile.totalXP.toLocaleString()} XP</div>
         {nextRank && (
           <div className="mt-3">
-            <div className="w-64 h-2 bg-[#1a1a2e] rounded mx-auto">
-              <div className="h-full bg-[#00ff41] rounded" style={{ width: `${((profile.totalXP - rank.minXP) / (nextRank.minXP - rank.minXP)) * 100}%` }} />
+            <div className="w-64 h-2 bg-[#27272A] rounded mx-auto">
+              <div className="h-full bg-gradient-to-r from-[#3B82F6] to-[#A78BFA] rounded" style={{ width: `${((profile.totalXP - rank.minXP) / (nextRank.minXP - rank.minXP)) * 100}%` }} />
             </div>
-            <div className="text-[#8b949e] font-mono text-xs mt-1">{nextRank.minXP - profile.totalXP} XP to {nextRank.name}</div>
+            <div className="text-[#71717A] text-xs mt-1">{nextRank.minXP - profile.totalXP} XP to {nextRank.name}</div>
           </div>
         )}
       </div>
 
-      <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-6">
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-4">Stats</div>
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
+        <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-4">Stats</div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: 'Modules', value: `${completedMods}/${totalMods}` },
@@ -2728,43 +4751,264 @@ function ProfileScreen({ profile, progress, badges, terminal, onUpdateProfile, o
             { label: 'Longest Streak', value: `${profile.longestStreak} days` },
           ].map((s, i) => (
             <div key={i}>
-              <div className="text-[#8b949e] font-mono text-xs">{s.label}</div>
-              <div className="text-[#c9d1d9] font-mono text-lg font-bold">{s.value}</div>
+              <div className="text-[#71717A] text-xs">{s.label}</div>
+              <div className="text-[#FAFAFA] text-lg font-bold">{s.value}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-6">
-        <div className="text-[#00ff41] font-mono text-sm font-bold uppercase tracking-wider mb-4">Badges</div>
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
+        <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-4">Progress Backup</div>
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => {
+            const data = { profile, progress, terminal, badges, exportedAt: new Date().toISOString(), version: 1 };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `secops-academy-${profile.callsign || 'progress'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          }} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: DT.blue, color: DT.blue }}>
+            <Download size={14} /> Export Progress
+          </button>
+          <label className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border cursor-pointer" style={{ borderColor: DT.border, color: DT.textSecondary }}>
+            <Upload size={14} /> Import Progress
+            <input type="file" accept=".json" className="hidden" onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              try {
+                const text = await file.text();
+                const data = JSON.parse(text);
+                if (data.version && data.profile && data.progress) {
+                  if (confirm('This will replace your current progress. Continue?')) {
+                    await storageSet('secops-profile', data.profile);
+                    await storageSet('secops-progress', data.progress);
+                    await storageSet('secops-terminal', data.terminal || STORAGE_DEFAULTS['secops-terminal']);
+                    await storageSet('secops-badges', data.badges || STORAGE_DEFAULTS['secops-badges']);
+                    window.location.reload();
+                  }
+                } else {
+                  alert('Invalid file format');
+                }
+              } catch { alert('Invalid file format'); }
+            }} />
+          </label>
+        </div>
+      </div>
+
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
+        <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-4">Badges</div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {BADGES.map(b => {
             const state = badges[b.id] || {};
             return (
-              <div key={b.id} className={`p-3 rounded-lg border ${state.unlocked ? 'border-[#ffb800] bg-[rgba(255,184,0,0.05)]' : 'border-[#1a1a2e] opacity-40'}`}>
+              <div key={b.id} className={`p-3 rounded-lg border ${state.unlocked ? 'border-[#F59E0B] bg-[rgba(245,158,11,0.05)]' : 'border-[#27272A] opacity-40'}`}>
                 <div className="text-lg mb-1">{b.icon}</div>
-                <div className={`font-mono text-xs font-bold ${state.unlocked ? 'text-[#ffb800]' : 'text-[#8b949e]'}`}>{b.name}</div>
-                <div className="text-[#8b949e] font-mono text-[10px] mt-1">{state.unlocked ? `Unlocked ${new Date(state.unlockedAt).toLocaleDateString()}` : b.desc}</div>
+                <div className={`text-xs font-bold ${state.unlocked ? 'text-[#F59E0B]' : 'text-[#71717A]'}`}>{b.name}</div>
+                <div className="text-[#71717A] text-[10px] mt-1">{state.unlocked ? `Unlocked ${new Date(state.unlockedAt).toLocaleDateString()}` : b.desc}</div>
               </div>
             );
           })}
         </div>
       </div>
 
-      <div className="bg-[#0d1117] border border-[#1a1a2e] rounded-lg p-6">
-        <button onClick={() => setShowReset(!showReset)} className="text-[#ff3366] font-mono text-sm hover:underline">Reset All Progress</button>
+      {showCert && <CertificateModal profile={profile} progress={progress} rank={rank} onClose={() => setShowCert(false)} />}
+
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
+        <div className="text-[#3B82F6] text-sm font-bold uppercase tracking-wider mb-4">Certificate & Sharing</div>
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => setShowCert(true)} disabled={completedMods === 0} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border disabled:opacity-30 disabled:cursor-not-allowed" style={{ borderColor: DT.blue, color: DT.blue }}>
+            <Award size={16} /> Generate Certificate
+          </button>
+          <button onClick={() => {
+            const text = `I'm a ${rank.name} on SecOps Academy with ${profile.totalXP} XP! Completed ${completedMods} modules in DevSecOps. Free platform: https://secops.academy #DevSecOps #CyberSecurity`;
+            navigator.clipboard.writeText(text);
+          }} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: DT.border, color: DT.textSecondary }}>
+            <Copy size={14} /> Copy Share Text
+          </button>
+          <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I'm a ${rank.name} on SecOps Academy with ${profile.totalXP} XP! Completed ${completedMods} modules in DevSecOps. Free platform: https://secops.academy #DevSecOps #CyberSecurity`)}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: DT.border, color: DT.textSecondary }}>
+            <Share2 size={14} /> Share on X
+          </a>
+          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://secops.academy')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: DT.border, color: DT.textSecondary }}>
+            <Share2 size={14} /> Share on LinkedIn
+          </a>
+        </div>
+        {completedMods === 0 && <div className="text-xs mt-2" style={{ color: DT.textTertiary }}>Complete at least 1 module to generate a certificate.</div>}
+      </div>
+
+      <div className="bg-[#18181B] border border-[#27272A] rounded-lg p-6">
+        <button onClick={() => setShowReset(!showReset)} className="text-[#EF4444] text-sm hover:underline">Reset All Progress</button>
         {showReset && (
-          <div className="mt-3 p-3 bg-[rgba(255,51,102,0.05)] border border-[#ff3366] rounded-lg">
-            <div className="text-[#ff3366] font-mono text-xs mb-2">This will erase ALL progress. Type "RESET" to confirm.</div>
+          <div className="mt-3 p-3 bg-[rgba(239,68,68,0.05)] border border-[#EF4444] rounded-lg">
+            <div className="text-[#EF4444] text-xs mb-2">This will erase ALL progress. Type "RESET" to confirm.</div>
             <div className="flex gap-2">
-              <input value={resetConfirm} onChange={e => setResetConfirm(e.target.value)} className="bg-[#0a0a0f] border border-[#1a1a2e] rounded px-3 py-1 text-[#ff3366] font-mono text-sm focus:border-[#ff3366] outline-none w-32" placeholder="Type RESET" />
-              <button onClick={() => { if (resetConfirm === 'RESET') onReset(); }} disabled={resetConfirm !== 'RESET'} className="px-3 py-1 rounded border border-[#ff3366] text-[#ff3366] font-mono text-sm hover:bg-[rgba(255,51,102,0.1)] disabled:opacity-30 disabled:cursor-not-allowed">Confirm Reset</button>
+              <input value={resetConfirm} onChange={e => setResetConfirm(e.target.value)} className="bg-[#09090B] border border-[#27272A] rounded px-3 py-1 text-[#EF4444] text-sm focus:border-[#EF4444] outline-none w-32" placeholder="Type RESET" />
+              <button onClick={() => { if (resetConfirm === 'RESET') onReset(); }} disabled={resetConfirm !== 'RESET'} className="px-3 py-1 rounded border border-[#EF4444] text-[#EF4444] text-sm hover:bg-[rgba(239,68,68,0.1)] disabled:opacity-30 disabled:cursor-not-allowed">Confirm Reset</button>
             </div>
           </div>
         )}
       </div>
 
-      <div className="text-center text-[#8b949e] font-mono text-xs">SecOps Academy — Built by Fractal AI Security Team. A free, open community platform for learning DevSecOps from zero to interview-ready.</div>
+      <div className="text-center text-[#71717A] text-xs">SecOps Academy — Built by Fractal AI Security Team. A free, open community platform for learning DevSecOps from zero to interview-ready.</div>
+    </div>
+  );
+}
+
+// ============================================================================
+// COMPONENT: ONBOARDING MODAL (Feature 2)
+// ============================================================================
+function OnboardingModal({ onComplete }) {
+  const [callsign, setCallsign] = useState('');
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(12px)' }}>
+      <div className="w-full max-w-md rounded-xl p-8" style={{ background: DT.surface, border: `1px solid ${DT.border}` }}>
+        <div className="text-center mb-6">
+          <Shield size={40} className="mx-auto mb-3" style={{ color: DT.blue }} />
+          <h2 className="text-xl font-bold" style={{ color: DT.textPrimary }}>Welcome to SecOps Academy</h2>
+          <p className="text-sm mt-1" style={{ color: DT.textTertiary }}>Master DevSecOps from zero to production-ready</p>
+        </div>
+        <div className="mb-6">
+          <label className="text-xs font-medium uppercase tracking-wider block mb-2" style={{ color: DT.textTertiary }}>Choose your callsign</label>
+          <input
+            value={callsign}
+            onChange={e => setCallsign(e.target.value.replace(/\s/g, ''))}
+            maxLength={20}
+            placeholder="e.g. SecurityNinja"
+            className="w-full rounded-lg px-4 py-3 text-sm outline-none"
+            style={{ background: DT.bg, border: `1px solid ${DT.border}`, color: DT.textPrimary }}
+            autoFocus
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {[
+            { value: '28', label: 'Modules' },
+            { value: '19', label: 'Hands-on Labs' },
+            { value: '140+', label: 'Quiz Questions' },
+          ].map(item => (
+            <div key={item.label} className="text-center rounded-lg p-3" style={{ background: DT.bg, border: `1px solid ${DT.border}` }}>
+              <div className="text-lg font-bold" style={{ color: DT.blue }}>{item.value}</div>
+              <div className="text-[10px]" style={{ color: DT.textTertiary }}>{item.label}</div>
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => { if (callsign.trim()) onComplete(callsign.trim()); }}
+          disabled={!callsign.trim()}
+          className="w-full py-3 rounded-lg text-sm font-semibold transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{ background: DT.blue, color: '#fff' }}
+        >
+          Start Learning
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// COMPONENT: SEARCH MODAL (Feature 3)
+// ============================================================================
+function SearchModal({ onClose, onNavigateModule, onNavigateScreen }) {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => { inputRef.current?.focus(); }, []);
+
+  const searchItems = useMemo(() => {
+    const items = [];
+    Object.values(MODULES).forEach(m => {
+      items.push({ type: 'module', id: m.id, title: `${m.id}: ${m.title}`, pathId: m.pathId });
+      m.theory.sections.forEach(s => {
+        items.push({ type: 'section', id: m.id, title: s.heading, subtitle: `Module ${m.id}` });
+      });
+    });
+    INTEL_TOOLS.forEach(t => {
+      items.push({ type: 'intel', title: t.name, subtitle: t.tools });
+    });
+    Object.keys(TERMINAL_COMMANDS).forEach(cmd => {
+      if (cmd !== 'help' && cmd !== 'whoami' && cmd !== 'clear') {
+        items.push({ type: 'command', title: cmd, subtitle: 'Terminal command' });
+      }
+    });
+    return items;
+  }, []);
+
+  const q = query.toLowerCase();
+  const filtered = q ? searchItems.filter(item => item.title.toLowerCase().includes(q) || (item.subtitle && item.subtitle.toLowerCase().includes(q))).slice(0, 20) : [];
+
+  const grouped = {
+    modules: filtered.filter(i => i.type === 'module' || i.type === 'section'),
+    intel: filtered.filter(i => i.type === 'intel'),
+    commands: filtered.filter(i => i.type === 'command'),
+  };
+
+  const handleSelect = (item) => {
+    if (item.type === 'module' || item.type === 'section') {
+      onNavigateModule(item.id);
+    } else if (item.type === 'intel') {
+      onNavigateScreen('intel');
+    } else if (item.type === 'command') {
+      onNavigateScreen('terminal');
+    }
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }} onClick={onClose}>
+      <div className="w-full max-w-lg rounded-xl overflow-hidden" style={{ background: DT.surface, border: `1px solid ${DT.border}` }} onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-3 p-4 border-b" style={{ borderColor: DT.border }}>
+          <Search size={16} style={{ color: DT.textTertiary }} />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Escape') onClose(); }}
+            placeholder="Search modules, tools, commands..."
+            className="flex-1 bg-transparent outline-none text-sm"
+            style={{ color: DT.textPrimary }}
+          />
+          <kbd className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: DT.surfaceRaised, color: DT.textTertiary, border: `1px solid ${DT.border}` }}>ESC</kbd>
+        </div>
+        {q && (
+          <div className="max-h-80 overflow-y-auto p-2">
+            {filtered.length === 0 && <div className="text-center py-6 text-sm" style={{ color: DT.textTertiary }}>No results found</div>}
+            {grouped.modules.length > 0 && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider px-3 py-1 font-semibold" style={{ color: DT.blue }}>Modules</div>
+                {grouped.modules.map((item, i) => (
+                  <button key={`m-${i}`} onClick={() => handleSelect(item)} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:opacity-80 transition-opacity" style={{ color: DT.textPrimary }} onMouseEnter={e => e.currentTarget.style.background = DT.surfaceRaised} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    <div>{item.title}</div>
+                    {item.subtitle && <div className="text-[10px]" style={{ color: DT.textTertiary }}>{item.subtitle}</div>}
+                  </button>
+                ))}
+              </div>
+            )}
+            {grouped.intel.length > 0 && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider px-3 py-1 font-semibold" style={{ color: DT.purple }}>Intel</div>
+                {grouped.intel.map((item, i) => (
+                  <button key={`i-${i}`} onClick={() => handleSelect(item)} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:opacity-80 transition-opacity" style={{ color: DT.textPrimary }} onMouseEnter={e => e.currentTarget.style.background = DT.surfaceRaised} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    <div>{item.title}</div>
+                    {item.subtitle && <div className="text-[10px]" style={{ color: DT.textTertiary }}>{item.subtitle}</div>}
+                  </button>
+                ))}
+              </div>
+            )}
+            {grouped.commands.length > 0 && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider px-3 py-1 font-semibold" style={{ color: DT.success }}>Commands</div>
+                {grouped.commands.map((item, i) => (
+                  <button key={`c-${i}`} onClick={() => handleSelect(item)} className="w-full text-left px-3 py-2 rounded-lg text-sm font-mono hover:opacity-80 transition-opacity" style={{ color: DT.textPrimary }} onMouseEnter={e => e.currentTarget.style.background = DT.surfaceRaised} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    <div>{item.title}</div>
+                    {item.subtitle && <div className="text-[10px]" style={{ color: DT.textTertiary }}>{item.subtitle}</div>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -2783,6 +5027,17 @@ export default function SecOpsAcademy() {
   const [toast, setToast] = useState(null);
   const [activeModule, setActiveModule] = useState(null);
   const [focusPath, setFocusPath] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [theme, setTheme] = useState('dark');
+  const [transitioning, setTransitioning] = useState(false);
+
+  // Load saved theme on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('secops-theme');
+    if (saved === 'light' || saved === 'dark') setTheme(saved);
+  }, []);
 
   // Load from storage
   useEffect(() => {
@@ -2804,6 +5059,55 @@ export default function SecOpsAcademy() {
       setLoading(false);
     })();
   }, []);
+
+  // Show onboarding if no callsign after load
+  useEffect(() => {
+    if (!loading && !profile.callsign) setShowOnboarding(true);
+  }, [loading, profile.callsign]);
+
+  const switchScreen = useCallback((newScreen) => {
+    setTransitioning(true);
+    setTimeout(() => {
+      setScreen(newScreen);
+      setActiveModule(null);
+      setFocusPath(null);
+      setTransitioning(false);
+    }, 150);
+  }, []);
+
+  // Keyboard shortcuts (Features 3 & 8)
+  useEffect(() => {
+    const handler = (e) => {
+      // Don't fire when typing in inputs
+      const tag = document.activeElement?.tagName?.toLowerCase();
+      const isInput = tag === 'input' || tag === 'textarea';
+
+      // Ctrl+K / Cmd+K — always open search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(s => !s);
+        return;
+      }
+
+      // Escape — close module or search
+      if (e.key === 'Escape') {
+        if (showSearch) { setShowSearch(false); return; }
+        if (activeModule) { setActiveModule(null); return; }
+        return;
+      }
+
+      // Number keys 1-6 for navigation (only when not in an input)
+      if (!isInput && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const screens = ['dashboard', 'paths', 'labs', 'terminal', 'intel', 'profile'];
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 6) {
+          switchScreen(screens[num - 1]);
+        }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [showSearch, activeModule, switchScreen]);
 
   // Streak tracking
   useEffect(() => {
@@ -2967,15 +5271,22 @@ export default function SecOpsAcademy() {
   }, [showToast]);
 
   const handleNavigate = useCallback((scr, data) => {
-    setScreen(scr);
-    setActiveModule(null);
-    if (scr === 'paths' && data) setFocusPath(data);
+    setTransitioning(true);
+    setTimeout(() => {
+      setScreen(scr);
+      setActiveModule(null);
+      if (scr === 'paths' && data) setFocusPath(data);
+      setTransitioning(false);
+    }, 150);
   }, []);
 
   const handleOpenModule = useCallback((moduleId) => {
     setActiveModule(moduleId);
     setScreen('paths');
   }, []);
+
+  // Apply active theme
+  DT = THEMES[theme];
 
   if (loading) {
     return (
@@ -2999,29 +5310,60 @@ export default function SecOpsAcademy() {
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
 
       {/* NAV */}
-      <nav className="border-b px-6 py-3 flex items-center gap-8 sticky top-0 z-40 backdrop-blur-md" style={{ background: DT.surface + 'ee', borderColor: DT.border }}>
+      <nav className="border-b px-4 md:px-6 py-3 flex items-center gap-4 md:gap-8 sticky top-0 z-40 backdrop-blur-md no-print" style={{ background: DT.surface + 'ee', borderColor: DT.border }}>
         <div className="font-semibold text-sm flex items-center gap-2" style={{ color: DT.textPrimary }}>
-          <Shield size={18} style={{ color: DT.blue }} /> SecOps Academy
+          <Shield size={18} style={{ color: DT.blue }} /> <span className="hidden sm:inline">SecOps Academy</span>
         </div>
-        <div className="flex gap-1 flex-1 justify-center">
+        <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ color: DT.textTertiary }}>
+          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <div className="hidden md:flex gap-1 flex-1 justify-center">
           {NAV_ITEMS.map(item => {
             const Icon = item.icon;
             const active = screen === item.id && !activeModule;
             return (
-              <button key={item.id} onClick={() => { setScreen(item.id); setActiveModule(null); setFocusPath(null); }} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all ${active ? '' : 'hover:opacity-80'}`} style={active ? { background: DT.blueMuted, color: DT.blue } : { color: DT.textTertiary }}>
+              <button key={item.id} onClick={() => switchScreen(item.id)} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all ${active ? '' : 'hover:opacity-80'}`} style={active ? { background: DT.blueMuted, color: DT.blue } : { color: DT.textTertiary }}>
                 <Icon size={15} /> {item.label}
               </button>
             );
           })}
         </div>
-        <div className="flex items-center gap-3 text-xs font-medium">
+        <div className="flex items-center gap-3 text-xs font-medium ml-auto md:ml-0">
+          <button onClick={() => setShowSearch(true)} className="hidden md:flex items-center gap-1 px-2 py-1 rounded text-[10px]" style={{ background: DT.surfaceRaised, color: DT.textTertiary, border: `1px solid ${DT.border}` }}>
+            <Search size={10} /> <kbd>&#8984;K</kbd>
+          </button>
           <span style={{ color: DT.purple }}>{profile.totalXP} XP</span>
           <span className="text-sm">{getRank(profile.totalXP).icon}</span>
+          <button onClick={() => { const next = theme === 'dark' ? 'light' : 'dark'; setTheme(next); localStorage.setItem('secops-theme', next); }} className="p-2 rounded-lg transition-colors hover:opacity-80" style={{ color: DT.textTertiary }}>
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
         </div>
       </nav>
+      {/* Mobile nav dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-b px-4 py-2 space-y-1 no-print" style={{ background: DT.surface, borderColor: DT.border }}>
+          {NAV_ITEMS.map(item => {
+            const Icon = item.icon;
+            const active = screen === item.id && !activeModule;
+            return (
+              <button key={item.id} onClick={() => { switchScreen(item.id); setMobileMenuOpen(false); }} className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[13px] font-medium transition-all" style={active ? { background: DT.blueMuted, color: DT.blue } : { color: DT.textTertiary }}>
+                <Icon size={15} /> {item.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* SEARCH MODAL */}
+      {showSearch && <SearchModal onClose={() => setShowSearch(false)} onNavigateModule={handleOpenModule} onNavigateScreen={(scr) => switchScreen(scr)} />}
+
+      {/* ONBOARDING MODAL */}
+      {showOnboarding && !loading && (
+        <OnboardingModal onComplete={(cs) => { saveProfile({ callsign: cs }); setShowOnboarding(false); }} />
+      )}
 
       {/* CONTENT */}
-      <main className="flex-1 overflow-y-auto">
+      <main className={`flex-1 overflow-y-auto transition-all duration-200 ${transitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
         {activeModule ? (
           <ModuleView
             moduleId={activeModule}
@@ -3031,12 +5373,12 @@ export default function SecOpsAcademy() {
           />
         ) : (
           <>
-            {screen === 'dashboard' && <DashboardScreen profile={profile} progress={progress} badges={badges} terminal={terminal} onNavigate={handleNavigate} onOpenModule={handleOpenModule} />}
-            {screen === 'paths' && <PathsScreen progress={progress} onOpenModule={handleOpenModule} focusPath={focusPath} />}
-            {screen === 'labs' && <LabsScreen progress={progress} onOpenModule={handleOpenModule} />}
-            {screen === 'terminal' && <TerminalScreen profile={profile} terminal={terminal} onMasterCommand={handleMasterCommand} onCompleteChallenge={handleCompleteChallenge} />}
+            {screen === 'dashboard' && <div className="no-print"><DashboardScreen profile={profile} progress={progress} badges={badges} terminal={terminal} onNavigate={handleNavigate} onOpenModule={handleOpenModule} /></div>}
+            {screen === 'paths' && <div className="no-print"><PathsScreen progress={progress} onOpenModule={handleOpenModule} focusPath={focusPath} /></div>}
+            {screen === 'labs' && <div className="no-print"><LabsScreen progress={progress} onOpenModule={handleOpenModule} /></div>}
+            {screen === 'terminal' && <div className="no-print"><TerminalScreen profile={profile} terminal={terminal} onMasterCommand={handleMasterCommand} onCompleteChallenge={handleCompleteChallenge} /></div>}
             {screen === 'intel' && <IntelScreen />}
-            {screen === 'profile' && <ProfileScreen profile={profile} progress={progress} badges={badges} terminal={terminal} onUpdateProfile={saveProfile} onReset={handleReset} />}
+            {screen === 'profile' && <div className="no-print"><ProfileScreen profile={profile} progress={progress} badges={badges} terminal={terminal} onUpdateProfile={saveProfile} onReset={handleReset} /></div>}
           </>
         )}
       </main>

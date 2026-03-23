@@ -32,6 +32,10 @@ if (!window.storage) {
   };
 }
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/secops-academy/sw.js').catch(() => {});
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <SecOpsAcademy />
