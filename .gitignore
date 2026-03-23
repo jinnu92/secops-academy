@@ -4,3 +4,5 @@ dist/
 e2e-screenshots/
 *.log
 .claude/
+e2e-*.cjs
+unlock-all.js
